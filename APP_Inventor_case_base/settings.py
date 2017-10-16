@@ -123,9 +123,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 '''
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',        # 默认的通过账号和密码进行验证的方式(login和logout方法）
+        'rest_framework.authentication.SessionAuthentication',          # drf自带的token认证模式（一般称为Session模式）
     ),
+    # 设置限速策略，防止爬虫拖垮网站（仅作用于设置了throttle_classes的ViewSet）
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '4/minute',     # 对于未登录用户，每分钟最多访问4次
+        'user': '6/minute'      # 对于已登录用户，每分钟最多访问6次
+    }
 }
 
 '''
@@ -143,7 +152,11 @@ REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 # 云片网设置
 APIKEY = ""
 
-# 缓存数据库的相关配置
+'''
+缓存数据库的相关配置（请求结果的缓存机制仅作用于继承了CacheResponseMixin的ViewSet）
+将请求URL、请求参数、请求的Content-type等等组合到一起求Hash值作为缓存数据库的键
+将请求结果的网页内容或者JSON字符串作为缓存数据库的值
+'''
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -152,4 +165,11 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
+}
+
+'''
+非Django原生setting项，仅用于REST-Framework-EXTENSIONS
+'''
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 15 * 60,      # 设置缓存有效时间
 }

@@ -10,7 +10,7 @@ from cases.models import Cases
 class CasesListView(View):
     def get(self, request):
         """
-        通过django的view实现商品列表页
+        通过django的view实现案例列表页
         :param request:
         :return:
         """

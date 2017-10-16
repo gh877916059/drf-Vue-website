@@ -30,9 +30,9 @@ class CasesPagination(PageNumberPagination):
 
 class CasesListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    商品列表页, 分页， 搜索， 过滤， 排序
+    案例列表页, 分页， 搜索， 过滤， 排序
     """
-    # throttle_classes = (UserRateThrottle, )
+    throttle_classes = (UserRateThrottle, )
     queryset = Cases.objects.all()
     serializer_class = CasesSerializer
     pagination_class = CasesPagination
@@ -52,9 +52,9 @@ class CasesListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.Retriev
 class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     list:
-        商品分类列表数据
+        案例分类列表数据
     retrieve:
-        获取商品分类详情
+        获取案例分类详情
     """
     queryset = CasesCategory.objects.filter(category_type=1)
     serializer_class = CategorySerializer
@@ -78,7 +78,7 @@ class BannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 class IndexCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
-    首页商品分类数据
+    首页案例分类数据
     """
     queryset = CasesCategory.objects.filter(is_tab=True, name__in=["生鲜食品", "酒水饮料"])
     serializer_class = IndexCategorySerializer
