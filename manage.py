@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+__author__ = 'HymanLu'
+
 import os
 import sys
 

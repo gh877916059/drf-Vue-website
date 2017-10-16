@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-__author__ = 'bobby'
+__author__ = 'HymanLu'
+
 import re
 from rest_framework import serializers
 from django.contrib.auth import get_user_model

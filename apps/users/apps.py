@@ -1,5 +1,7 @@
-from django.apps import AppConfig
+# -*- coding: utf-8 -*-
+__author__ = 'HymanLu'
 
+from django.apps import AppConfig
 
 class UsersConfig(AppConfig):
     name = 'users'

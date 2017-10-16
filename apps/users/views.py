@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+__author__ = 'HymanLu'
+
 from django.shortcuts import render
 
 # Create your views here.

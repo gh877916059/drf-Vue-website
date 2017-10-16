@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+__author__ = 'HymanLu'
+
 from datetime import datetime
 
 from django.db import models

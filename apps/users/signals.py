@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-__author__ = 'bobby'
+__author__ = 'HymanLu'
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
