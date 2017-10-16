@@ -2,11 +2,8 @@
 __author__ = 'HymanLu'
 
 from datetime import datetime
-
 from django.db import models
 from DjangoUeditor.models import UEditorField
-# Create your models here.
-
 
 class CasesCategory(models.Model):
     """
@@ -15,7 +12,6 @@ class CasesCategory(models.Model):
     CATEGORY_TYPE = (
         (1, "一级类目"),
         (2, "二级类目"),
-        (3, "三级类目"),
     )
 
     name = models.CharField(default="", max_length=30, verbose_name="类别名", help_text="类别名")
