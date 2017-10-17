@@ -20,7 +20,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
 from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
-from MxShop.settings import APIKEY
+from APP_Inventor_case_base.settings import APIKEY
 from utils.yunpian import YunPian
 from .models import VerifyCode
 

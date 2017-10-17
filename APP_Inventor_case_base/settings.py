@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'APP_Inventor_case_base.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "mxshop",
+        'NAME': "APP_Inventor_case_base",
         'USER': 'root',
         'PASSWORD': "your_password",
         'HOST': "localhost",
