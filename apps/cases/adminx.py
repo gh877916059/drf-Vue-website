@@ -2,7 +2,7 @@
 __author__ = 'HymanLu'
 
 import xadmin
-from .models import Cases, CasesCategory, CasesImage, CasesCategoryBrand, Banner, HotSearchWords
+from .models import Cases, CasesCategory, CasesImage, Banner, HotSearchWords
 from .models import IndexAd
 
 class CasesAdmin(object):
@@ -54,7 +54,6 @@ class IndexAdAdmin(object):
 xadmin.site.register(Cases, CasesAdmin)
 xadmin.site.register(CasesCategory, CasesCategoryAdmin)
 xadmin.site.register(Banner, BannerCasesAdmin)
-xadmin.site.register(CasesCategoryBrand, CasesBrandAdmin)
 
 xadmin.site.register(HotSearchWords, HotSearchAdmin)
 xadmin.site.register(IndexAd, IndexAdAdmin)

@@ -18,9 +18,9 @@ class UserFavViewset(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retr
     list:
         获取用户收藏列表
     retrieve:
-        判断某个商品是否已经收藏
+        判断某个案例是否已经收藏
     create:
-        收藏商品
+        收藏案例
     """
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)

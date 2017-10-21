@@ -5,16 +5,10 @@ from rest_framework import serializers
 from django.db.models import Q
 
 from cases.models import Cases, CasesCategory, HotSearchWords, CasesImage, Banner
-from cases.models import CasesCategoryBrand, IndexAd
-
-class CategorySerializer3(serializers.ModelSerializer):
-    class Meta:
-        model = CasesCategory
-        fields = "__all__"
+from cases.models import IndexAd
 
 
 class CategorySerializer2(serializers.ModelSerializer):
-    sub_cat = CategorySerializer3(many=True)
     class Meta:
         model = CasesCategory
         fields = "__all__"
@@ -53,14 +47,7 @@ class BannerSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class BrandSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CasesCategoryBrand
-        fields = "__all__"
-
-
 class IndexCategorySerializer(serializers.ModelSerializer):
-    brands = BrandSerializer(many=True)
     cases = serializers.SerializerMethodField()
     sub_cat = CategorySerializer2(many=True)
     ad_cases = serializers.SerializerMethodField()

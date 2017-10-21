@@ -8,7 +8,7 @@ import os
 # realpath()对于软链接获取的是真实路径
 pwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(pwd+"../")
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MxShop.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "APP_Inventor_case_base.settings")
 
 import django
 django.setup()
@@ -27,7 +27,10 @@ for lev1_cat in row_data:
     for lev2_cat in lev1_cat["sub_categorys"]:
         lev2_intance = CasesCategory()
         lev2_intance.code = lev2_cat["code"]
-        lev2_intance.name = lev2_cat["name"]
+        try:
+            lev2_intance.name = lev2_cat["name"]
+        except KeyError as err:
+            print(lev2_cat)
         lev2_intance.category_type = 2
         lev2_intance.parent_category = lev1_intance
         lev2_intance.save()

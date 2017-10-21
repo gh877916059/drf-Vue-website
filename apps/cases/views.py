@@ -70,7 +70,7 @@ class HotSearchsViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 class BannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
-    获取轮播图列表
+    获取案例轮播图列表
     """
     queryset = Banner.objects.all().order_by("index")
     serializer_class = BannerSerializer

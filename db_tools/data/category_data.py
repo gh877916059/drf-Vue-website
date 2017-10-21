@@ -47,7 +47,7 @@ row_data = [
             {'code': 'dong_zuo_mao_xian', 'name': '动作冒险'},
             {'code': 'sai_che_jing_su', 'name': '赛车竞速'},
             {'code': 'mo_ni_jing_ying', 'name': '模拟经营'},
-            {'code': 'jue_se_ban_yan', 'zhu_ti_cha_jian': '角色扮演'},
+            {'code': 'jue_se_ban_yan', 'name': '角色扮演'},
             {'code': 'ti_yu_yun_dong', 'name': '体育运动'},
             {'code': 'qi_pai_zhuo_you', 'name': '棋牌桌游'},
             {'code': 'xu_ni_yang_cheng', 'name': '虚拟养成'},

@@ -7,10 +7,8 @@ from django.contrib.auth import get_user_model
 from datetime import datetime
 from datetime import timedelta
 from rest_framework.validators import UniqueValidator
-
 from .models import VerifyCode
-
-from MxShop.settings import REGEX_MOBILE
+from APP_Inventor_case_base.settings import REGEX_MOBILE
 
 User = get_user_model()
 
