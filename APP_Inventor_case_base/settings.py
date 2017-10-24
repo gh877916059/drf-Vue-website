@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 
 # 此密钥将会在REST-Framework-JWT中作为JWT_SECRET_KEY
-SECRET_KEY = 'y0vj*z2@3@53nht9t!hn4jac*$6oufv+w24r65*4vom1a^2cca'
+SECRET_KEY = 'njl9wf4g%+r(2z9kjx(efbp2zv37e%*eqc6c*srg=mz58itr9@'
 
 # 请在正式发布代码的时候，将此项设置为False
 DEBUG = True
@@ -85,8 +85,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "APP_Inventor_case_base",
         'USER': 'root',
-        'PASSWORD': "your_password",
-        'HOST': "localhost",
+        'PASSWORD': "87319106",
+        'HOST': "119.23.69.178",
         'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' }
     }
 }
@@ -161,7 +161,7 @@ APIKEY = ""
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://:87319106@119.23.69.178:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

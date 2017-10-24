@@ -3,3 +3,7 @@
 *__pycache__*
 *.pyc
 setting.txt
+Front-End-Vue-Project/dist
+Front-End-Vue-Project/node_modules
+Front-End-Vue-Project/bower_components
+*.swp
