@@ -6,6 +6,7 @@ var vueLoaderConfig = require('./vue-loader.conf')
 
 
 function resolve(dir) {
+    // __dirname变量获取当前模块文件所在目录的完整绝对路径
     return path.join(__dirname, '..', dir)
 }
 
@@ -24,8 +25,8 @@ module.exports = {
     filename：打包后输出文件的文件名
      */
     output: {
-        path: config.build.assetsRoot,
-        publicPath: config.build.assetsPublicPath,
+        path: config.build.assetsRoot,  // 值为/dist/
+        publicPath: config.build.assetsPublicPath,  // 值为/
         filename: '[name].js'
     },
     /*
@@ -43,19 +44,19 @@ module.exports = {
         }
     },
     /*
-    配置loader加载器处理文件：比如 sass less 等, 告知 webpack每一种文件都需要使用什么加载器来处理
-    ①ESLint是一个用来识别 ECMAScript 并且按照规则给出报告的代码检测工具
-    ②babel-loader用于将ES6代码转为ES5代码，从而在现有环境执行
-    ③css-loader用于向CSS加入了局部作用域和模块依赖
-    ④url-loader提供了一个limit参数，小于limit字节的文件会被转为DataURl（base64编码），大于limit字节就会使用file-loader（url-loader封装了file-loader，url路径被重新调整为相对入口html页面）
-    ⑤style-loader通过注入<style>标签将CSS添加到DOM中
+
+
+    配置loader加载器处理文件：比如 sass less 等, 告知webpack每一种文件都需要使用什么加载器来处理
+    ①eslint-loader是一个用来识别ECMAScript并且按照规则给出报告的代码检测工具
+    ②vue-loader可以将Vue组件转换为JavaScript、CSS模块
+    ③babel-loader用于将ES6代码转为ES5代码，从而在现有环境执行
+    ④sass-loader：加载SASS/SCSS文件并将它编译为CSS文件
+    ⑤css-loader可以实现在文件中通过require的方式，来引入css
+    ⑥style-loader通过注入<style>标签将CSS添加到DOM中
+    ⑦url-loader提供了一个limit参数，小于limit字节的文件会被转为DataURl（base64编码），大于limit字节就会使用file-loader（url-loader封装了file-loader，url路径被重新调整为相对入口html页面）
 
     配置plugin用来更改loader的默认行为
     ①ExtractTextPlugin会将所有的入口chunk中的require("style.css")移动到分开的css文件
-    这样，样式不再内联到 javascript 里面，但会放到一个单独的 css 包文件 (styles.css)当中
-    如果你的样式文件大小较大，这会更快，因为样式文件会跟 javascript 包并行加载
-    use：指示加载器 (Loader), 被用于将资源转换成一个输出的 CSS 模块（例如'sass-loader'和'css-loader' )
-    fallback：指示加载器 (例如'style-loader'), 应用于当 css 没有被提取(也就是一个额外的 chunk，当 allChunks: false)
      */
     module: {
         rules: [{

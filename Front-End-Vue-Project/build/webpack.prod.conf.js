@@ -9,9 +9,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var env = config.build.env
 
 var webpackConfig = merge(baseWebpackConfig, {
+    /*
+    webpack2更新变化，module.loaders => module.rules
+    This is not a breaking change because module.loaders will continue to be supported, but in the future it will be deprecated in favour of module.rules.
     module: {
         loaders: utils.styleLoaders({ sourceMap: config.build.productionSourceMap, extract: true })
     },
+    */
+
     /*
     为了使调试更容易，输出更多有帮助的信息
     ①source-map：在一个单独的文件中产生一个完整且功能完全的文件。这个文件具有最好的source map，但是它会减慢打包速度；
@@ -20,6 +25,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     ④cheap-module-eval-source-map：这是在打包文件时最快的生成source map的方法，生成的Source Map 会和打包后的JavaScript文件同行显示，没有列映射，和eval-source-map选项具有相似的缺点；
      */
     devtool: config.build.productionSourceMap ? '#source-map' : false,
+
     /*
     path：打包后的文件存放的地方
     publicPath：公共资源路径

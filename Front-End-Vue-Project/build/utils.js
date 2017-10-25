@@ -18,21 +18,28 @@ exports.cssLoaders = function(options) {
         }
     }
 
-    // generate loader string to be used with extract text plugin
     function generateLoaders(loader, loaderOptions) {
         var loaders = [cssLoader]
         if (loader) {
             loaders.push({
                 loader: loader + '-loader',
-                // Object.assign(target, ...sources)用于将所有可枚举属性的值从一个或多个源对象复制到目标对象
+                /*
+                 var o1 = { a: 1, b: 1, c: 1 };
+                 var o2 = { b: 2, c: 2 };
+                 var o3 = { c: 3 };
+                 var obj = Object.assign({}, o1, o2, o3);
+                 console.log(obj); // { a: 1, b: 2, c: 3 }
+                 */
                 options: Object.assign({}, loaderOptions, {
                     sourceMap: options.sourceMap
                 })
             })
         }
-
-        // Extract CSS when that option is specified
-        // (which is the case during production build)
+        /*
+         如果传入的options带有extract属性，则表示利用ExtractTextPlugin将所有的入口chunk (entry chunks)中的 require("style.css")移动到分开的css 文件
+         vue-style-loader修改自style-loader，因此与它十分相似，我们可以在css-loader等之后插入vue-style-loader，通过注入<style>标签将CSS添加到DOM中
+         use属性对应的loaders数组是从右往左进行加载的
+         */
         if (options.extract) {
             return ExtractTextPlugin.extract({
                 use: loaders,
@@ -43,7 +50,7 @@ exports.cssLoaders = function(options) {
         }
     }
 
-    // http://vuejs.github.io/vue-loader/en/configurations/extract-css.html
+    // 这些都是CSS预处理器
     return {
         css: generateLoaders(),
         postcss: generateLoaders('postcss'),
@@ -54,8 +61,9 @@ exports.cssLoaders = function(options) {
         styl: generateLoaders('stylus')
     }
 }
-
-// Generate loaders for standalone style files (outside of .vue)
+/*
+ var re = new RegExp("\\w+");    等价于    var re = /\w+/;    转义字符需要写两次
+ */
 exports.styleLoaders = function(options) {
     var output = []
     var loaders = exports.cssLoaders(options)
