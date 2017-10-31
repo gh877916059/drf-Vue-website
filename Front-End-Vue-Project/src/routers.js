@@ -1,3 +1,11 @@
+import IndexPage from './pages/index'
+import DetailPage from './pages/detail'
+import OrderListPage from './pages/orderList'
+import DetailAnaPage from './pages/detail/analysis'
+import DetailCouPage from './pages/detail/count'
+import DetailForPage from './pages/detail/forecast'
+import DetailPubPage from './pages/detail/publish'
+
 /*
   在webpack中，如果某个JS文件没有被打包，而是独立导出，则需要通过jsonp来异步加载
   原理类似于：
@@ -9,87 +17,39 @@
   而我们的require.ensure(dependencies: String[], callback: function(require), chunkName: String)就是负责完成这一任务
  */
 
-const routers = [{
+const routers = [
+  {
     path: '/',
-    name: 'home',
-    component(resolve) {
-        require.ensure(['./views/index.vue'], () => {
-            resolve(require('./views/index.vue'));
-        });
-    }
-}, {
-    path: '/cnodevue',
-    name: 'cnodevue',
-    component(resolve) {
-        require.ensure(['./views/index.vue'], () => {
-            resolve(require('./views/index.vue'));
-        });
-    }
-}, {
-    path: '/list',
-    name: 'list',
-    component(resolve) {
-        require.ensure(['./views/list.vue'], () => {
-            resolve(require('./views/list.vue'));
-        });
-    }
-}, {
-    path: '/topic/:id',
-    name: 'topic',
-    component(resolve) {
-        require.ensure(['./views/topic.vue'], () => {
-            resolve(require('./views/topic.vue'));
-        });
-    }
-}, {
-    path: '/add',
-    name: 'add',
-    component(resolve) {
-        require.ensure(['./views/new.vue'], () => {
-            resolve(require('./views/new.vue'));
-        });
-    },
-    meta: { requiresAuth: true }
-}, {
-    path: '/message',
-    name: 'message',
-    component(resolve) {
-        require.ensure(['./views/message.vue'], () => {
-            resolve(require('./views/message.vue'));
-        });
-    },
-    meta: { requiresAuth: true }
-}, {
-    path: '/user/:loginname',
-    name: 'user',
-    component(resolve) {
-        require.ensure(['./views/user.vue'], () => {
-            resolve(require('./views/user.vue'));
-        });
-    }
-}, {
-    path: '/about',
-    name: 'about',
-    component(resolve) {
-        require.ensure(['./views/about.vue'], () => {
-            resolve(require('./views/about.vue'));
-        });
-    }
-}, {
-    path: '/login',
-    name: 'login',
-    component(resolve) {
-        require.ensure(['./views/login.vue'], () => {
-            resolve(require('./views/login.vue'));
-        });
-    }
-}, {
-    path: '*',
-    component(resolve) {
-        require.ensure(['./views/index.vue'], () => {
-            resolve(require('./views/index.vue'));
-        });
-    }
-}];
+    component: IndexPage
+  },
+  {
+    path: '/orderList',
+    component: OrderListPage
+  },
+  {
+    path: '/detail',
+    component: DetailPage,
+    redirect: '/detail/analysis',
+    children: [
+      {
+        path: 'analysis',
+        component: DetailAnaPage
+      },
+      {
+        path: 'count',
+        component: DetailCouPage
+      },
+      {
+        path: 'forecast',
+        component: DetailForPage
+      },
+      {
+        path: 'publish',
+        component: DetailPubPage
+      }
+    ]
+  }
+]
+};
 
 export default routers;

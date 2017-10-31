@@ -88,7 +88,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': "your_password",
         'HOST': "localhost",
-        'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' }
+        'OPTIONS': { 'init_command': 'SET default_storage_engine=INNODB;' }
     }
 }
 

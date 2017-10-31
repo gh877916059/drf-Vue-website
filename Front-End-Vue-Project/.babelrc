@@ -1,13 +1,9 @@
 {
-    "presets": [
-      "env", "stage-2"
-    ],
-    "plugins": ["transform-runtime"],
-    "comments": false,
-    "env": {
-        "test": {
-            "presets": ["env", "stage-2"],
-            "plugins": ["istanbul"]
-        }
-    }
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }]
+  ]
 }

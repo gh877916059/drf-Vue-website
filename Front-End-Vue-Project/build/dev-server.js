@@ -1,6 +1,5 @@
-require('./check-versions')()
 var config = require('../config')
-if (!process.env.NODE_ENV) process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
+if (!process.env.NODE_ENV) process.env.NODE_ENV = config.dev.env
 var path = require('path')
 var express = require('express')
 var webpack = require('webpack')
@@ -22,11 +21,11 @@ webpack中的文件寄存在内存，不会生成文件
 publicPath其实是访问的目录根
  */
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    stats: {
-        colors: true,
-        chunks: false
-    }
+  publicPath: webpackConfig.output.publicPath,
+  stats: {
+    colors: true,
+    chunks: false
+  }
 })
 
 /*
@@ -36,19 +35,19 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
 var hotMiddleware = require('webpack-hot-middleware')(compiler)
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
-    compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-        hotMiddleware.publish({action: 'reload'})
-        cb()
-    })
+  compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
+    hotMiddleware.publish({ action: 'reload' })
+    cb()
+  })
 })
 
 // 设置HTTP代理，context用于匹配URL ,target用于指定代理域名
 Object.keys(proxyTable).forEach(function (context) {
-    var options = proxyTable[context]
-    if (typeof options === 'string') {
-        options = {target: options, changeOrigin: true}
-    }
-    app.use(proxyMiddleware(context, options))
+  var options = proxyTable[context]
+  if (typeof options === 'string') {
+    options = { target: options }
+  }
+  app.use(proxyMiddleware(context, options))
 })
 
 // 让你的单页面路由处理更自然（比如vue-router的mode设置为html5时）
@@ -58,18 +57,47 @@ app.use(devMiddleware)
 app.use(hotMiddleware)
 
 // 将静态资源文件所在的目录作为参数传递给express.static中间件就可以提供静态资源文件的访问了（staticPath的值为"/public")
-var staticPath = path.posix.join(config.build.assetsPublicPath, config.build.assetsSubDirectory)
-app.use(staticPath, express.static('./public'))
+var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
+app.use(staticPath, express.static('./static'))
+
+var apiServer = express()
+var bodyParser = require('body-parser')
+apiServer.use(bodyParser.urlencoded({ extended: true }))
+apiServer.use(bodyParser.json())
+var apiRouter = express.Router()
+var fs = require('fs')
+apiRouter.route('/:apiName')
+.all(function (req, res) {
+  fs.readFile('./db.json', 'utf8', function (err, data) {
+    if (err) throw err
+    var data = JSON.parse(data)
+    if (data[req.params.apiName]) {
+      res.json(data[req.params.apiName])
+    }
+    else {
+      res.send('no such api name')
+    }
+
+  })
+})
+
+
+apiServer.use('/api', apiRouter);
+apiServer.listen(port + 1, function (err) {
+  if (err) {
+    console.log(err)
+    return
+  }
+  console.log('Listening at http://localhost:' + (port + 1) + '\n')
+})
 
 module.exports = app.listen(port, function (err) {
-    if (err) {
-        console.log(err)
-        return
-    }
-    var uri = 'http://localhost:' + port
-    console.log('Listening at ' + uri + '\n')
-    if (process.env.NODE_ENV !== 'testing') {
-        // 用于安全、方便、跨平台地打开各种资源（比如网站、文件、可执行程序），这里用于自动打开浏览器
-        opn(uri)
-    }
+  if (err) {
+    console.log(err)
+    return
+  }
+  var uri = 'http://localhost:' + port
+  console.log('Listening at ' + uri + '\n')
+  // 用于安全、方便、跨平台地打开各种资源（比如网站、文件、可执行程序），这里用于自动打开浏览器
+  opn(uri)
 })

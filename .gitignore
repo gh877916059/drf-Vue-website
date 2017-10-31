@@ -6,4 +6,5 @@ setting.txt
 Front-End-Vue-Project/dist
 Front-End-Vue-Project/node_modules
 Front-End-Vue-Project/bower_components
+Vue-Project-Example/*
 *.swp
