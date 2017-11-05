@@ -18,6 +18,15 @@
         <span class="g-form-error">{{ passwordErrorText }}</span>
       </div>
       <div class="g-form-line">
+        <span class="g-form-label">验证码：</span>
+        <div class="g-form-input">
+          <input type="text"
+                 v-model="AuthenticodeModel" placeholder="请输入验证码">
+        </div>
+        <span class="g-form-error">{{ AuthenticodeErrorText }}</span>
+      </div>
+      <img width="100" height="30" v-bind:src="imageSrc" />
+      <div class="g-form-line">
         <span class="g-form-error">{{ ResponseErrorText }}</span>
       </div>
       <div class="g-form-line">
@@ -37,12 +46,31 @@
     },
     data() {
       return {
+        imageSrc: 'data:image/png;base64,',
+        authentiCode: '',
         usernameModel: '',
         passwordModel: '',
+        AuthenticodeModel:'',
         usernameErrorText: '',
         passwordErrorText: '',
+        AuthenticodeErrorText: '',
         ResponseErrorText: ''
       }
+    },
+    mounted: function () {
+      this.$nextTick(function () {
+        this.$http.get(this.$root.$data.request_host + '/picturecodes/')
+          .then((res) => {
+            console.log("----res.data----");
+            console.dir(res.data);
+            this.authentiCode = res.data.code;
+            this.imageSrc = 'data:image/png;base64,'+ res.data.data_url;
+          }, (err) => {
+            console.log("----err----");
+            console.log(err);
+            this.ResponseErrorText = '网络请求错误';
+          });
+      })
     },
     methods: {
       onRegister() {

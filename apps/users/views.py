@@ -16,10 +16,9 @@ from random import choice
 from rest_framework import permissions
 from rest_framework import authentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
-
-from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer, PictureSerializer
+from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
 from APP_Inventor_case_base.settings import APIKEY
 from utils.yunpian import YunPian
 from .models import SmsVerifyCode
@@ -81,9 +80,6 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
             return Response({
                 "mobile":mobile
             }, status=status.HTTP_201_CREATED)
-
-class PictureCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
-    pass
 
 class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """

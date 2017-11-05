@@ -207,7 +207,7 @@ body {
 
 }
 .g-form-line {
-  padding: 15px 0;
+  padding: 10px 0;
 }
 .g-form-label {
   width: 100px;

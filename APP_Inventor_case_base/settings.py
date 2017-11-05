@@ -52,6 +52,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 '''
 非Django原生setting项，仅用于corsheaders.middleware.CorsMiddleware
 '''
