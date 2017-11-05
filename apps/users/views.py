@@ -19,10 +19,10 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
-from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
+from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer, PictureSerializer
 from APP_Inventor_case_base.settings import APIKEY
 from utils.yunpian import YunPian
-from .models import VerifyCode
+from .models import SmsVerifyCode
 
 '''
 在setting.py文件中指定AUTHENTICATION_BACKENDS为CustomBackend，即可生效
@@ -76,12 +76,14 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
                 "mobile":sms_status["msg"]
             }, status=status.HTTP_400_BAD_REQUEST)
         else:
-            code_record = VerifyCode(code=code, mobile=mobile)
+            code_record = SmsVerifyCode(code=code, mobile=mobile)
             code_record.save()
             return Response({
                 "mobile":mobile
             }, status=status.HTTP_201_CREATED)
 
+class PictureCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
+    pass
 
 class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """

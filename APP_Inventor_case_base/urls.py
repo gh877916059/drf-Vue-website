@@ -11,14 +11,15 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 from cases.views import CasesListViewSet, CategoryViewset, HotSearchsViewset, BannerViewset
 from cases.views import IndexCategoryViewset
-from users.views import SmsCodeViewset, UserViewset
+from users.views import SmsCodeViewset, UserViewset, PictureCodeViewset
 from user_operation.views import UserFavViewset, LeavingMessageViewset
 from django.views.generic import TemplateView
 
 router = DefaultRouter()    # 利用了ViewSet的重载as_view()方法进行请求方法和处理函数的动态绑定（简单好用，只需要逐一register，然后urls函数即可）
 router.register(r'cases', CasesListViewSet, base_name="cases")      # 案例列表的相关操作
 router.register(r'categorys', CategoryViewset, base_name="categorys")       # 案例类别的相关操作
-router.register(r'codes', SmsCodeViewset, base_name="codes")    # 短信验证码的相关操作
+router.register(r'smscodes', SmsCodeViewset, base_name="smscodes")    # 短信验证码的相关操作
+#router.register(r'picturecodes', PictureCodeViewset, base_name="picturecodes")    # 图片验证码的相关操作
 router.register(r'hotsearchs', HotSearchsViewset, base_name="hotsearchs")       # 热搜案例的相关操作
 router.register(r'users', UserViewset, base_name="users")       # 用户的相关操作
 router.register(r'userfavs', UserFavViewset, base_name="userfavs")      # 用户收藏的相关操作

@@ -3,7 +3,7 @@ __author__ = 'HymanLu'
 
 import xadmin
 from xadmin import views
-from .models import VerifyCode
+from .models import SmsVerifyCode, PictureVerifyCode
 
 
 class BaseSetting(object):
@@ -21,6 +21,6 @@ class VerifyCodeAdmin(object):
     list_display = ['code', 'mobile', "add_time"]
 
 
-xadmin.site.register(VerifyCode, VerifyCodeAdmin)
+xadmin.site.register(SmsVerifyCode, VerifyCodeAdmin)
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 xadmin.site.register(views.CommAdminView, GlobalSettings)

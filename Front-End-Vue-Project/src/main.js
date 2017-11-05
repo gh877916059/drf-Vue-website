@@ -1,9 +1,12 @@
-import Vue from 'vue'
-import Layout from './components/layout'
+import Vue from 'vue';
+import Layout from './components/layout';
 import routes from './routers';
-import VueRouter from 'vue-router'
-import VueResource from 'vue-resource'
+import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
+import store from './vuex/user';
+import Utils from './utils'
 Vue.use(VueRouter)
+// 此后只需要使用this.$http.get或者this.$http.post就可以发起ajax请求
 Vue.use(VueResource)
 /*
  实例化VueRouter，下面详细剖析mode属性的含义
@@ -20,7 +23,10 @@ let router = new VueRouter({
 new Vue({
   el: '#app',
   router,
+  store, // 此后需要用到修改到用户信息时就只需调用this.$store.dispatch('setUserInfo', user);而需要获取用户信息时因为已经绑定好了commputed属性，因此直接获取即可
   // 字符串模板，将会 替换 挂载的元素。挂载元素的内容都将被忽略，除非模板的内容有分发插槽
   template: '<Layout/>',
-  components: { Layout }  // ES6语法糖，相当于Layout:Layout
-})
+  components: { Layout },  // ES6语法糖，相当于Layout:Layout
+  data: { request_host: 'http://127.0.0.1:8000' },
+  methods: Utils
+});

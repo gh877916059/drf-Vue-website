@@ -2,6 +2,7 @@
 *.idea*
 *__pycache__*
 *.pyc
+*node_modules*
 setting.txt
 Front-End-Vue-Project/dist
 Front-End-Vue-Project/node_modules

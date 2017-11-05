@@ -5,6 +5,7 @@
   "author": "HymanLu <877916059@qq.com>",
   "private": true,
   "scripts": {
+    "test": "babel-node --use_strict src/just-for-test.js",
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src"
@@ -21,10 +22,12 @@
     "lodash": "^4.16.4",
     "vue": "^2.0.1",
     "vue-resource": "^1.0.3",
-    "vue-router": "^2.0.1"
+    "vue-router": "^2.0.1",
+    "vuex": "^3.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-plugin-transform-runtime": "^6.0.0",

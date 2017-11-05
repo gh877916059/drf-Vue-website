@@ -2,9 +2,11 @@
   <div>
     <div class="dialog-wrap">
       <div class="dialog-cover"  v-if="isShow" @click="closeMyself"></div>
+      <!-- CSS过渡动画，一般会有6个class的切换：v-enter、v-enter-active、v-enter-to、v-leave、v-leave-active、v-leave-to -->
       <transition name="drop">
         <div class="dialog-content"  v-if="isShow">
           <p class="dialog-close" @click="closeMyself">x</p>
+          <!-- 因为没有name属性（具名插槽只接受slot属性值相对于的标签/组件），因此该标签为默认插槽，作为找不到匹配的内容片段的备用插槽 -->
           <slot>empty</slot>
         </div>
       </transition>
@@ -22,7 +24,7 @@ export default {
   },
   data () {
     return {
-      
+
     }
   },
   methods: {

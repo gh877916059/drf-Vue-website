@@ -9,6 +9,7 @@
           <ul class="nav-list">
             <li> {{ username }}</li>
             <li v-if="username!== ''" class="nav-pile">|</li>
+            <!-- 这里的@是指令v-on:的缩写 -->:
             <li v-if="username!== ''" @click="quit">退出</li>
             <li v-if="username=== ''" @click="logClick">登录</li>
             <li class="nav-pile">|</li>
@@ -16,7 +17,7 @@
             <li v-if="username=== ''" class="nav-pile">|</li>
             <li @click="aboutClick">关于</li>
           </ul>
-        </div>  
+        </div>
       </div>
     </div>
     <div class="container">
@@ -27,11 +28,14 @@
     <div class="app-foot">
       <p>© 2016 fishenal MIT</p>
     </div>
+    <!-- :是v-bind:的缩写实现单向绑定，这里的is-show实际上是子组件的props属性——isShow，通过它来实现父子组件的通信（这里是典型的动态Prop） -->
+    <!-- 除非子组件模板包含至少一个 <slot> 插口，否则父组件的内容将会被丢弃（而我们的MyDialog正好有<slot>插口） -->
     <my-dialog :is-show="isShowAboutDialog" @on-close="closeDialog('isShowAboutDialog')">
-      <p>本报告在调研数据的基础上，采用定性与定量相结合的方式深入分析了专车市场发展的驱动因素与阻碍因素、专车市场背后的产业格局、专车企业的竞争格局、用户对专车市场的依赖程度、专车对其他交通工具运力的补充效应等，通过这五个章节的研究反映专车市场的发展态势和面临的问题。报告力求客观、深入、准确地反映中国专车市场发展情况，为政府、企事业单位和社会各界提供决策依据。 </p>
+      <p>APP Inventor案例库网站</p>
     </my-dialog>
-    
+
     <my-dialog :is-show="isShowLogDialog" @on-close="closeDialog('isShowLogDialog')">
+      <!-- 响应this.$emit('has-log', res.data)事件 -->
       <log-form @has-log="onSuccessLog"></log-form>
     </my-dialog>
 
@@ -82,7 +86,7 @@ export default {
 </script>
 
 <style>
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -96,8 +100,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
   margin: 0;
@@ -108,7 +112,7 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block;
 }

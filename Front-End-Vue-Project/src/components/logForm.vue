@@ -4,18 +4,21 @@
       <div class="g-form-line">
         <span class="g-form-label">用户名：</span>
         <div class="g-form-input">
-          <input type="text" 
-          v-model="usernameModel" placeholder="请输入用户名">
+          <input type="text"
+                 v-model="usernameModel" placeholder="请输入用户名">
         </div>
-        <span class="g-form-error">{{ userErrors.errorText }}</span>
+        <span class="g-form-error">{{ usernameErrorText }}</span>
       </div>
       <div class="g-form-line">
         <span class="g-form-label">密码：</span>
         <div class="g-form-input">
-          <input type="password" 
-          v-model="passwordModel" placeholder="请输入密码">
+          <input type="password"
+                 v-model="passwordModel" placeholder="请输入密码">
         </div>
-        <span class="g-form-error">{{ passwordErrors.errorText }}</span>
+        <span class="g-form-error">{{ passwordErrorText }}</span>
+      </div>
+      <div class="g-form-line">
+        <span class="g-form-error">{{ ResponseErrorText }}</span>
       </div>
       <div class="g-form-line">
         <div class="g-form-btn">
@@ -28,71 +31,54 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      usernameModel: '',
-      passwordModel: '',
-      errorText: ''
-    }
-  },
-  computed: {
-    userErrors () {
-      let errorText, status
-      if (!/@/g.test(this.usernameModel)) {
-        status = false
-        errorText = '不包含@'
-      }
-      else {
-        status = true
-        errorText = ''
-      }
-      if (!this.userFlag) {
-        errorText = ''
-        this.userFlag = true
-      }
+  export default {
+    data() {
       return {
-        status,
-        errorText
+        usernameModel: '',
+        passwordModel: '',
+        usernameErrorText: '',
+        passwordErrorText: '',
+        ResponseErrorText: ''
       }
     },
-    passwordErrors () {
-      let errorText, status
-      if (!/^\w{1,6}$/g.test(this.passwordModel)) {
-        status = false
-        errorText = '密码不是1-6位'
-      }
-      else {
-        status = true
-        errorText = ''
-      }
-      if (!this.passwordFlag) {
-        errorText = ''
-        this.passwordFlag = true
-      }
-      return {
-        status,
-        errorText
-      }
-    }
-  },
-  methods: {
-    onLogin () {
-      if (!this.userErrors.status || !this.passwordErrors.status) {
-        this.errorText = '部分选项未通过'
-      }
-      else {
-        this.errorText = ''
-        this.$http.get('api/login')
-        .then((res) => {
-          this.$emit('has-log', res.data)
-        }, (error) => {
-          console.log(error)
-        })
+    methods: {
+      onLogin() {
+        let [status, errorText] = this.$root.checkUsername(this.usernameModel);
+        if (!status) {
+          this.usernameErrorText = errorText;
+          return;
+        }
+        else
+        {
+          this.usernameErrorText = "";
+        }
+        [status, errorText] = this.$root.checkPassword(this.passwordModel);
+        if (!status) {
+          this.passwordErrorText = errorText;
+          return;
+        }
+        else
+        {
+          this.passwordErrorText = "";
+        }
+        let reqParams = {
+          username: this.usernameModel,
+          password: this.passwordModel,
+        };
+        this.$http.post(this.$root.$data.request_host + '/login/', reqParams)
+          .then((res) => {
+            console.log("----res.data----");
+            console.dir(res.data);
+            this.$emit('has-log', res.data)
+          }, (err) => {
+            console.log("----err----");
+            console.log("????");
+            console.log(err);
+            this.ResponseErrorText = '网络请求错误';
+          })
       }
     }
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
