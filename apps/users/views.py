@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'HymanLu'
 
-from django.shortcuts import render
-
 # Create your views here.
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
@@ -14,7 +12,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from random import choice
 from rest_framework import permissions
-from rest_framework import authentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
@@ -22,6 +19,10 @@ from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
 from APP_Inventor_case_base.settings import APIKEY
 from utils.yunpian import YunPian
 from .models import SmsVerifyCode
+from rest_framework.views import APIView
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
+import json
 
 '''
 在setting.py文件中指定AUTHENTICATION_BACKENDS为CustomBackend，即可生效
@@ -39,6 +40,17 @@ class CustomBackend(ModelBackend):
         except Exception as e:
             return None
 
+class PictureCodeView(APIView):
+    """
+    图片验证码
+    """
+    throttle_classes = (UserRateThrottle, AnonRateThrottle)
+
+    def get(self, request, format=None):
+        response_data = dict()
+        response_data['cptch_key'] = CaptchaStore.generate_key()
+        response_data['cptch_image'] = captcha_image_url(response_data['cptch_key'])
+        return Response(response_data, status=status.HTTP_200_OK, content_type='application/json')
 
 class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -59,6 +71,7 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
         return "".join(random_str)
 
     def create(self, request, *args, **kwargs):
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -87,7 +100,7 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
     """
     serializer_class = UserRegSerializer    # 序列化类
     queryset = User.objects.all()       # 这里只是定义了SQL语句的写法，并不会真的进行查询，只有当遍历对应数据时才会进行真正的查询
-    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication )    # 访问该视图需要验证身份信息，将使用这些类
+    authentication_classes = (JSONWebTokenAuthentication, )    # 访问该视图需要验证身份信息，将使用这些类
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -107,6 +120,12 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 
         return []
 
+    def retrieve(self, request, *args, **kwargs):
+        print("---request.data---")
+        print(request.data)
+        print("----request.user---")
+        print(request.user)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -116,7 +135,7 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 
         # JWT模块的加密算法得到token，降低服务器的存储压力，并提高安全性
         payload = jwt_payload_handler(user)
-        re_dict["token"] = jwt_encode_handler(payload)
+        re_dict["jwt_token"] = jwt_encode_handler(payload)
 
         re_dict["name"] = user.name if user.name else user.username
 

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'xadmin',
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'captcha'
 ]
 
 # 作用于全局的中间件，一个Request进来会从上到下调用各个中间件的process_request()方法，再传给具体的View，得到的Response从下到上调用各个中间件的process_response()方法
@@ -52,12 +53,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+# 会话的存储机制使用数据库模式
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 '''
 非Django原生setting项，仅用于corsheaders.middleware.CorsMiddleware
 '''
 CORS_ORIGIN_ALLOW_ALL = True
+
+# 在会话Cookie上使用HTTPOnly标志。如果设置为True，客户端JavaScript将无法访问会话Cookie
+SESSION_COOKIE_HTTPONLY = True
 
 # URL映射规则配置文件（也可以通过修改HttpRequest对象的urlconf属性）
 ROOT_URLCONF = 'APP_Inventor_case_base.urls'
@@ -127,8 +132,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 '''
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',        # 默认的通过账号和密码进行验证的方式(login和logout方法）
-        'rest_framework.authentication.SessionAuthentication',          # drf自带的token认证模式（一般称为Session模式）
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',      # JSON Web Token Authentication
     ),
     # 设置限速策略，防止爬虫拖垮网站（仅作用于设置了throttle_classes的ViewSet）
     'DEFAULT_THROTTLE_CLASSES': (
@@ -136,8 +140,8 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '4/minute',     # 对于未登录用户，每分钟最多访问4次
-        'user': '6/minute'      # 对于已登录用户，每分钟最多访问6次
+        'anon': '6/minute',     # 对于未登录用户，每分钟最多访问4次
+        'user': '8/minute'      # 对于已登录用户，每分钟最多访问6次
     }
 }
 

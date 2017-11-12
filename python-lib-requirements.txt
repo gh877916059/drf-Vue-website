@@ -20,3 +20,4 @@ drf-extensions
 django-redis
 pycryptodome
 raven
+django-simple-captcha

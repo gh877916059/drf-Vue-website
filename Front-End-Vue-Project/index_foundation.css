@@ -1,0 +1,102 @@
+
+.menu-fancy li {
+    position: relative;
+    margin: 0 5px;
+}
+
+.menu-fancy li a {
+    padding: 0.5rem 0;
+    color: #8a8a8a;
+}
+
+.menu-fancy li:after,
+.menu-fancy li:before,
+.menu-fancy a:before,
+.menu-fancy a:after {
+    position: absolute;
+    content: '';
+    border-radius: 4px;
+}
+
+.menu-fancy li:after,
+.menu-fancy li:before {
+    bottom: -4px;
+    height: 4px;
+}
+
+.menu-fancy li:not(.is-selected):before {
+    left: 0;
+    right: -2px;
+}
+
+.menu-fancy li.is-selected:after {
+    left: 0;
+    right: 39px;
+}
+
+.menu-fancy li.is-selected:before {
+    right: -2px;
+    width: 13px;
+}
+
+.menu-fancy .is-selected a:before {
+    height: 22px;
+    width: 4px;
+    bottom: -22px;
+    right: 7px;
+}
+
+.menu-fancy .is-selected a:after {
+    height: 4px;
+    width: 40px;
+    bottom: -13px;
+    right: 5px;
+    -webkit-transform: rotate(30deg);
+    -ms-transform: rotate(30deg);
+    transform: rotate(30deg);
+}
+
+.menu-fancy .menu-fancy-option1 a:hover {
+    color: #3adb76;
+}
+
+.menu-fancy .menu-fancy-option1:after,
+.menu-fancy .menu-fancy-option1:before,
+.menu-fancy .menu-fancy-option1 a:after,
+.menu-fancy .menu-fancy-option1 a:before {
+    background-color: #3adb76;
+}
+
+.menu-fancy .menu-fancy-option2 a:hover {
+    color: #cc4b37;
+}
+
+.menu-fancy .menu-fancy-option2:after,
+.menu-fancy .menu-fancy-option2:before,
+.menu-fancy .menu-fancy-option2 a:after,
+.menu-fancy .menu-fancy-option2 a:before {
+    background-color: #cc4b37;
+}
+
+.menu-fancy .menu-fancy-option3 a:hover {
+    color: #1779ba;
+}
+
+.menu-fancy .menu-fancy-option3:after,
+.menu-fancy .menu-fancy-option3:before,
+.menu-fancy .menu-fancy-option3 a:after,
+.menu-fancy .menu-fancy-option3 a:before {
+    background-color: #1779ba;
+}
+
+.menu-fancy .menu-fancy-option4 a:hover {
+    color: #ffae00;
+}
+
+.menu-fancy .menu-fancy-option4:after,
+.menu-fancy .menu-fancy-option4:before,
+.menu-fancy .menu-fancy-option4 a:after,
+.menu-fancy .menu-fancy-option4 a:before {
+    background-color: #ffae00;
+}
+
