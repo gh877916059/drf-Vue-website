@@ -18,21 +18,22 @@ const routers = [{
         });
     }
 }, {
-    path: '/register',
-    name: 'register',
+    path: '/index',
+    name: 'index',
     component(resolve) {
-        require.ensure(['./views/register.vue'], () => {
-            resolve(require('./views/register.vue'));
+        require.ensure(['./views/index.vue'], () => {
+            resolve(require('./views/index.vue'));
         });
     }
 }, {
-    path: '/login',
-    name: 'login',
+    path: '/editCase',
+    name: 'editCase',
     component(resolve) {
-        require.ensure(['./views/login.vue'], () => {
-            resolve(require('./views/login.vue'));
+        require.ensure(['./views/editCase.vue'], () => {
+            resolve(require('./views/editCase.vue'));
         });
-    }
+    },
+    meta: { requiresAuth: true }
 }, {
     path: '*',
     component(resolve) {

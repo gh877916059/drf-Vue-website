@@ -1,23 +1,20 @@
 # -*- coding: utf-8 -*-
 __author__ = 'HymanLu'
 
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import mixins
-from rest_framework import generics
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.throttling import UserRateThrottle
-
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
-
 from .models import Cases, CasesCategory, HotSearchWords, Banner
 from .filters import CasesFilter
 from .serializers import CasesSerializer, CategorySerializer, HotWordsSerializer, BannerSerializer
-from .serializers import IndexCategorySerializer
+from rest_framework import status
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
 
@@ -28,7 +25,7 @@ class CasesPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class CasesListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CasesListViewSet(CacheResponseMixin, mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     案例列表页, 分页， 搜索， 过滤， 排序
     """
@@ -36,7 +33,8 @@ class CasesListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.Retriev
     queryset = Cases.objects.all()
     serializer_class = CasesSerializer
     pagination_class = CasesPagination
-    # authentication_classes = (TokenAuthentication, )
+    authentication_classes = (JSONWebTokenAuthentication, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = CasesFilter
     search_fields = ('name', 'cases_brief', 'cases_desc')
@@ -48,6 +46,14 @@ class CasesListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.Retriev
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.perform_create(serializer)      # 注册成功，将SQL记录插入语句提交到数据库执行
+        re_dict = serializer.data
+        headers = self.get_success_headers(serializer.data)
+        return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 
 class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
@@ -74,12 +80,3 @@ class BannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     queryset = Banner.objects.all().order_by("index")
     serializer_class = BannerSerializer
-
-
-class IndexCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
-    """
-    首页案例分类数据
-    """
-    queryset = CasesCategory.objects.filter(is_tab=True, name__in=["生鲜食品", "酒水饮料"])
-    serializer_class = IndexCategorySerializer
-

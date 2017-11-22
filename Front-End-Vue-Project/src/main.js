@@ -6,13 +6,10 @@ import routes from './routers';
 import Alert from './libs/alert';
 import store from './vuex/user';
 import FastClick from 'fastclick';
-import $ from 'jquery';
 import Utils from './utils';
 Vue.use(VueRouter);
 Vue.use(Alert);
 Vue.use(VueResource);
-
-$.ajaxSettings.crossDomain = true;
 
 /*
   Object.keys() 方法会返回一个由一个给定对象的自身可枚举属性组成的数组
@@ -38,8 +35,8 @@ const router = new VueRouter({
 FastClick.attach(document.body);
 
 // 处理刷新的时候vuex被清空但是用户已经登录的情况
-if (window.sessionStorage.user) {
-    store.dispatch('setUserInfo', JSON.parse(window.sessionStorage.user));
+if (window.sessionStorage.userName) {
+    store.commit('setUserName', window.sessionStorage.userName);
 }
 
 /*
@@ -55,13 +52,15 @@ if (window.sessionStorage.user) {
  next()进行管道中的下一个钩子；next(false)返回到from参数对应的URL；next(其他URL)表示重定向
  */
 router.beforeEach((to, from, next) => {
+    console.log('---store.state---');
+    console.log(store.state);
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (store.state.userInfo.userId) {
+        if (store.state.userName.length > 0) {
             next();
         } else {
             next({
-                path: '/login',
-                query: { redirect: to.fullPath }
+                path: '/index',
+                query: { redirect: to.fullPath, needToLogin: 'true' }
             });
         }
     } else {
@@ -85,11 +84,5 @@ new Vue({
         return {
             requestHost: requestHost
         };
-    },
-    mounted: function () {
-        this.$nextTick(function () {
-            // 使得Foundation框架生效所必须的操作
-            $(document).foundation();
-        });
     }
 }).$mount('#app');

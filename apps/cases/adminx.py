@@ -3,15 +3,13 @@ __author__ = 'HymanLu'
 
 import xadmin
 from .models import Cases, CasesCategory, CasesImage, Banner, HotSearchWords
-from .models import IndexAd
 
 class CasesAdmin(object):
-    list_display = ["name", "click_num", "sold_num", "fav_num", "cases_num", "market_price",
-                    "shop_price", "cases_brief", "cases_desc", "is_new", "is_hot", "add_time"]
+    list_display = ["name", "click_num", "fav_num",
+                    "cases_brief", "cases_desc", "add_time"]
     search_fields = ['name', ]
-    list_editable = ["is_hot", ]
-    list_filter = ["name", "click_num", "sold_num", "fav_num", "cases_num", "market_price",
-                   "shop_price", "is_new", "is_hot", "add_time", "category__name"]
+    list_filter = ["name", "click_num", "fav_num",
+                   "add_time", "category__name"]
     style_fields = {"cases_desc": "ueditor"}
 
     class CasesImagesInline(object):
@@ -47,14 +45,7 @@ class HotSearchAdmin(object):
     list_display = ["keywords", "index", "add_time"]
 
 
-class IndexAdAdmin(object):
-    list_display = ["category", "cases"]
-
-
 xadmin.site.register(Cases, CasesAdmin)
 xadmin.site.register(CasesCategory, CasesCategoryAdmin)
 xadmin.site.register(Banner, BannerCasesAdmin)
-
 xadmin.site.register(HotSearchWords, HotSearchAdmin)
-xadmin.site.register(IndexAd, IndexAdAdmin)
-

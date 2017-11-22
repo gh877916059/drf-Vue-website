@@ -1,19 +1,49 @@
 <template>
-    <ai-head page-type="登录">
-    </ai-head>
+    <div>
+        <div class="row">
+            <div class="col-sm-12">
+                <top-bar activeIndex='0'>
+                </top-bar>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <index-carousel>
+                </index-carousel>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <left-accordion-menu>
+                </left-accordion-menu>
+            </div>
+            <div class="col-sm-9">
+                <div class="row">
+                    <div v-for="caseObj in caseList" class="col-sm-4">
+                        <case-media-object thumbnailSrc=caseObj.thumbnailSrc title=caseObj.tile content=caseObj.content>
+                        </case-media-object>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
-    import aiHead from '../components/header.vue';
-    import $ from 'jquery';
+    import topBar from '../components/topBar.vue';
+    import leftAccordionMenu from '../components/leftAccordionMenu.vue';
+    import caseMediaObject from '../components/caseMediaObject.vue';
+    import indexCarousel from '../components/indexCarousel.vue';
     export default {
         components: {
-            aiHead
+            topBar,
+            leftAccordionMenu,
+            caseMediaObject,
+            indexCarousel
         },
-        mounted: function () {
-            this.$nextTick(function () {
-                // 使得Foundation框架生效所必须的操作
-                $(document).foundation();
-            });
+        data() {
+            return {
+                caseList: []
+            };
         }
     };
 </script>

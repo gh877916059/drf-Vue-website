@@ -22,7 +22,6 @@ from .models import SmsVerifyCode
 from rest_framework.views import APIView
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
-import json
 
 '''
 在setting.py文件中指定AUTHENTICATION_BACKENDS为CustomBackend，即可生效
@@ -136,8 +135,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
         # JWT模块的加密算法得到token，降低服务器的存储压力，并提高安全性
         payload = jwt_payload_handler(user)
         re_dict["jwt_token"] = jwt_encode_handler(payload)
-
-        re_dict["name"] = user.name if user.name else user.username
 
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)

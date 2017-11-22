@@ -34,21 +34,14 @@ class Cases(models.Model):
     案例
     """
     category = models.ForeignKey(CasesCategory, verbose_name="案例类目")
-    cases_sn = models.CharField(max_length=50, default="", verbose_name="案例唯一货号")
     name = models.CharField(max_length=100, verbose_name="案例名")
     click_num = models.IntegerField(default=0, verbose_name="点击数")
-    sold_num = models.IntegerField(default=0, verbose_name="案例销售量")
     fav_num = models.IntegerField(default=0, verbose_name="收藏数")
-    cases_num = models.IntegerField(default=0, verbose_name="库存数")
-    market_price = models.FloatField(default=0, verbose_name="市场价格")
-    shop_price = models.FloatField(default=0, verbose_name="本店价格")
     cases_brief = models.TextField(max_length=500, verbose_name="案例简短描述")
-    cases_desc = UEditorField(verbose_name=u"内容", imagePath="cases/images/", width=1000, height=300,
-                              filePath="cases/files/", default='')
-    ship_free = models.BooleanField(default=True, verbose_name="是否承担运费")
-    cases_front_image = models.ImageField(upload_to="cases/images/", null=True, blank=True, verbose_name="封面图")
-    is_new = models.BooleanField(default=False, verbose_name="是否新品")
-    is_hot = models.BooleanField(default=False, verbose_name="是否热销")
+    #cases_desc = UEditorField(verbose_name=u"内容", imagePath="cases/images/", width=1000, height=300, filePath="cases/files/", default='')
+    cases_desc = models.TextField(max_length=10000, verbose_name="案例正文内容")
+    #cases_front_image = models.ImageField(upload_to="cases/images/", null=True, blank=True, verbose_name="封面图")
+    cases_front_image = models.CharField(max_length=200, verbose_name="封面图URL", blank=True)
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
@@ -57,19 +50,6 @@ class Cases(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class IndexAd(models.Model):
-    category = models.ForeignKey(CasesCategory, related_name='category',verbose_name="案例类目")
-    cases =models.ForeignKey(Cases, related_name='cases')
-
-    class Meta:
-        verbose_name = '首页案例类别广告'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.cases.name
-
 
 class CasesImage(models.Model):
     """

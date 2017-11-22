@@ -10,10 +10,10 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 from cases.views import CasesListViewSet, CategoryViewset, HotSearchsViewset, BannerViewset
-from cases.views import IndexCategoryViewset
 from users.views import SmsCodeViewset, UserViewset, PictureCodeView
-from user_operation.views import UserFavViewset, LeavingMessageViewset
+from user_operation.views import UserFavViewset
 from django.views.generic import TemplateView
+from utils.file_views import UploadFileView
 
 router = DefaultRouter()    # 利用了ViewSet的重载as_view()方法进行请求方法和处理函数的动态绑定（简单好用，只需要逐一register，然后urls函数即可）
 router.register(r'cases', CasesListViewSet, base_name="cases")      # 案例列表的相关操作
@@ -22,11 +22,10 @@ router.register(r'smscodes', SmsCodeViewset, base_name="smscodes")    # 短信�
 router.register(r'hotsearchs', HotSearchsViewset, base_name="hotsearchs")       # 热搜案例的相关操作
 router.register(r'users', UserViewset, base_name="users")       # 用户的相关操作
 router.register(r'userfavs', UserFavViewset, base_name="userfavs")      # 用户收藏的相关操作
-router.register(r'messages', LeavingMessageViewset, base_name="messages")       # 用户留言的相关操作
 router.register(r'banners', BannerViewset, base_name="banners")     # 轮播图的相关操作
-router.register(r'indexcases', IndexCategoryViewset, base_name="indexcases")    # 首页案例的相关操作
 
 urlpatterns = [
+    url(r'^uploadfile/(.+)/$', UploadFileView.as_view()),    # 上传文件接口
     url(r'^picturecodes/', PictureCodeView.as_view(), name='picturecodes'),       # 获取验证码图片
     url(r'^', include(router.urls)),        # 将调用刚才注册到router的各个ViewSet的as_view()方法，得到最终的URL映射配置
     url(r'^xadmin/', xadmin.site.urls),     # 注册xadmin后台管理平台的URL处理函数

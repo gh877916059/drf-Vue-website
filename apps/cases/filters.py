@@ -11,8 +11,6 @@ class CasesFilter(django_filters.rest_framework.FilterSet):
     """
     案例的过滤类
     """
-    pricemin = django_filters.NumberFilter(name='shop_price', help_text="最低价格",lookup_expr='gte')
-    pricemax = django_filters.NumberFilter(name='shop_price', lookup_expr='lte')
     top_category = django_filters.NumberFilter(method='top_category_filter')
 
 
@@ -22,4 +20,4 @@ class CasesFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = Cases
-        fields = ['pricemin', 'pricemax', 'is_hot', 'is_new']
+        fields = []

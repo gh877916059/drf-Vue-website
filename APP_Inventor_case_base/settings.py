@@ -9,6 +9,9 @@ sys.path.insert(0, BASE_DIR)
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 
+# 此程序的请求URL
+REQUEST_HOST = 'http://127.0.0.1:8000'
+
 # 此密钥将会在REST-Framework-JWT中作为JWT_SECRET_KEY
 SECRET_KEY = 'y0vj*z2@3@53nht9t!hn4jac*$6oufv+w24r65*4vom1a^2cca'
 

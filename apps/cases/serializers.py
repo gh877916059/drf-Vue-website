@@ -3,9 +3,7 @@ __author__ = 'HymanLu'
 
 from rest_framework import serializers
 from django.db.models import Q
-
 from cases.models import Cases, CasesCategory, HotSearchWords, CasesImage, Banner
-from cases.models import IndexAd
 
 
 class CategorySerializer2(serializers.ModelSerializer):
@@ -26,13 +24,26 @@ class CasesImageSerializer(serializers.ModelSerializer):
         model = CasesImage
         fields = ("image", )
 
-
 class CasesSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-    images = CasesImageSerializer(many=True)
+    #category = CategorySerializer()
+    #images = CasesImageSerializer(many=True)
+    category_name = serializers.CharField(required=True, write_only=True, label="案例类别名称",
+                                     error_messages={
+                                         "required": "请输入案例类别名称",
+                                         "blank": "请输入案例类别名称"
+                                     })
+    def validate(self, attrs):
+        category_name = attrs["category_name"]
+        category = CasesCategory.objects.get(Q(name=category_name))
+        if not category:
+            raise serializers.ValidationError("该案例类别不存在")
+        attrs["category"] = category
+        del attrs["category_name"]
+        return attrs
     class Meta:
         model = Cases
-        fields = "__all__"
+        #fields = "__all__"
+        fields = ("category_name", "name", "cases_brief", "cases_desc", "cases_front_image")
 
 
 class HotWordsSerializer(serializers.ModelSerializer):
@@ -44,29 +55,4 @@ class HotWordsSerializer(serializers.ModelSerializer):
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
-        fields = "__all__"
-
-
-class IndexCategorySerializer(serializers.ModelSerializer):
-    cases = serializers.SerializerMethodField()
-    sub_cat = CategorySerializer2(many=True)
-    ad_cases = serializers.SerializerMethodField()
-
-    def get_ad_cases(self, obj):
-        cases_json = {}
-        ad_cases = IndexAd.objects.filter(category_id=obj.id, )
-        if ad_cases:
-            case_ins = ad_cases[0].cases
-            cases_json = CasesSerializer(case_ins, many=False, context={'request': self.context['request']}).data
-        return cases_json
-
-
-
-    def get_cases(self, obj):
-        all_cases = Cases.objects.filter(Q(category_id=obj.id)|Q(category__parent_category_id=obj.id)|Q(category__parent_category__parent_category_id=obj.id))
-        cases_serializer = CasesSerializer(all_cases, many=True, context={'request': self.context['request']})
-        return cases_serializer.data
-
-    class Meta:
-        model = CasesCategory
         fields = "__all__"
