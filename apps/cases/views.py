@@ -11,7 +11,7 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 from .models import Cases, CasesCategory, HotSearchWords, Banner
 from .filters import CasesFilter
-from .serializers import CasesSerializer, CategorySerializer, HotWordsSerializer, BannerSerializer
+from .serializers import GetCasesSerializer, PostCasesSerializer, CategorySerializer, HotWordsSerializer, BannerSerializer
 from rest_framework import status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -25,13 +25,13 @@ class CasesPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class CasesListViewSet(CacheResponseMixin, mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CasesListViewSet(CacheResponseMixin, mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     案例列表页, 分页， 搜索， 过滤， 排序
     """
     throttle_classes = (UserRateThrottle, )
     queryset = Cases.objects.all()
-    serializer_class = CasesSerializer
+    serializer_class = GetCasesSerializer
     pagination_class = CasesPagination
     authentication_classes = (JSONWebTokenAuthentication, )
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -39,6 +39,16 @@ class CasesListViewSet(CacheResponseMixin, mixins.CreateModelMixin, mixins.ListM
     filter_class = CasesFilter
     search_fields = ('name', 'cases_brief', 'cases_desc')
     ordering_fields = ('sold_num', 'shop_price')
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return GetCasesSerializer
+        # 当进行的是注册新用户时
+        elif self.action == "create":
+            return PostCasesSerializer
+        elif self.action == "update":
+            return PostCasesSerializer
+        return GetCasesSerializer
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

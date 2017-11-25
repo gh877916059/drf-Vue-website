@@ -24,13 +24,30 @@ class CasesImageSerializer(serializers.ModelSerializer):
         model = CasesImage
         fields = ("image", )
 
-class CasesSerializer(serializers.ModelSerializer):
+class GetCasesSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     #images = CasesImageSerializer(many=True)
+
     class Meta:
         model = Cases
         fields = "__all__"
-        #fields = ("category", "name", "cases_brief", "cases_desc", "cases_front_image")
+
+class PostCasesSerializer(serializers.ModelSerializer):
+    #category = CategorySerializer()
+    #images = CasesImageSerializer(many=True)
+    category_id = serializers.IntegerField(required=True, write_only=True, label="类别ID", help_text="类别ID")
+
+    def validate(self, attrs):
+        category_id = attrs['category_id']
+        category = CasesCategory.objects.get(Q(id=category_id))
+        attrs['category'] = category
+        del attrs["category_id"]
+        return attrs
+
+    class Meta:
+        model = Cases
+        fields = "__all__"
+        fields = ("category_id", "name", "cases_brief", "cases_desc", "cases_front_image")
 
 
 class HotWordsSerializer(serializers.ModelSerializer):

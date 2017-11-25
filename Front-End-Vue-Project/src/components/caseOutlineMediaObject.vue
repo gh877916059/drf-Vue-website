@@ -1,23 +1,22 @@
 <template>
     <router-link v-bind:to="jumpURL">
-        <div class="media">
-            <a class="media-left" href="#">
-                <img class="media-object" v-bind:src="cases_front_image" alt="Generic placeholder image">
-            </a>
-            <div class="media-body">
-
-                <h4 class="media-heading">
-                    <span v-text="category_name"></span>
-                    <span v-text="name"></span>
-                </h4>
-                <div>
-                    <span v-text="add_time"></span>
-                    <span v-text="click_num"></span>
-                    <span v-text="fav_num"></span>
-                    <span v-text="reply_num"></span>
-                </div>
-                <div v-text="cases_brief"></div>
+        <div class="media row">
+            <div class="col-sm-4">
+                <a class="media-left thumbnail" href="#">
+                    <img class="media-object" v-bind:src="cases_front_image" alt="Generic placeholder image">
+                </a>
             </div>
+            <h4 class="media-heading">
+                <span v-text="category_name"></span>
+                <span v-text="name"></span>
+            </h4>
+            <div>
+                <span v-text="add_time"></span>
+                <span v-text="click_num"></span>
+                <span v-text="fav_num"></span>
+                <span v-text="reply_num"></span>
+            </div>
+            <div v-text="cases_brief"></div>
         </div>
     </router-link>
 </template>

@@ -45,6 +45,7 @@ class Cases(models.Model):
     cases_front_image = models.CharField(max_length=200, verbose_name="封面图URL", default='/static/image/fail.jpg')
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
+
     class Meta:
         verbose_name = '案例'
         verbose_name_plural = verbose_name

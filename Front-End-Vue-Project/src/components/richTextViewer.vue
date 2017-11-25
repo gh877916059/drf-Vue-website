@@ -16,10 +16,11 @@
         },
         data() {
             return {
-                category: '',
+                category_name: '',
                 name: '',
                 click_num: 0,
                 fav_num: 0,
+                reply_num: 0,
                 cases_brief: '',
                 cases_desc: '',
                 cases_front_image: '',
@@ -35,10 +36,11 @@
                 } else {
                     this.$http.get('cases/' + this.caseId + '/')
                         .then((res) => {
-                            this.category = res.data['category'];
+                            this.category_name = res.data['category']['name'];
                             this.name = res.data['name'];
                             this.click_num = res.data['click_num'];
                             this.fav_num = res.data['fav_num'];
+                            this.reply_num = res.data['reply_num'];
                             this.cases_brief = res.data['cases_brief'];
                             this.cases_desc = res.data['cases_desc'];
                             this.cases_front_image = res.data['cases_front_image'];

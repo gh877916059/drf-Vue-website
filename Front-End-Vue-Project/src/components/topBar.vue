@@ -135,6 +135,10 @@
                     // 请求图片验证码
                     this.$refs.registerModal.requestForPictureCode();
                 }.bind(this));
+                if (this.$route.query.needToLogin) {
+                    this.openLoginModal();
+                    delete this.$route.query.needToLogin;
+                }
             });
         }
     };

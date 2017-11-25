@@ -3,19 +3,19 @@
 
         <div class="form-group">
             <label>案例名称：</label>
-            <input type="text" class="form-control" name="name" placeholder="请输入案例名称" data-required-error="案例名称不可以为空" required>
+            <input type="text" class="form-control" v-model="name" name="name" placeholder="请输入案例名称" data-required-error="案例名称不可以为空" required>
             <div class="help-block with-errors"></div>
         </div>
 
         <div class="form-group">
             <label>案例简短描述：</label>
-            <input type="text" class="form-control" name="cases_brief" placeholder="请输入案例简短描述" data-required-error="案例简短描述不可以为空" required>
+            <input type="text" class="form-control" v-model="cases_brief" name="cases_brief" placeholder="请输入案例简短描述" data-required-error="案例简短描述不可以为空" required>
             <div class="help-block with-errors"></div>
         </div>
 
         <div class="form-group">
             <label>案例类别：</label>
-            <select name="category_name">
+            <select name="category_name" v-model="category_name">
                 <optgroup v-for="parentCategory in categoryList" v-bind:label="parentCategory.name">
                     <option v-for="subCategory in parentCategory.sub_cat">{{subCategory.name}}</option>
                 </optgroup>
@@ -52,6 +52,9 @@
         },
         data() {
             return {
+                name: '',
+                cases_brief: '',
+                category_name: '',
                 categoryList: [],
                 coverPictureURL: '',
                 uploadProgress: 0.0,
@@ -65,14 +68,23 @@
                     var postData = this.$root.getFormInput('richTextEditorForm');
                     var casesDesc = $('#richTextEditorDiv').html();
                     postData['cases_desc'] = casesDesc;
-                    postData['category'] = this.categoryNameToId[postData['category_name']];
+                    postData['category_id'] = this.categoryNameToId[postData['category_name']];
                     delete postData['category_name'];
-                    this.$http.post('cases/', postData).then(function(res) {
-                        console.log('---表单提交成功---');
-                    }, (err) => {
-                        console.log('---err.body---');
-                        console.log(err.body);
-                    });
+                    if (this.caseId.length > 0) {
+                        this.$http.put('cases/' + this.caseId + '/', postData).then(function(res) {
+                            console.log('---表单提交成功---');
+                        }, (err) => {
+                            console.log('---err.body---');
+                            console.log(err.body);
+                        });
+                    } else {
+                        this.$http.post('cases/', postData).then(function(res) {
+                            console.log('---表单提交成功---');
+                        }, (err) => {
+                            console.log('---err.body---');
+                            console.log(err.body);
+                        });
+                    }
                 }.bind(this));
             },
             // 异步上传封面图片
@@ -164,8 +176,12 @@
             getCaseInfoById () {
                 this.$http.get('cases/' + this.caseId + '/')
                     .then((res) => {
-                        console.log('---res.data---');
-                        console.log(res.data);
+                        this.category_name = res.data['category']['name'];
+                        this.name = res.data['name'];
+                        this.cases_brief = res.data['cases_brief'];
+                        this.cases_front_image = res.data['cases_front_image'];
+                        var casesDesc = res.data['cases_desc'];
+                        $('#richTextEditorDiv').html(casesDesc);
                     }, (err) => {
                         var errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
@@ -186,7 +202,7 @@
                 }
                 // 如果caseId不为空，则为修改已经存在的案例，而不是新建
                 if (this.caseId.length > 0) {
-                    console.log('---准备实现，请求对应案例的相关信息和内容---');
+                    this.getCaseInfoById();
                 }
             });
         }

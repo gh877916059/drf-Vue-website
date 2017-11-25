@@ -5,11 +5,11 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from .models import UserFav
-from cases.serializers import CasesSerializer
+from cases.serializers import GetCasesSerializer
 
 
 class UserFavDetailSerializer(serializers.ModelSerializer):
-    cases = CasesSerializer()
+    cases = GetCasesSerializer()
 
     class Meta:
         model = UserFav

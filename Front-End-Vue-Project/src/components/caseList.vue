@@ -38,16 +38,20 @@
                 requestURL = requestURL.slice(0, -1);
                 console.log('---准备往该URL请求案例列表：---');
                 console.log(requestURL);
+                var path = this.$route.path;
                 this.$http.get(requestURL)
                     .then((res) => {
+                        if (path !== this.$route.path) {
+                            return;
+                        }
                         this.caseOutlineList = res.data.results;
                         for (var index in this.caseOutlineList) {
                             this.caseOutlineList[index]['category_name'] = this.caseOutlineList[index]['category']['name'];
                             delete this.caseOutlineList[index]['category'];
                             delete this.caseOutlineList[index]['cases_desc'];
                         }
-                        console.log('---this.caseOutlineList---');
-                        console.log(this.caseOutlineList);
+                        console.log('---this.caseOutlineList.length---');
+                        console.log(this.caseOutlineList.length);
                     }, (err) => {
                         var errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
