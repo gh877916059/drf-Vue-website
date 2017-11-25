@@ -68,6 +68,7 @@
                 this.$http.post('users/', postData)
                     .then((res) => {
                         Vue.http.headers.common['Authorization'] = 'JWT ' + res.data['jwt_token'];
+                        window.sessionStorage.AuthorizationHeader = 'JWT ' + res.data['jwt_token'];
                         this.setUserName($('#registerForm input[name="username"]').val());
                         this.$emit('closeRegisterModal');
                     }, (err) => {

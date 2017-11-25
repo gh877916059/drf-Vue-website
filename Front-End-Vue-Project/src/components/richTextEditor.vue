@@ -23,50 +23,9 @@
             <div class="help-block with-errors"></div>
         </div>
 
-        <textarea name="cases_desc">
-        <p style="text-align: center;">
-            <img title="TinyMCE Logo" src="//www.tinymce.com/images/glyph-tinymce@2x.png" alt="TinyMCE Logo" width="110"
-                 height="97"/></p>
-        <h1 style="text-align: center;">Welcome to the TinyMCE editor demo!</h1>
-        <p>Please try out the features provided in this basic example.
-            <br>Note that any
-            <strong>MoxieManager</strong>file and image management functionality in this example is part of our commercial offering – the demo is to show the integration.
-        </p>
-        <h2>Got questions or need help?</h2>
-        <ul>
-            <li>Our<a href="https://www.tinymce.com/docs/">documentation</a>is a great resource for learning how to configure TinyMCE.</li>
-            <li>Have a specific question? Visit the<a href="https://community.tinymce.com/forum/" target="_blank">Community Forum</a>.</li>
-            <li>We also offer enterprise grade support as part of<a
-                href="www.tinymce.com/pricing">TinyMCE Enterprise</a>.</li></ul>
-        <h2>A simple table to play with</h2>
-        <table style="text-align: center;">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Cost</th>
-                    <th>Really?</th></tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>TinyMCE</td>
-                    <td>Free</td>
-                    <td>YES!</td></tr>
-                <tr>
-                    <td>Plupload</td>
-                    <td>Free</td>
-                    <td>YES!</td></tr>
-            </tbody>
-        </table>
-        <h2>Found a bug?</h2>
-        <p>If you think you have found a bug please create an issue on the
-            <a href="https://github.com/tinymce/tinymce/issues">GitHub repo</a>to report it to the developers.
-        </p>
-        <h2>Finally ...</h2>
-        <p>Don't forget to check out our other product
-            <a href="http://www.plupload.com" target="_blank">Plupload</a>, your ultimate upload solution featuring HTML5 upload support.</p>
-        <p>Thanks for supporting TinyMCE! We hope it helps you and your users create great content.
-            <br>All the best from the TinyMCE team.</p>
-        </textarea>
+        <div id="richTextEditorDiv" style="margin-top: 25px">
+            <h1>请在这里编辑案例介绍</h1>
+        </div>
 
         <div class="form-group">
             <label>案例封面图片：</label>
@@ -84,19 +43,30 @@
 
 <script>
     import $ from 'jquery';
-
     export default {
+        props: {
+            caseId: {
+                type: String,
+                default: ''
+            }
+        },
         data() {
             return {
                 categoryList: [],
                 coverPictureURL: '',
-                uploadProgress: 0.0
+                uploadProgress: 0.0,
+                categoryNameToId: {}
             };
         },
         methods: {
+            // 提交案例相关信息和富文本框内容
             postRichTextEditorData: function () {
                 window.tinymce.activeEditor.uploadImages(function(success) {
                     var postData = this.$root.getFormInput('richTextEditorForm');
+                    var casesDesc = $('#richTextEditorDiv').html();
+                    postData['cases_desc'] = casesDesc;
+                    postData['category'] = this.categoryNameToId[postData['category_name']];
+                    delete postData['category_name'];
                     this.$http.post('cases/', postData).then(function(res) {
                         console.log('---表单提交成功---');
                     }, (err) => {
@@ -105,6 +75,7 @@
                     });
                 }.bind(this));
             },
+            // 异步上传封面图片
             uploadCoverPicture (event) {
                 this.uploadProgress = 0.0;
                 this.coverPictureURL = '';
@@ -127,6 +98,79 @@
                         console.log(errorReasonDict);
                     });
                 }
+            },
+            // 请求案例分类信息
+            getCategoryInfo () {
+                this.$http.get('categorys/')
+                    .then((res) => {
+                        this.categoryList = res.data;
+                        for (var index1 in this.categoryList) {
+                            var subCategoryList = this.categoryList[index1].sub_cat;
+                            for (var index2 in subCategoryList) {
+                                var subCategory = subCategoryList[index2];
+                                this.categoryNameToId[subCategory.name] = subCategory.id;
+                            }
+                        }
+                    }, (err) => {
+                        var errorReasonDict = err.body;
+                        console.log('---errorReasonDict---');
+                        console.log(errorReasonDict);
+                    });
+            },
+            // 加载强大的富文本编辑器TinyMCE
+            initTinyMCE () {
+                $.getScript('https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=w1jnifw6jyuhsi04yjizbcmplt1s0w5zks3u7xeaitd7samr')
+                    .done(function() {
+                        // 要等到下一次DOM更新完成（即window.tinymce已经生成）后才进行tinymce的初始化
+                        this.$nextTick(function () {
+                            // 初始化富文本编辑器TinyMCE
+                            window.tinymce.init({
+                                selector: '#richTextEditorDiv',
+                                branding: false,
+                                language_url: this.$root.$data.requestHost + '/static/js/zh_CN.js',  // site absolute URL
+                                height: 500,
+                                menubar: false,
+                                paste_data_images: true,
+                                plugins: [
+                                    'advlist autolink lists link image charmap print preview anchor textcolor colorpicker',
+                                    'searchreplace visualblocks code fullscreen',
+                                    'insertdatetime media table contextmenu paste code help'
+                                ],
+                                toolbar: 'insert | undo redo |  formatselect image | bold italic strikethrough forecolor backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                                // 配置了该选项后，才能进行上传文件
+                                images_upload_url: this.$root.$data.requestHost + '/uploadfile/rich_text_picture/',
+                                images_upload_handler: function (blobInfo, success, failure) {
+                                    var formData = new FormData();
+                                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+                                    this.$http.post('uploadfile/rich_text_picture/', formData).then((res) => {
+                                        success(res.data['location']);
+                                    }, (err) => {
+                                        var errorReasonDict = err.body;
+                                        console.log('---errorReasonDict---');
+                                        console.log(errorReasonDict);
+                                        failure(errorReasonDict['detail']);
+                                    });
+                                }.bind(this),
+                                content_css: [
+                                    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                                    '//www.tinymce.com/css/codepen.min.css']
+                            });
+                        });
+                    }.bind(this))
+                    .fail(function() {
+                        console.log('TinyMCE加载失败。。。');
+                    });
+            },
+            getCaseInfoById () {
+                this.$http.get('cases/' + this.caseId + '/')
+                    .then((res) => {
+                        console.log('---res.data---');
+                        console.log(res.data);
+                    }, (err) => {
+                        var errorReasonDict = err.body;
+                        console.log('---errorReasonDict---');
+                        console.log(errorReasonDict);
+                    });
             }
         },
         mounted: function () {
@@ -135,57 +179,14 @@
                 $('#richTextEditorForm').submit(function (e) {
                     e.preventDefault();
                 });
-                // 请求案例分类信息
-                this.$http.get('categorys/')
-                    .then((res) => {
-                        this.categoryList = res.data;
-                    }, (err) => {
-                        var errorReasonDict = err.body;
-                        console.log('---errorReasonDict---');
-                        console.log(errorReasonDict);
-                    });
-                // 如果还没加载强大的富文本编辑器TinyMCE，则进行动态请求并加载
+                this.getCategoryInfo();
+                // 动态请求并加载TinyMCE
                 if (!window.tinymce) {
-                    $.getScript('https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=w1jnifw6jyuhsi04yjizbcmplt1s0w5zks3u7xeaitd7samr')
-                        .done(function() {
-                            // 要等到下一次DOM更新完成（即window.tinymce已经生成）后才进行tinymce的初始化
-                            this.$nextTick(function () {
-                                // 初始化富文本编辑器TinyMCE
-                                window.tinymce.init({
-                                    selector: 'textarea',
-                                    branding: false,
-                                    language_url: this.$root.$data.requestHost + '/static/zh_CN.js',  // site absolute URL
-                                    height: 500,
-                                    menubar: false,
-                                    plugins: [
-                                        'advlist autolink lists link image charmap print preview anchor textcolor colorpicker',
-                                        'searchreplace visualblocks code fullscreen',
-                                        'insertdatetime media table contextmenu paste code help'
-                                    ],
-                                    toolbar: 'insert | undo redo |  formatselect image | bold italic strikethrough forecolor backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                                    // 配置了该选项后，才能进行上传文件
-                                    images_upload_url: this.$root.$data.requestHost + '/uploadfile/rich_text_picture/',
-                                    images_upload_handler: function (blobInfo, success, failure) {
-                                        var formData = new FormData();
-                                        formData.append('file', blobInfo.blob(), blobInfo.filename());
-                                        this.$http.post('uploadfile/rich_text_picture/', formData).then((res) => {
-                                            success(res.data['location']);
-                                        }, (err) => {
-                                            var errorReasonDict = err.body;
-                                            console.log('---errorReasonDict---');
-                                            console.log(errorReasonDict);
-                                            failure(errorReasonDict['detail']);
-                                        });
-                                    }.bind(this),
-                                    content_css: [
-                                        '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-                                        '//www.tinymce.com/css/codepen.min.css']
-                                });
-                            });
-                        }.bind(this))
-                        .fail(function() {
-                            console.log('TinyMCE加载失败。。。');
-                        });
+                    this.initTinyMCE();
+                }
+                // 如果caseId不为空，则为修改已经存在的案例，而不是新建
+                if (this.caseId.length > 0) {
+                    console.log('---准备实现，请求对应案例的相关信息和内容---');
                 }
             });
         }

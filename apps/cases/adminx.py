@@ -27,18 +27,8 @@ class CasesCategoryAdmin(object):
     search_fields = ['name', ]
 
 
-class CasesBrandAdmin(object):
-    list_display = ["category", "image", "name", "desc"]
-
-    def get_context(self):
-        context = super(CasesBrandAdmin, self).get_context()
-        if 'form' in context:
-            context['form'].fields['category'].queryset = CasesCategory.objects.filter(category_type=1)
-        return context
-
-
 class BannerCasesAdmin(object):
-    list_display = ["cases", "image", "index"]
+    list_display = ["title", "hyperlink", "image", "index"]
 
 
 class HotSearchAdmin(object):

@@ -115,6 +115,7 @@ module.exports = {
             }
         ]
     },
+    // 由于已经从CDN中加载了jquery，后续只要使用jQuery这个引用变量即可
     externals: {
         jquery: 'jQuery'
     }

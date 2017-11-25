@@ -4,9 +4,18 @@ import VueResource from 'vue-resource';
 import filters from './filters';
 import routes from './routers';
 import Alert from './libs/alert';
-import store from './vuex/user';
+import store from './vuex/store';
 import FastClick from 'fastclick';
 import Utils from './utils';
+
+// 仅在本地（非CDN）模式下，才加载这些文件
+/*
+import('./assets/css/bootstrap-3.3.7/bootstrap.css');
+import('./assets/css/font-awesome-4.7.0/font-awesome.css');
+import('./assets/js/bootstrap-3.3.7/bootstrap.js');
+import('./assets/js/bootstrap-validator/validator.js');
+*/
+
 Vue.use(VueRouter);
 Vue.use(Alert);
 Vue.use(VueResource);
@@ -34,9 +43,13 @@ const router = new VueRouter({
 // FastClick 是一个简单，易于使用的JS库用于消除在移动浏览器上触发click事件与一个物理Tap(敲击)之间的300延迟
 FastClick.attach(document.body);
 
+console.log('---重新加载页面，尝试从本地存储sessionStorage中恢复Vuex---');
 // 处理刷新的时候vuex被清空但是用户已经登录的情况
 if (window.sessionStorage.userName) {
     store.commit('setUserName', window.sessionStorage.userName);
+}
+if (window.sessionStorage.AuthorizationHeader) {
+    Vue.http.headers.common['Authorization'] = window.sessionStorage.AuthorizationHeader;
 }
 
 /*
@@ -52,8 +65,6 @@ if (window.sessionStorage.userName) {
  next()进行管道中的下一个钩子；next(false)返回到from参数对应的URL；next(其他URL)表示重定向
  */
 router.beforeEach((to, from, next) => {
-    console.log('---store.state---');
-    console.log(store.state);
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.state.userName.length > 0) {
             next();

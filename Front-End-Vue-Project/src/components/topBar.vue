@@ -17,10 +17,10 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav" id="navUl">
-                        <li><a href="/index">首页<span class="sr-only">(current)</span></a></li>
-                        <li><a href="#">案例</a></li>
-                        <li><a href="/editCase">发表</a></li>
-                        <li><a href="#">问答</a></li>
+                        <li><router-link to="/index">首页<!--<span class="sr-only">(current)</span>--></router-link></li>
+                        <li><router-link to="/showAllCases">案例</router-link></li>
+                        <li><router-link to="/editCase">发表</router-link></li>
+                        <li><router-link to="/index">问答</router-link></li>
                     </ul>
                     <form class="navbar-form navbar-left">
                         <div class="form-group">
@@ -81,7 +81,7 @@
         props: {
             activeIndex: {
                 type: String,
-                required: true
+                default: '0'
             }
         },
         components: {
@@ -113,8 +113,18 @@
             logout: function () {
                 this.$store.commit('setUserName', '');
                 window.sessionStorage.userName = '';
+                delete window.sessionStorage.AuthorizationHeader;
                 delete Vue.http.headers.common['Authorization'];
                 this.$router.go(0);
+            }
+        },
+        // 参数或查询的改变并不会触发进入/离开的导航守卫，因此需要通过观察$route对象来应对这些变化
+        watch: {
+            $route: function () {
+                if (this.$route.query.needToLogin) {
+                    this.openLoginModal();
+                    delete this.$route.query.needToLogin;
+                }
             }
         },
         mounted: function () {
@@ -125,11 +135,6 @@
                     // 请求图片验证码
                     this.$refs.registerModal.requestForPictureCode();
                 }.bind(this));
-                if (this.$route.query.hasOwnProperty('needToLogin')) {
-                    this.openLoginModal();
-                }
-                console.log('---this.$store.state---');
-                console.log(this.$store.state);
             });
         }
     };

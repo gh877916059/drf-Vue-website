@@ -37,11 +37,12 @@ class Cases(models.Model):
     name = models.CharField(max_length=100, verbose_name="案例名")
     click_num = models.IntegerField(default=0, verbose_name="点击数")
     fav_num = models.IntegerField(default=0, verbose_name="收藏数")
+    reply_num = models.IntegerField(default=0, verbose_name="回复数")
     cases_brief = models.TextField(max_length=500, verbose_name="案例简短描述")
     #cases_desc = UEditorField(verbose_name=u"内容", imagePath="cases/images/", width=1000, height=300, filePath="cases/files/", default='')
-    cases_desc = models.TextField(max_length=10000, verbose_name="案例正文内容")
+    cases_desc = models.TextField(max_length=50000, verbose_name="案例正文内容")
     #cases_front_image = models.ImageField(upload_to="cases/images/", null=True, blank=True, verbose_name="封面图")
-    cases_front_image = models.CharField(max_length=200, verbose_name="封面图URL", blank=True)
+    cases_front_image = models.CharField(max_length=200, verbose_name="封面图URL", default='/static/image/fail.jpg')
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
@@ -69,19 +70,20 @@ class CasesImage(models.Model):
 
 class Banner(models.Model):
     """
-    轮播的案例
+    首页轮播图
     """
-    cases = models.ForeignKey(Cases, verbose_name="案例")
+    title = models.CharField(max_length=50, verbose_name="标题", default="暂无标题")
+    hyperlink = models.CharField(max_length=200, verbose_name="超链接地址", default="/index")
     image = models.ImageField(upload_to='banner', verbose_name="轮播图片")
     index = models.IntegerField(default=0, verbose_name="轮播顺序")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
-        verbose_name = '轮播案例'
+        verbose_name = '首页轮播图'
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.cases.name
+        return self.title
 
 
 class HotSearchWords(models.Model):

@@ -1,32 +1,21 @@
 <template>
-    <div id="indexCarousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
+    <div id="focusslide" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-            <template v-for="(bannerCase, index) in bannerCaseList">
-                <li data-target="#indexCarousel" v-bind:data-slide-to="index" v-bind:class="[index===0?'active':'']"></li>
-            </template>
+            <li v-for="(banner, index) in bannerList" data-target="#focusslide" v-bind:data-slide-to="index" v-bind:class="[index===0?'active':'']"></li>
         </ol>
-
-        <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
-            <template v-for="(bannerCase, index) in bannerCaseList">
-                <div v-bind:class="[index===0?'active':'', 'item']">
-                    <img v-bind:src="bannerCase.imageSrc">
-                    <div class="carousel-caption">
-                        {{bannerCase.title}}
-                    </div>
-                </div>
-            </template>
+            <div v-for="(banner, index) in bannerList" v-bind:class="[index===0?'active':'', 'item']">
+                <a v-bind:href="banner.hyperlink" target="_blank" v-bind:title="banner.title" >
+                    <img v-bind:src="banner.image" v-bind:alt="banner.title" class="img-responsive"></a>
+            </div>
         </div>
-
-        <!-- Controls -->
-        <a class="left carousel-control" href="#indexCarousel" role="button" data-slide="prev">
+        <a class="left carousel-control" href="#focusslide" role="button" data-slide="prev" rel="nofollow">
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
+            <span class="sr-only">上一个</span>
         </a>
-        <a class="right carousel-control" href="#indexCarousel" role="button" data-slide="next">
+        <a class="right carousel-control" href="#focusslide" role="button" data-slide="next" rel="nofollow">
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
+            <span class="sr-only">下一个</span>
         </a>
     </div>
 </template>
@@ -35,8 +24,26 @@
     export default {
         data() {
             return {
-                bannerCaseList: []
+                bannerList: []
             };
+        },
+        methods: {
+            // 请求首页轮播图信息
+            getBannerList: function () {
+                this.$http.get('banners/')
+                    .then((res) => {
+                        this.bannerList = res.data;
+                    }, (err) => {
+                        var errorReasonDict = err.body;
+                        console.log('---errorReasonDict---');
+                        console.log(errorReasonDict);
+                    });
+            }
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                this.getBannerList();
+            });
         }
     };
 </script>

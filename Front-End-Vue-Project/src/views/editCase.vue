@@ -2,13 +2,13 @@
     <div>
         <div class="row">
             <div class="col-sm-12">
-                <top-bar activeIndex='2'>
+                <top-bar activeIndex=2>
                 </top-bar>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <rich-text-editor>
+                <rich-text-editor v-bind:caseId="caseId">
                 </rich-text-editor>
             </div>
         </div>
@@ -22,10 +22,13 @@
             topBar,
             richTextEditor
         },
-        data() {
-            return {
-                caseList: []
-            };
+        computed: {
+            caseId () {
+                if (this.$route.query.id) {
+                    return this.$route.query.id;
+                }
+                return '';
+            }
         }
     };
 </script>

@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col-sm-12">
-                <top-bar activeIndex='0'>
+                <top-bar activeIndex=0>
                 </top-bar>
             </div>
         </div>
@@ -18,12 +18,7 @@
                 </left-accordion-menu>
             </div>
             <div class="col-sm-9">
-                <div class="row">
-                    <div v-for="caseObj in caseList" class="col-sm-4">
-                        <case-media-object thumbnailSrc=caseObj.thumbnailSrc title=caseObj.tile content=caseObj.content>
-                        </case-media-object>
-                    </div>
-                </div>
+                <case-list></case-list>
             </div>
         </div>
     </div>
@@ -31,19 +26,14 @@
 <script>
     import topBar from '../components/topBar.vue';
     import leftAccordionMenu from '../components/leftAccordionMenu.vue';
-    import caseMediaObject from '../components/caseMediaObject.vue';
     import indexCarousel from '../components/indexCarousel.vue';
+    import caseList from '../components/caseList.vue';
     export default {
         components: {
             topBar,
             leftAccordionMenu,
-            caseMediaObject,
+            caseList,
             indexCarousel
-        },
-        data() {
-            return {
-                caseList: []
-            };
         }
     };
 </script>

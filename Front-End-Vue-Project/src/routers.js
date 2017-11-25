@@ -35,6 +35,22 @@ const routers = [{
     },
     meta: { requiresAuth: true }
 }, {
+    path: '/viewCase/:id',
+    name: 'viewCase',
+    component(resolve) {
+        require.ensure(['./views/viewCase.vue'], () => {
+            resolve(require('./views/viewCase.vue'));
+        });
+    }
+}, {
+    path: '/showAllCases',
+    name: 'showAllCases',
+    component(resolve) {
+        require.ensure(['./views/showAllCases.vue'], () => {
+            resolve(require('./views/showAllCases.vue'));
+        });
+    }
+}, {
     path: '*',
     component(resolve) {
         require.ensure(['./views/index.vue'], () => {

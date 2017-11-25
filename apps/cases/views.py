@@ -50,7 +50,7 @@ class CasesListViewSet(CacheResponseMixin, mixins.CreateModelMixin, mixins.ListM
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = self.perform_create(serializer)      # 注册成功，将SQL记录插入语句提交到数据库执行
+        self.perform_create(serializer)      # 注册成功，将SQL记录插入语句提交到数据库执行
         re_dict = serializer.data
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)

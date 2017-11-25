@@ -61,6 +61,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 '''
 非Django原生setting项，仅用于corsheaders.middleware.CorsMiddleware
+跨域增加忽略
 '''
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -143,8 +144,8 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '6/minute',     # 对于未登录用户，每分钟最多访问4次
-        'user': '8/minute'      # 对于已登录用户，每分钟最多访问6次
+        'anon': '1000/minute',     # 对于未登录用户，每分钟最多访问4次
+        'user': '1200/minute'      # 对于已登录用户，每分钟最多访问6次
     }
 }
 

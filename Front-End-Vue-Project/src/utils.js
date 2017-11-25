@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
-const jumpToThisPage = function (name, params) {
-    this.$router.push({name: name, params: params});
+const jumpToThisPage = function (name, query) {
+    this.$router.push({name, query});
 };
 
 const getFormInput = function (formId) {

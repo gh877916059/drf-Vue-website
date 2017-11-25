@@ -5,3 +5,5 @@ src/libs/llqrcode.js
 src/libs/zepto.js
 build/
 config/
+src/assets/js/**/*.js
+src/assets/css/**/*.css
