@@ -21,3 +21,4 @@ django-redis
 pycryptodome
 raven
 django-simple-captcha
+beautifulsoup4

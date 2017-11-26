@@ -28,7 +28,7 @@
         </div>
 
         <div class="form-group">
-            <label>案例封面图片：</label>
+            <label>案例封面图片：{{coverPictureFileName}}</label>
             <input type="file" v-on:change="uploadCoverPicture" id="coverPictureSelector">
             <label>上传进度：{{uploadProgress}}%</label>
         </div>
@@ -60,6 +60,11 @@
                 uploadProgress: 0.0,
                 categoryNameToId: {}
             };
+        },
+        computed: {
+            coverPictureFileName () {
+                return this.$root.convertURLtoRawFileName(this.coverPictureURL);
+            }
         },
         methods: {
             // 提交案例相关信息和富文本框内容
@@ -179,7 +184,7 @@
                         this.category_name = res.data['category']['name'];
                         this.name = res.data['name'];
                         this.cases_brief = res.data['cases_brief'];
-                        this.cases_front_image = res.data['cases_front_image'];
+                        this.coverPictureURL = res.data['cases_front_image'];
                         var casesDesc = res.data['cases_desc'];
                         $('#richTextEditorDiv').html(casesDesc);
                     }, (err) => {

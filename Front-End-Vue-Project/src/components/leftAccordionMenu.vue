@@ -9,9 +9,9 @@
                 </h4>
             </div>
             <div v-bind:id="'collapse'+index" v-bind:class="[index===0?'in':'', 'panel-collapse','collapse']" role="tabpanel">
-                <ul v-for="subCategory in parentCategory.sub_cat" class="list-group">
-                    <li class="list-group-item"><a v-on:click="selectOneCategory(subCategory.id)">{{subCategory.name}}</a></li>
-                </ul>
+                <div class="list-group">
+                    <a style="cursor: pointer" v-for="subCategory in parentCategory.sub_cat" v-on:click="selectOneCategory(subCategory.id)" class="list-group-item">{{subCategory.name}}</a>
+                </div>
             </div>
         </div>
     </div>
