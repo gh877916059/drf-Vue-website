@@ -26,6 +26,9 @@
         computed: {
             caseFilterCondition () {
                 return this.$store.state.caseFilterCondition;
+            },
+            ForcedRequestCounter () {
+                return this.$store.state.ForcedRequestCounter;
             }
         },
         methods: {
@@ -36,8 +39,6 @@
                     requestURL = requestURL + key + '=' + caseFilterCondition[key] + '&';
                 }
                 requestURL = requestURL.slice(0, -1);
-                console.log('---准备往该URL请求案例列表：---');
-                console.log(requestURL);
                 var path = this.$route.path;
                 this.$http.get(requestURL)
                     .then((res) => {
@@ -50,8 +51,6 @@
                             delete this.caseOutlineList[index]['category'];
                             delete this.caseOutlineList[index]['cases_desc'];
                         }
-                        console.log('---this.caseOutlineList.length---');
-                        console.log(this.caseOutlineList.length);
                     }, (err) => {
                         var errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
@@ -72,6 +71,12 @@
                     this.getcaseOutlineList(val);
                 },
                 deep: true
+            },
+            ForcedRequestCounter: {
+                handler: function (val, oldVal) {
+                    console.log('---因为计数器而引起案例列表重新请求---');
+                    this.getcaseOutlineList(this.caseFilterCondition);
+                }
             }
         }
     };

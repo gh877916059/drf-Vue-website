@@ -1,31 +1,31 @@
 <template>
     <form data-toggle="validator" role="form" id="registerForm">
         <div class="form-group">
-            <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
+            <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
             <input type="text" class="form-control" name="username" placeholder="请输入用户名" data-pattern-error="用户名长度不足6位" data-required-error="用户名不可以为空" pattern="^.{6,}$" required data-serverValidation>
             <div class="help-block with-errors"></div>
         </div>
 
         <div class="form-group">
-            <i class="fa fa-envelope fa-lg" aria-hidden="true"></i>
+            <i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>
             <input type="email" class="form-control" name="email" placeholder="请输入邮箱地址" data-error="邮箱地址格式非法" required>
             <div class="help-block with-errors"></div>
         </div>
 
         <div class="form-group">
-            <i class="fa fa-envelope fa-lg" aria-hidden="true"></i>
+            <i class="glyphicon glyphicon-phone" aria-hidden="true"></i>
             <input type="text" class="form-control" name="mobile" placeholder="(非必填）请输入手机号码" data-pattern-error="手机号码格式错误" pattern="^1[34578]\d{9}$">
             <div class="help-block with-errors"></div>
         </div>
 
         <div class="form-group">
-            <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+            <i class="glyphicon glyphicon-lock" aria-hidden="true"></i>
             <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" data-pattern-error="密码长度不足6位" data-required-error="密码不可以为空" pattern="^.{6,}$" required>
             <div class="help-block with-errors"></div>
         </div>
 
         <div class="form-group">
-            <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+            <i class="glyphicon glyphicon-lock" aria-hidden="true"></i>
             <input type="password" class="form-control" name="repeated_password" placeholder="请重复上面所输入的密码" data-match-error="两次输入的密码不一样" data-required-error="必须重复上面的密码" data-match="#password" required>
             <div class="help-block with-errors"></div>
         </div>

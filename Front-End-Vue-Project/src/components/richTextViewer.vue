@@ -1,6 +1,7 @@
 <template>
     <div>
         <router-link class="button expanded" v-bind:to="editCaseURL">编辑</router-link>
+        <button class="button expanded" v-on:click="deleteCase">删除</button>
         <div id="richTextViewerDiv" v-html="cases_desc">
         </div>
     </div>
@@ -46,6 +47,22 @@
                             this.cases_front_image = res.data['cases_front_image'];
                             this.add_time = res.data['add_time'];
                             this.id = res.data['id'];
+                        }, (err) => {
+                            var errorReasonDict = err.body;
+                            console.log('---errorReasonDict---');
+                            console.log(errorReasonDict);
+                        });
+                }
+            },
+            deleteCase: function () {
+                if (this.caseId.length <= 0) {
+                    console.log('---请传入案例ID作为query---');
+                } else {
+                    this.$http.delete('cases/' + this.caseId + '/')
+                        .then((res) => {
+                            console.log('---删除案例成功---');
+                            this.$store.commit('increaseForcedRequestCounter');
+                            this.$root.jumpToThisPage('showAllCases');
                         }, (err) => {
                             var errorReasonDict = err.body;
                             console.log('---errorReasonDict---');

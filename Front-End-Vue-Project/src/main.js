@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import filters from './filters';
 import routes from './routers';
-import Alert from './libs/alert';
 import store from './vuex/store';
 import FastClick from 'fastclick';
 import Utils from './utils';
@@ -14,11 +13,13 @@ import('./assets/css/bootstrap-3.3.7/bootstrap.css');
 import('./assets/css/font-awesome-4.7.0/font-awesome.css');
 import('./assets/js/bootstrap-3.3.7/bootstrap.js');
 import('./assets/js/bootstrap-validator/validator.js');
+import('./assets/js/jQuery.autoIMG.min.js');
 */
 
 Vue.use(VueRouter);
-Vue.use(Alert);
 Vue.use(VueResource);
+// 为Vue加载过滤器（可以理解为字符串加工处理函数）
+Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 
 /*
   Object.keys() 方法会返回一个由一个给定对象的自身可枚举属性组成的数组
@@ -44,7 +45,7 @@ const router = new VueRouter({
 FastClick.attach(document.body);
 
 console.log('---重新加载页面，尝试从本地存储sessionStorage中恢复Vuex---');
-// 处理刷新的时候vuex被清空但是用户已经登录的情况
+// 一般情况下（使用Vue-router进行页面跳转）Vuex的数据是不会丢失的，但是如果用户手动在浏览器输入网址进行强制跳转时，就需要从sessionStorage中还原
 if (window.sessionStorage.userName) {
     store.commit('setUserName', window.sessionStorage.userName);
 }

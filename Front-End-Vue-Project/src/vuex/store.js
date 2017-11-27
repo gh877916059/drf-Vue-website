@@ -6,15 +6,12 @@ const store = new Vuex.Store({
     state: {
         userName: '',
         caseFilterCondition: {},
-        isCaseFilterValid: false
+        ForcedRequestCounter: 0 // 用于在caseFilterCondition不变的情况下，强制进行数据请求
     },
     // 更改 Vuex 的 store 中的状态的唯一方法是提交 mutation
     mutations: {
         setUserName(state, userName) {
             state.userName = userName;
-        },
-        setCurrSelectedCaseCategory(state, currSelectedCaseCategory) {
-            state.currSelectedCaseCategory = currSelectedCaseCategory;
         },
         setCaseFilterCondition(state, caseFilterCondition) {
             state.caseFilterCondition = caseFilterCondition;
@@ -22,8 +19,8 @@ const store = new Vuex.Store({
         addCaseFilterCondition(state, conditionKey, conditionValue) {
             state.caseFilterCondition[conditionKey] = conditionValue;
         },
-        setIsCaseFilterValid(state, isCaseFilterValid) {
-            state.isCaseFilterValid = isCaseFilterValid;
+        increaseForcedRequestCounter(state) {
+            state.ForcedRequestCounter = state.ForcedRequestCounter + 1;
         }
     }
 });

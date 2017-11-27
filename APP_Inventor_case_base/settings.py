@@ -168,7 +168,7 @@ APIKEY = ""
 缓存数据库的相关配置（请求结果的缓存机制仅作用于继承了CacheResponseMixin的ViewSet）
 将请求URL、请求参数、请求的Content-type等等组合到一起求Hash值作为缓存数据库的键
 将请求结果的网页内容或者JSON字符串作为缓存数据库的值
-'''
+为了避免不一致的情况出现，暂时取消redis缓存
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -178,6 +178,7 @@ CACHES = {
         }
     }
 }
+'''
 
 '''
 非Django原生setting项，仅用于REST-Framework-EXTENSIONS

@@ -23,12 +23,11 @@
             <div class="help-block with-errors"></div>
         </div>
 
-        <div id="richTextEditorDiv" style="margin-top: 25px">
-            <h1>请在这里编辑案例介绍</h1>
-        </div>
+        <textarea id="MyTextArea">请在这里编辑案例介绍</textarea>
 
         <div class="form-group">
-            <label>案例封面图片：{{coverPictureFileName}}</label>
+            <label v-if="coverPictureFileName.lastIndexOf('.') > 0" class="cover-picture-tip">案例封面图片名（已上传）：{{coverPictureFileName}}</label>
+            <label v-else class="cover-picture-tip">未上传案例封面图片</label>
             <input type="file" v-on:change="uploadCoverPicture" id="coverPictureSelector">
             <label>上传进度：{{uploadProgress}}%</label>
         </div>
@@ -37,7 +36,7 @@
             <input type="hidden" name="cases_front_image" v-bind:value="coverPictureURL"/>
         </div>
 
-        <button class="button expanded" v-on:click='postRichTextEditorData'>提交</button>
+        <input type="submit" class="button expanded" v-on:click='postRichTextEditorData' value="提交"></input>
     </form>
 </template>
 
@@ -56,7 +55,7 @@
                 cases_brief: '',
                 category_name: '',
                 categoryList: [],
-                coverPictureURL: '',
+                coverPictureURL: this.$root.$data.requestHost + '/static/image/fail.jpg',
                 uploadProgress: 0.0,
                 categoryNameToId: {}
             };
@@ -71,20 +70,25 @@
             postRichTextEditorData: function () {
                 window.tinymce.activeEditor.uploadImages(function(success) {
                     var postData = this.$root.getFormInput('richTextEditorForm');
-                    var casesDesc = $('#richTextEditorDiv').html();
+                    postData = this.$root.getFormInput('richTextEditorForm');
+                    var casesDesc = window.tinymce.activeEditor.getContent();
                     postData['cases_desc'] = casesDesc;
                     postData['category_id'] = this.categoryNameToId[postData['category_name']];
                     delete postData['category_name'];
                     if (this.caseId.length > 0) {
-                        this.$http.put('cases/' + this.caseId + '/', postData).then(function(res) {
-                            console.log('---表单提交成功---');
+                        this.$http.put('cases/' + this.caseId + '/', postData).then(function (res) {
+                            console.log('---res.data---');
+                            console.log(res.data);
+                            this.$root.jumpToThisPage('viewCase/' + this.caseId);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
                         });
                     } else {
-                        this.$http.post('cases/', postData).then(function(res) {
-                            console.log('---表单提交成功---');
+                        this.$http.post('cases/', postData).then(function (res) {
+                            console.log('---res.data---');
+                            console.log(res.data);
+                            this.$root.jumpToThisPage('viewCase/' + res.data['id']);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
@@ -94,6 +98,7 @@
             },
             // 异步上传封面图片
             uploadCoverPicture (event) {
+                console.log('---调用了uploadCoverPicture()函数---');
                 this.uploadProgress = 0.0;
                 this.coverPictureURL = '';
                 let file = event.target.files[0];
@@ -142,7 +147,7 @@
                         this.$nextTick(function () {
                             // 初始化富文本编辑器TinyMCE
                             window.tinymce.init({
-                                selector: '#richTextEditorDiv',
+                                selector: '#MyTextArea',
                                 branding: false,
                                 language_url: this.$root.$data.requestHost + '/static/js/zh_CN.js',  // site absolute URL
                                 height: 500,
@@ -217,5 +222,8 @@
 <style>
     body {
         padding: 5px
+    }
+    .cover-picture-tip {
+        color:red;
     }
 </style>

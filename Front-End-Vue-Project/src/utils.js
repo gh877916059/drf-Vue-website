@@ -1,10 +1,10 @@
 import $ from 'jquery';
 
-const jumpToThisPage = function (name, query) {
+exports.jumpToThisPage = function (name, query) {
     this.$router.push({name, query});
 };
 
-const convertURLtoRawFileName = function (url) {
+exports.convertURLtoRawFileName = function (url) {
     var urlElementList = url.split('/');
     var fileName = urlElementList[urlElementList.length - 1];
     var lastDotIndex = fileName.lastIndexOf('.');
@@ -14,7 +14,7 @@ const convertURLtoRawFileName = function (url) {
     return rawFileName;
 };
 
-const getFormInput = function (formId) {
+exports.getFormInput = function (formId) {
     var postData = {};
     var fieldArray = $('#' + formId).serializeArray();
     $.each(fieldArray, function (i, field) {
@@ -25,5 +25,3 @@ const getFormInput = function (formId) {
     console.log(postData);
     return postData;
 };
-
-export default {jumpToThisPage, getFormInput, convertURLtoRawFileName};

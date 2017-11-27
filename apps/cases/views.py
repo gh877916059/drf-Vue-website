@@ -25,7 +25,7 @@ class CasesPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class CasesListViewSet(CacheResponseMixin, mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class CasesListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """
     案例列表页, 分页， 搜索， 过滤， 排序
     """
@@ -60,8 +60,11 @@ class CasesListViewSet(CacheResponseMixin, mixins.CreateModelMixin, mixins.ListM
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)      # 注册成功，将SQL记录插入语句提交到数据库执行
+        print("---serializer---")
+        print(serializer)
+        case = serializer.save()      # 注册成功，将SQL记录插入语句提交到数据库执行
         re_dict = serializer.data
+        re_dict['id'] = case.id
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 

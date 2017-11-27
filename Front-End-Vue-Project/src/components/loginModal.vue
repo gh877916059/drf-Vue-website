@@ -1,13 +1,13 @@
 <template>
     <form data-toggle="validator" role="form" id="loginForm">
         <div class="form-group">
-            <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
+            <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
             <input type="text" class="form-control" name="username" placeholder="请输入用户名" data-pattern-error="用户名长度不足6位" data-required-error="用户名不可以为空" pattern="^.{6,}$" required data-serverValidation>
             <div class="help-block with-errors"></div>
         </div>
 
         <div class="form-group">
-            <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+            <i class="glyphicon glyphicon-lock" aria-hidden="true"></i>
             <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" data-pattern-error="密码长度不足6位" data-required-error="密码不可以为空" pattern="^.{6,}$" required data-serverValidation>
             <div class="help-block with-errors"></div>
         </div>

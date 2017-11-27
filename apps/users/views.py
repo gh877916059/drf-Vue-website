@@ -113,9 +113,9 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
     # permission_classes = (permissions.IsAuthenticated, )
     def get_permissions(self):
         if self.action == "retrieve":
-            return [permissions.IsAuthenticated()]
-        elif self.action == "create":
             return []
+        elif self.action == "create":
+            return [permissions.IsAuthenticated()]
 
         return []
 
@@ -128,21 +128,13 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = self.perform_create(serializer)      # 注册成功，将SQL记录插入语句提交到数据库执行
-
+        user = serializer.save()      # 注册成功，将SQL记录插入语句提交到数据库执行
         re_dict = serializer.data
-
         # JWT模块的加密算法得到token，降低服务器的存储压力，并提高安全性
         payload = jwt_payload_handler(user)
         re_dict["jwt_token"] = jwt_encode_handler(payload)
-
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_object(self):
         return self.request.user
-
-    def perform_create(self, serializer):
-        return serializer.save()
-
-
