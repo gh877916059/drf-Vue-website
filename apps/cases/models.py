@@ -3,7 +3,6 @@ __author__ = 'HymanLu'
 
 from datetime import datetime
 from django.db import models
-from DjangoUeditor.models import UEditorField
 
 class CasesCategory(models.Model):
     """
