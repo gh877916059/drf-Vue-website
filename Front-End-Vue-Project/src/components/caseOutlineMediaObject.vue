@@ -2,7 +2,7 @@
     <router-link v-bind:to="jumpURL">
         <div class="media row">
             <div class="col-sm-4 media-object-container" style="height:150px">
-                <img class="media-object" v-bind:src="cases_front_image" alt="Generic placeholder image">
+                <img class="media-object img-responsive" v-bind:src="cases_front_image" alt="Generic placeholder image">
             </div>
             <h4 class="media-heading">
                 <span class="badge" v-text="category_name"></span>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import $ from 'jquery';
+    // import $ from 'jquery';
     export default {
         // 模板<template>默认替换挂载元素，如果 replace 选项为 false，模板将插入挂载元素内
         replace: true,
@@ -69,7 +69,7 @@
         },
         mounted: function () {
             this.$nextTick(function () {
-                $('.media-object-container').autoIMG();
+                // $('.media-object-container').autoIMG();
             });
         }
     };

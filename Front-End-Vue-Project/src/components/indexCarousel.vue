@@ -6,7 +6,7 @@
         <div class="carousel-inner" role="listbox">
             <div v-for="(banner, index) in bannerList" v-bind:class="[index===0?'active':'', 'item']">
                 <a v-bind:href="banner.hyperlink" target="_blank" v-bind:title="banner.title" >
-                    <img v-bind:src="banner.image" v-bind:alt="banner.title" class="img-responsive"></a>
+                    <img v-bind:src="banner.image" v-bind:alt="banner.title" class="img-responsive" style="width:100%"></a>
             </div>
         </div>
         <a class="left carousel-control" href="#focusslide" role="button" data-slide="prev" rel="nofollow">

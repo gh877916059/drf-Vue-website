@@ -1,39 +1,64 @@
 <template>
-    <form data-toggle="validator" role="form" id="registerForm">
-        <div class="form-group">
-            <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
-            <input type="text" class="form-control" name="username" placeholder="请输入用户名" data-pattern-error="用户名长度不足6位" data-required-error="用户名不可以为空" pattern="^.{6,}$" required data-serverValidation>
-            <div class="help-block with-errors"></div>
+    <form data-toggle="validator" role="form" id="registerForm" class="form-horizontal">
+
+        <div class="form-group has-feedback has-success has-error">
+            <label for="usernameInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> 用户名：</label>
+            <div class="col-sm-9">
+                <input type="text" id="usernameInput" class="form-control" name="username" placeholder="请输入用户名" data-pattern-error="用户名长度不足6位" data-required-error="用户名不可以为空" pattern="^.{6,}$" required data-serverValidation>
+                <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+            <div class="help-block with-errors col-sm-12"></div>
         </div>
 
-        <div class="form-group">
-            <i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>
-            <input type="email" class="form-control" name="email" placeholder="请输入邮箱地址" data-error="邮箱地址格式非法" required>
-            <div class="help-block with-errors"></div>
+        <div class="form-group has-feedback has-success has-error">
+            <label for="emailInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i> 电子邮箱：</label>
+            <div class="col-sm-9">
+                <input type="email" id="emailInput" class="form-control" name="email" placeholder="请输入邮箱地址" data-error="邮箱地址格式非法" required>
+                <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+            <div class="help-block with-errors col-sm-12"></div>
         </div>
 
-        <div class="form-group">
-            <i class="glyphicon glyphicon-phone" aria-hidden="true"></i>
-            <input type="text" class="form-control" name="mobile" placeholder="(非必填）请输入手机号码" data-pattern-error="手机号码格式错误" pattern="^1[34578]\d{9}$">
-            <div class="help-block with-errors"></div>
+        <div class="form-group has-feedback has-success has-error">
+            <label for="mobileInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-phone" aria-hidden="true"></i> 手机号码：</label>
+            <div class="col-sm-9">
+                <input type="text" id="mobileInput" class="form-control" name="mobile" placeholder="(非必填）请输入手机号码" data-pattern-error="手机号码格式错误" pattern="^1[34578]\d{9}$">
+                <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+            <div class="help-block with-errors col-sm-12"></div>
         </div>
 
-        <div class="form-group">
-            <i class="glyphicon glyphicon-lock" aria-hidden="true"></i>
-            <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" data-pattern-error="密码长度不足6位" data-required-error="密码不可以为空" pattern="^.{6,}$" required>
-            <div class="help-block with-errors"></div>
+        <div class="form-group has-feedback has-success has-error">
+            <label for="passwordInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i> 密码：</label>
+            <div class="col-sm-9">
+                <input type="password" id="passwordInput" class="form-control" name="password" placeholder="请输入密码" data-pattern-error="密码长度不足6位" data-required-error="密码不可以为空" pattern="^.{6,}$" required>
+                <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+            <div class="help-block with-errors col-sm-12"></div>
         </div>
 
-        <div class="form-group">
-            <i class="glyphicon glyphicon-lock" aria-hidden="true"></i>
-            <input type="password" class="form-control" name="repeated_password" placeholder="请重复上面所输入的密码" data-match-error="两次输入的密码不一样" data-required-error="必须重复上面的密码" data-match="#password" required>
-            <div class="help-block with-errors"></div>
+        <div class="form-group has-feedback has-success has-error">
+            <label for="repeatedPasswordInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i> 重复密码：</label>
+            <div class="col-sm-9">
+                <input type="password" id="repeatedPasswordInput" class="form-control" name="repeated_password" placeholder="请重复上面所输入的密码" data-match-error="两次输入的密码不一样" data-required-error="必须重复上面的密码" data-match="#passwordInput" required>
+                <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+            <div class="help-block with-errors col-sm-12"></div>
         </div>
 
-        <div class="form-group">
-            <img v-bind:src="pictureCodeSrc" style="cursor: pointer" v-on:click='requestForPictureCode'>
-            <input type="text" class="form-control" name="code" placeholder="请输入图片验证码" data-pattern-error="验证码的长度必须为4位" data-required-error="验证码不可以为空" pattern="^.{4,4}$" required data-serverValidation>
-            <div class="help-block with-errors"></div>
+        <div class="form-group has-feedback has-success has-error">
+            <label class="col-sm-3"><img v-bind:src="pictureCodeSrc" style="cursor: pointer" v-on:click='requestForPictureCode'></label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="code" placeholder="请输入图片验证码" data-pattern-error="验证码的长度必须为4位" data-required-error="验证码不可以为空" pattern="^.{4,4}$" required data-serverValidation>
+                <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+            <div class="help-block with-errors col-sm-12"></div>
         </div>
 
         <div class="form-group">
@@ -41,7 +66,7 @@
         </div>
 
         <div class="form-group">
-            <button class="button expanded" v-on:click='postRegisterData'>注册</button>
+            <button class="btn btn-primary btn-block" v-on:click='postRegisterData'>注册</button>
         </div>
     </form>
 </template>
@@ -115,8 +140,7 @@
                 $('#registerForm').submit(function (e) {
                     e.preventDefault();
                 });
-                $('#registerForm i').css('margin-left', '2%');
-                $('#registerForm input[name]').css('display', 'inline-block').css('width', '70%').css('margin-left', '2%');
+                $('label').css('text-align', 'left');
                 $('#registerForm').validator({
                     custom: {
                         serverValidation: function ($el) {
@@ -135,3 +159,9 @@
         }
     };
 </script>
+<style>
+    form {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+</style>
