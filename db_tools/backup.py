@@ -1,21 +1,31 @@
-import pymysql
 import os
 import sys
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, os.path.join(BASE_DIR, 'APP_Inventor_case_base'))
-from settings import DATABASES
-default_conf = DATABASES['default']
 
-connect = pymysql.connect(
-    user=default_conf['USER'],
-    password=default_conf['PASSWORD'],
-    host=default_conf['HOST'],
-    db=default_conf['NAME'],
-    charset="utf8",
-    port=3306
-)
+if __name__ == "__main__":
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, os.path.join(BASE_DIR, 'APP_Inventor_case_base'))
+    from settings import DATABASES
 
-conn = connect.cursor()  # 创建游标以便来操作数据库
+    default_conf = DATABASES['default']
 
-cmdString = 'D:/php/phpStudy/MySQL/bin/mysqldump -u root --password=root --database  abcDataBase >  c:/abc_backup.sql'
-os.system(cmdString)
+    db_backup_file_dir = os.path.dirname(os.path.abspath(__file__))
+    db_backup_file_dir = os.path.join(db_backup_file_dir, 'data')
+    db_backup_file_dir = os.path.join(db_backup_file_dir, 'db_backup')
+    version_counter = 0
+    for db_backup_file_name in os.listdir(db_backup_file_dir):
+        if not db_backup_file_name.endswith('.sql'):
+            print('---存在非法文件---')
+            print(db_backup_file_name)
+            exit()
+        version = int(db_backup_file_name[:-4])
+        if version > version_counter:
+            version_counter = version
+    version_counter = version_counter + 1
+    db_backup_file_path = os.path.join(db_backup_file_dir, str(version_counter) + '.sql')
+    mysqldump_procedure_path = '"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysqldump"'
+    user_name = default_conf['USER']
+    password = default_conf['PASSWORD']
+    db_name = default_conf['NAME']
+    cmdString = mysqldump_procedure_path + ' -u' + user_name + ' -p' + password + ' ' + db_name + '>' + db_backup_file_path
+    print(cmdString)
+    os.system(cmdString)

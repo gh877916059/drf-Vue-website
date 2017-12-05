@@ -17,7 +17,7 @@ class CasesCategory(models.Model):
     code = models.CharField(default="", max_length=30, verbose_name="类别code", help_text="类别code")
     desc = models.TextField(default="", verbose_name="类别描述", help_text="类别描述")
     category_type = models.IntegerField(choices=CATEGORY_TYPE, verbose_name="类目级别", help_text="类目级别")
-    parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录", related_name="sub_cat")
+    parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录", related_name="sub_cat", on_delete=models.SET_NULL)
     is_tab = models.BooleanField(default=False, verbose_name="是否导航", help_text="是否导航")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
@@ -32,7 +32,7 @@ class Cases(models.Model):
     """
     案例
     """
-    category = models.ForeignKey(CasesCategory, verbose_name="案例类目")
+    category = models.ForeignKey(CasesCategory, verbose_name="案例类目", on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name="案例名")
     click_num = models.IntegerField(default=0, verbose_name="点击数")
     fav_num = models.IntegerField(default=0, verbose_name="收藏数")
@@ -56,7 +56,7 @@ class CasesImage(models.Model):
     """
     案例轮播图
     """
-    cases = models.ForeignKey(Cases, verbose_name="案例", related_name="images")
+    cases = models.ForeignKey(Cases, verbose_name="案例", related_name="images", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="", verbose_name="图片", null=True, blank=True)
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 

@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.encoding import force_text, smart_text, smart_str
 from django.utils.translation import ungettext
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.conf import settings
 from django.forms import Media
 from django.utils.translation import get_language
