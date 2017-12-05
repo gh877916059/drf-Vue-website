@@ -8,7 +8,7 @@
 
 # 使用说明
 
-1. 后台环境搭建。安装好Python3.5或者Python3.6，在本项目根目录打开命令行，并输入：`pip install -r python-lib-requirements.txt`
+1. 后台环境搭建。安装好Python3.5或者Python3.6，在本项目根目录打开命令行，并输入：`pip install -r python-lib-requirements.txt`（注意，请保证你使用的Django版本要至少为2.0）
 
 2. 前端环境搭建。安装好node.js，进入/Front-End-Vue-Project目录，打开命令行并输入：`npm install`
 
