@@ -1,26 +1,40 @@
 <template>
-    <router-link v-bind:to="jumpURL">
-        <div class="media row">
-            <div class="col-sm-4 media-object-container" style="height:150px">
+    <div class="media row">
+        <div class="col-sm-4 media-object-container" style="height:150px;margin-right:-10px">
+            <router-link v-bind:to="caseDetailUrl" data-toggle="tooltip" data-original-title="查看详情">
                 <img class="media-object img-responsive" v-bind:src="cases_front_image" alt="Generic placeholder image">
-            </div>
-            <h4 class="media-heading">
-                <span class="badge" v-text="category_name"></span>
-                <span v-text="name"></span>
-            </h4>
-            <p>
-                <span><i class="glyphicon glyphicon-time"></i> {{add_time | makeTimeFriendly()}}</span>
-                <span><i class="glyphicon glyphicon-eye-open"></i> {{click_num}}</span>
-                <span><i class="glyphicon glyphicon-comment"></i> {{reply_num}}</span>
-                <span><i class="glyphicon glyphicon-star"></i> {{fav_num}}</span>
-            </p>
-            <div v-text="cases_brief"></div>
+            </router-link>
         </div>
-    </router-link>
+        <div class="col-sm-8" style="margin-left:-10px">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="media-heading">
+                        <span class="label label-primary" v-text="category_name"></span>
+                        <span v-text="name"></span>
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="list-inline">
+                        <li><i class="glyphicon glyphicon-time"></i> {{add_time | makeTimeFriendly()}}</li>
+                        <li><i class="glyphicon glyphicon-eye-open"></i> {{click_num}}</li>
+                        <li><i class="glyphicon glyphicon-comment"></i> {{reply_num}}</li>
+                        <li><i class="glyphicon glyphicon-star"></i> {{fav_num}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <pre v-text="cases_brief"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-    // import $ from 'jquery';
+    import $ from 'jquery';
     export default {
         // 模板<template>默认替换挂载元素，如果 replace 选项为 false，模板将插入挂载元素内
         replace: true,
@@ -63,14 +77,19 @@
             }
         },
         computed: {
-            jumpURL () {
+            caseDetailUrl () {
                 return '/viewCase/' + this.id;
             }
         },
         mounted: function () {
             this.$nextTick(function () {
-                // $('.media-object-container').autoIMG();
+                $('[data-toggle=tooltip]').tooltip();
             });
+        },
+        methods: {
+            jumpToCaseDetailPage: function () {
+                this.$root.jumpToThisPage('/viewCase/' + this.id);
+            }
         }
     };
 </script>

@@ -1,48 +1,63 @@
 <template>
-    <form id="richTextEditorForm">
+    <div>
+        <form id="richTextEditorForm">
 
-        <div class="form-group">
-            <label>案例名称：</label>
-            <input type="text" class="form-control" v-model="name" name="name" placeholder="请输入案例名称" data-required-error="案例名称不可以为空" required>
-            <div class="help-block with-errors"></div>
+            <div class="form-group">
+                <label>案例名称：</label>
+                <input type="text" class="form-control" v-model="name" name="name" placeholder="请输入案例名称" data-required-error="案例名称不可以为空" required>
+                <div class="help-block with-errors"></div>
+            </div>
+
+            <div class="form-group">
+                <label>案例简短描述：</label>
+                <input type="text" class="form-control" v-model="cases_brief" name="cases_brief" placeholder="请输入案例简短描述" data-required-error="案例简短描述不可以为空" required>
+                <div class="help-block with-errors"></div>
+            </div>
+
+            <div class="form-group">
+                <label>案例类别：</label>
+                <select name="category_name" v-model="category_name">
+                    <optgroup v-for="parentCategory in categoryList" v-bind:label="parentCategory.name">
+                        <option v-for="subCategory in parentCategory.sub_cat">{{subCategory.name}}</option>
+                    </optgroup>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+
+            <textarea id="MyTextArea">请在这里编辑案例介绍</textarea>
+
+            <div class="form-group">
+                <input type="file" id="coverPictureImg" class="file" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="cases_front_image" v-bind:value="coverPictureURL"/>
+            </div>
+
+            <input type="submit" class="btn btn-primary btn-block" v-on:click='postRichTextEditorData' value="提交"></input>
+        </form>
+        <div class="modal fade" id="pictureCropperModal" tabindex="-1" role="dialog" aria-labelledby="pictureCropperModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">剪裁图片</h4>
+                    </div>
+                    <picture-cropper v-on:setCoverPictureURL="setCoverPictureURL" ref="pictureCropperModal" v-on:closePictureCropperModal="closePictureCropperModal"></picture-cropper>
+                </div>
+            </div>
         </div>
-
-        <div class="form-group">
-            <label>案例简短描述：</label>
-            <input type="text" class="form-control" v-model="cases_brief" name="cases_brief" placeholder="请输入案例简短描述" data-required-error="案例简短描述不可以为空" required>
-            <div class="help-block with-errors"></div>
-        </div>
-
-        <div class="form-group">
-            <label>案例类别：</label>
-            <select name="category_name" v-model="category_name">
-                <optgroup v-for="parentCategory in categoryList" v-bind:label="parentCategory.name">
-                    <option v-for="subCategory in parentCategory.sub_cat">{{subCategory.name}}</option>
-                </optgroup>
-            </select>
-            <div class="help-block with-errors"></div>
-        </div>
-
-        <textarea id="MyTextArea">请在这里编辑案例介绍</textarea>
-
-        <div class="form-group">
-            <label v-if="coverPictureFileName.lastIndexOf('.') > 0" class="cover-picture-tip">案例封面图片名（已上传）：{{coverPictureFileName}}</label>
-            <label v-else class="cover-picture-tip">未上传案例封面图片</label>
-            <input type="file" v-on:change="uploadCoverPicture" id="coverPictureSelector">
-            <label>上传进度：{{uploadProgress}}%</label>
-        </div>
-
-        <div class="form-group">
-            <input type="hidden" name="cases_front_image" v-bind:value="coverPictureURL"/>
-        </div>
-
-        <input type="submit" class="button expanded" v-on:click='postRichTextEditorData' value="提交"></input>
-    </form>
+    </div>
 </template>
 
 <script>
+    import Vue from 'vue';
     import $ from 'jquery';
+    import pictureCropper from './pictureCropper.vue';
     export default {
+        components: {
+            pictureCropper
+        },
         props: {
             caseId: {
                 type: String,
@@ -56,13 +71,48 @@
                 category_name: '',
                 categoryList: [],
                 coverPictureURL: this.$root.$data.requestHost + '/static/image/fail.jpg',
-                uploadProgress: 0.0,
-                categoryNameToId: {}
+                categoryNameToId: {},
+                imageData: '',
+                coverPictureType: '',
+                coverPictureName: ''
             };
         },
         computed: {
             coverPictureFileName () {
                 return this.$root.convertURLtoRawFileName(this.coverPictureURL);
+            },
+            completePictureFileName () {
+                return this.$root.convertURLtoCompleteFileName(this.coverPictureURL);
+            },
+            bootstrapInputConfig () {
+                var config = {
+                    language: 'zh',
+                    ajaxSettings: {headers: {Authorization: Vue.http.headers.common['Authorization']}},
+                    deleteExtraData: {case_id: this.caseId},
+                    msgPlaceholder: '案例封面图片',
+                    initialPreviewAsData: false, // allows you to set a raw markup
+                    initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+                    previewFileType: 'image',
+                    browseClass: 'btn btn-success',
+                    browseLabel: '选择图片',
+                    browseIcon: '<i class=\"glyphicon glyphicon-picture\"></i> ',
+                    removeClass: 'btn btn-danger',
+                    removeLabel: '删除',
+                    removeIcon: '<i class=\"glyphicon glyphicon-trash\"></i> ',
+                    uploadClass: 'btn btn-info',
+                    uploadLabel: '上传',
+                    uploadIcon: '<i class=\"glyphicon glyphicon-upload\"></i> '
+                };
+                if (this.coverPictureFileName.lastIndexOf('.') > 0) {
+                    config['initialPreview'] = [
+                        '<img src="' + this.coverPictureURL + '" class="kv-preview-data file-preview-image">'
+                    ];
+                    config['initialPreviewConfig'] = [
+                        {type: 'image', caption: this.coverPictureFileName, url: 'http://127.0.0.1:8000/deletefile/', key: this.completePictureFileName, downloadUrl: false}
+                    ];
+                    config['initialCaption'] = this.coverPictureFileName;
+                }
+                return config;
             }
         },
         methods: {
@@ -79,7 +129,7 @@
                         this.$http.put('cases/' + this.caseId + '/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            this.$root.jumpToThisPage('viewCase/' + this.caseId);
+                            this.$root.jumpToThisPage('/viewCase/' + this.caseId);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
@@ -88,7 +138,7 @@
                         this.$http.post('cases/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            this.$root.jumpToThisPage('viewCase/' + res.data['id']);
+                            this.$root.jumpToThisPage('/viewCase/' + res.data['id']);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
@@ -96,30 +146,20 @@
                     }
                 }.bind(this));
             },
-            // 异步上传封面图片
-            uploadCoverPicture (event) {
-                console.log('---调用了uploadCoverPicture()函数---');
-                this.uploadProgress = 0.0;
-                this.coverPictureURL = '';
+            // 读取封面图片，准备进行裁剪并上传
+            readPictureData (event) {
                 let file = event.target.files[0];
-                if (file) {
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    this.$http.post('uploadfile/case_cover_picture/', formData, {
-                        progress: function(event) {
-                            this.uploadProgress = parseFloat(event.loaded / event.total * 100);
-                        }.bind(this)
-                    }).then((res) => {
-                        this.coverPictureURL = res.data['location'];
-                        console.log('---this.coverPictureURL---');
-                        console.log(this.coverPictureURL);
-                    }, (err) => {
-                        this.uploadProgress = 0.0;
-                        var errorReasonDict = err.body;
-                        console.log('---errorReasonDict---');
-                        console.log(errorReasonDict);
-                    });
-                }
+                var imageInfoDict = {};
+                imageInfoDict['type'] = file.type;
+                imageInfoDict['name'] = file.name;
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    imageInfoDict['data'] = evt.target.result;
+                    // 强制触发子组件initCropper()函数
+                    this.$refs.pictureCropperModal.initCropper(imageInfoDict);
+                    this.openPictureCropperModal();
+                }.bind(this);
+                reader.readAsDataURL(file);
             },
             // 请求案例分类信息
             getCategoryInfo () {
@@ -197,6 +237,55 @@
                         console.log('---errorReasonDict---');
                         console.log(errorReasonDict);
                     });
+            },
+            closePictureCropperModal () {
+                $('#pictureCropperModal').modal('hide');
+            },
+            openPictureCropperModal () {
+                // backdrop 为 static 时，点击模态对话框的外部区域不会将其关闭
+                // keyboard 为 false 时，按下 Esc 键不会关闭 Modal
+                $('#pictureCropperModal').modal({backdrop: 'static', keyboard: false});
+            },
+            setCoverPictureURL (coverPictureURL) {
+                this.coverPictureURL = coverPictureURL;
+            },
+            deleteCoverPicture: function (event, key, data) {
+                var aborted = !window.confirm('你确定要删除该封面图片吗?');
+                if (aborted) {
+                    window.alert('删除操作被中止!');
+                } else {
+                    const postData = {
+                        file_name: key,
+                        case_id: data['case_id']
+                    };
+                    this.$http.post('deletefile/case_cover_picture/', postData).then((res) => {
+                        this.coverPictureURL = this.$root.$data.requestHost + '/static/image/fail.jpg';
+                        this.refreshBootstrapInput();
+                    }, (err) => {
+                        var errorReasonDict = err.body;
+                        console.log('---errorReasonDict---');
+                        console.log(errorReasonDict);
+                    });
+                }
+                // 阻止默认的删除操作，使用vue-resource进行删除请求
+                return true;
+            },
+            // 利用bootstrap-input插件初始化封面图片文件选择器
+            initBootstrapInput: function () {
+                const $picture = $('#coverPictureImg');
+                $picture.fileinput(this.bootstrapInputConfig);
+                $picture.on('filebeforedelete',
+                    function(event, key, data) {
+                        this.deleteCoverPicture(event, key, data);
+                    }.bind(this)
+                );
+                $picture.on('change', function(event, numFiles, label) {
+                    this.readPictureData(event);
+                }.bind(this));
+            },
+            refreshBootstrapInput: function () {
+                $('#coverPictureImg').fileinput('destroy');
+                this.initBootstrapInput();
             }
         },
         mounted: function () {
@@ -214,6 +303,12 @@
                 if (this.caseId.length > 0) {
                     this.getCaseInfoById();
                 }
+                this.initBootstrapInput();
+                $('#pictureCropperModal').on('hidden.bs.modal', function (e) {
+                    // 强制触发子组件destroyCropper()函数
+                    this.$refs.pictureCropperModal.destroyCropper();
+                    this.refreshBootstrapInput();
+                }.bind(this));
             });
         }
     };

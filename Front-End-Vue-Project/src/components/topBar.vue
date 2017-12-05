@@ -109,6 +109,8 @@
                 // backdrop 为 static 时，点击模态对话框的外部区域不会将其关闭
                 // keyboard 为 false 时，按下 Esc 键不会关闭 Modal
                 $('#registerModal').modal({backdrop: 'static', keyboard: false});
+                // 触发手机号码的检测函数（因为它可以为空，需要特殊处理）
+                $('#mobileInput').trigger('change');
             },
             logout: function () {
                 this.$store.commit('setUserName', '');

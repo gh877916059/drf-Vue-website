@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-link class="button expanded" v-bind:to="editCaseURL">编辑</router-link>
+        <router-link class="button expanded" v-bind:to="editCaseURL" data-toggle="tooltip" data-original-title="编辑">编辑</router-link>
         <button class="button expanded" v-on:click="deleteCase">删除</button>
         <div id="richTextViewerDiv" v-html="cases_desc">
         </div>
@@ -8,6 +8,7 @@
 </template>
 
 <script>
+    import $ from 'jquery';
     export default {
         props: {
             caseId: {
@@ -62,7 +63,7 @@
                         .then((res) => {
                             console.log('---删除案例成功---');
                             this.$store.commit('increaseForcedRequestCounter');
-                            this.$root.jumpToThisPage('showAllCases');
+                            this.$root.jumpToThisPage('/showAllCases');
                         }, (err) => {
                             var errorReasonDict = err.body;
                             console.log('---errorReasonDict---');
@@ -74,6 +75,7 @@
         mounted: function () {
             this.$nextTick(function () {
                 this.getCaseDetail();
+                $('[data-toggle=tooltip]').tooltip();
             });
         },
         computed: {

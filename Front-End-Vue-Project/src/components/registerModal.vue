@@ -6,7 +6,6 @@
             <div class="col-sm-9">
                 <input type="text" id="usernameInput" class="form-control" name="username" placeholder="请输入用户名" data-pattern-error="用户名长度不足6位" data-required-error="用户名不可以为空" pattern="^.{6,}$" required data-serverValidation>
                 <span class="glyphicon glyphicon-ok form-control-feedback"></span>
-                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
             <div class="help-block with-errors col-sm-12"></div>
         </div>

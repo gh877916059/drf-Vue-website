@@ -18,7 +18,11 @@
                 </left-accordion-menu>
             </div>
             <div class="col-sm-9">
-                <case-list></case-list>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <case-list></case-list>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
