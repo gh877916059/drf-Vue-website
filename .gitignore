@@ -2,11 +2,10 @@
 *.idea*
 *__pycache__*
 *.pyc
-*node_modules*
-setting.txt
-Front-End-Vue-Project/dist
-Front-End-Vue-Project/node_modules
-Front-End-Vue-Project/bower_components
-Vue-Project-Example/*
+back-end-src/media/*
+back-end-src/tool_scripts/data/setting/local.py
+back-end-src/tool_scripts/data/setting/remote.py
+front-end-src/dist
+front-end-src/node_modules
+front-end-src/bower_components
 *.swp
-media/*
