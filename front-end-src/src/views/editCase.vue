@@ -8,19 +8,19 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <rich-text-editor v-bind:caseId="caseId">
-                </rich-text-editor>
+                <case-editor-form v-bind:caseId="caseId">
+                </case-editor-form>
             </div>
         </div>
     </div>
 </template>
 <script>
     import topBar from '../components/topBar.vue';
-    import richTextEditor from '../components/richTextEditor.vue';
+    import caseEditorForm from '../components/caseEditorForm.vue';
     export default {
         components: {
             topBar,
-            richTextEditor
+            caseEditorForm
         },
         computed: {
             caseId () {

@@ -70,7 +70,7 @@ class DeleteFileView(views.APIView, FileInfoRecorder):
         if media_dir not in self.dir_name_to_valid_file_extension:
             error_reason_dict['detail'] = '请输入合法的文件目录URL参数'
             return Response(error_reason_dict, status=status.HTTP_400_BAD_REQUEST)
-        file_name = request.data.get('file_name')
+        file_name = request.data.get('key')
         if not file_name:
             error_reason_dict['detail'] = '请传输要删除文件的文件名'
             return Response(error_reason_dict, status=status.HTTP_400_BAD_REQUEST)

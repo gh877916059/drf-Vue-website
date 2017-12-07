@@ -22,7 +22,7 @@
             </div>
 
             <div class="form-group">
-                <button class="btn btn-primary btn-block" v-on:click='uploadCoverPicture'>确定</button>
+                <button class="btn btn-primary btn-block" v-on:click='uploadCoverPicture'>上传</button>
             </div>
         </template>
     </form>
@@ -38,8 +38,8 @@
                 imageName: '',
                 croppable: false,
                 afterCroppingImageData: '',
-                minAspectRatio: 1.9,
-                maxAspectRatio: 2.1
+                minAspectRatio: 0.4,
+                maxAspectRatio: 0.8
             };
         },
         mounted: function () {
@@ -53,10 +53,11 @@
         methods: {
             // 异步上传封面图片
             uploadCoverPicture (event) {
-                console.log('---调用了uploadCoverPicture()函数---');
                 this.coverPictureURL = '';
                 let bits = this.$root.convertBase64UrlToBlob(this.afterCroppingImageData);
                 var file = new File([bits], this.imageName, {type: this.imageType});
+                this.$emit('updatePictureFiles', file, this.afterCroppingImageData);
+                this.$emit('closePictureCropperModal');
                 if (file) {
                     const formData = new FormData();
                     formData.append('file', file);
@@ -78,6 +79,18 @@
                 }
                 var croppedCanvas = $('#beforeCroppingimg').cropper('getCroppedCanvas');
                 this.afterCroppingImageData = croppedCanvas.toDataURL();
+                var image = new Image();
+                image.src = this.afterCroppingImageData;
+                var _vue = this;
+                image.onload = function() {
+                    var width = this.width;
+                    var height = this.height;
+                    _vue.$nextTick(function () {
+                        var afterImg = $('#afterCroppingimg');
+                        $(afterImg).width(width / 2);
+                        $(afterImg).height(height / 2);
+                    });
+                };
             },
             destroyCropper: function () {
                 // 销毁cropper组件
@@ -85,45 +98,58 @@
             },
             initCropper: function(imageInfoDict) {
                 this.beforeCroppingImageData = imageInfoDict['data'];
+                var image = new Image();
+                image.src = this.beforeCroppingImageData;
                 this.imageType = imageInfoDict['type'];
                 this.imageName = imageInfoDict['name'];
                 this.afterCroppingImageData = '';
-                this.$nextTick(function () {
-                    this.croppable = false;
-                    // 初始化cropper组件
-                    $('#beforeCroppingimg').cropper({
-                        ready: function () {
-                            var $image = $('#beforeCroppingimg');
-                            var containerData = $image.cropper('getContainerData');
-                            var cropBoxData = $image.cropper('getCropBoxData');
-                            var aspectRatio = cropBoxData.width / cropBoxData.height;
-                            var newCropBoxWidth;
-                            // 如果宽高比不在规定范围内，则要对剪裁框进行强制放缩
-                            if (aspectRatio < this.minAspectRatio || aspectRatio > this.maxAspectRatio) {
-                                newCropBoxWidth = cropBoxData.height * ((this.minAspectRatio + this.maxAspectRatio) / 2);
-                                $image.cropper('setCropBoxData', {
-                                    left: (containerData.width - newCropBoxWidth) / 2,
-                                    width: newCropBoxWidth
-                                });
-                            }
-                            this.croppable = true;
-                        }.bind(this),
-                        cropmove: function () {
-                            var $image = $('#beforeCroppingimg');
-                            var cropBoxData = $image.cropper('getCropBoxData');
-                            var aspectRatio = cropBoxData.width / cropBoxData.height;
-                            if (aspectRatio < this.minAspectRatio) {
-                                $image.cropper('setCropBoxData', {
-                                    width: cropBoxData.height * this.minAspectRatio
-                                });
-                            } else if (aspectRatio > this.maxAspectRatio) {
-                                $image.cropper('setCropBoxData', {
-                                    width: cropBoxData.height * this.maxAspectRatio
-                                });
-                            }
-                        }.bind(this)
-                    });
-                }.bind(this));
+                var _vue = this;
+                image.onload = function() {
+                    var width = this.width;
+                    var height = this.height;
+                    _vue.$nextTick(function () {
+                        this.croppable = false;
+                        // 初始化cropper组件
+                        $('#beforeCroppingimg').cropper({
+                            viewMode: 0,
+                            minContainerHeight: height * 0.5,
+                            minContainerWidth: width * 0.5,
+                            minCanvasHeight: height * 0.5,
+                            minCanvasWidth: width * 0.5,
+                            aspectRatio: ((this.minAspectRatio + this.maxAspectRatio) / 2),
+                            ready: function () {
+                                var $image = $('#beforeCroppingimg');
+                                var containerData = $image.cropper('getContainerData');
+                                var cropBoxData = $image.cropper('getCropBoxData');
+                                var aspectRatio = cropBoxData.width / cropBoxData.height;
+                                var newCropBoxWidth;
+                                // 如果宽高比不在规定范围内，则要对剪裁框进行强制放缩
+                                if (aspectRatio < this.minAspectRatio || aspectRatio > this.maxAspectRatio) {
+                                    newCropBoxWidth = cropBoxData.height * ((this.minAspectRatio + this.maxAspectRatio) / 2);
+                                    $image.cropper('setCropBoxData', {
+                                        left: (containerData.width - newCropBoxWidth) / 2,
+                                        width: newCropBoxWidth
+                                    });
+                                }
+                                this.croppable = true;
+                            }.bind(this),
+                            cropmove: function () {
+                                var $image = $('#beforeCroppingimg');
+                                var cropBoxData = $image.cropper('getCropBoxData');
+                                var aspectRatio = cropBoxData.width / cropBoxData.height;
+                                if (aspectRatio < this.minAspectRatio) {
+                                    $image.cropper('setCropBoxData', {
+                                        width: cropBoxData.height * this.minAspectRatio
+                                    });
+                                } else if (aspectRatio > this.maxAspectRatio) {
+                                    $image.cropper('setCropBoxData', {
+                                        width: cropBoxData.height * this.maxAspectRatio
+                                    });
+                                }
+                            }.bind(this)
+                        });
+                    }.bind(_vue));
+                };
             }
         }
     };

@@ -7,7 +7,7 @@ import os
 
 # realpath()对于软链接获取的是真实路径
 pwd = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(pwd+"../")
+sys.path.append(os.path.dirname(pwd))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "APP_Inventor_case_base.settings")
 from APP_Inventor_case_base.settings import REQUEST_HOST
 import django

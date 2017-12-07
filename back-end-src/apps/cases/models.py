@@ -3,6 +3,7 @@ __author__ = 'HymanLu'
 
 from datetime import datetime
 from django.db import models
+from DjangoUeditor.models import UEditorField
 
 class CasesCategory(models.Model):
     """
@@ -38,7 +39,7 @@ class Cases(models.Model):
     fav_num = models.IntegerField(default=0, verbose_name="收藏数")
     reply_num = models.IntegerField(default=0, verbose_name="回复数")
     cases_brief = models.TextField(max_length=500, verbose_name="案例简短描述")
-    #cases_desc = UEditorField(verbose_name=u"内容", imagePath="cases/images/", width=1000, height=300, filePath="cases/files/", default='')
+    #cases_desc = UEditorField(verbose_name=u"内容", imagePath="rich_text_picture/", width=1000, height=300, filePath="rich_text_file/", default='')
     cases_desc = models.TextField(max_length=50000, verbose_name="案例正文内容")
     #cases_front_image = models.ImageField(upload_to="cases/images/", null=True, blank=True, verbose_name="封面图")
     cases_front_image = models.CharField(max_length=200, verbose_name="封面图URL", default='/static/image/fail.jpg')
