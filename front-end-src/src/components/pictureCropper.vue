@@ -60,7 +60,7 @@
                 if (file) {
                     const formData = new FormData();
                     formData.append('file', file);
-                    this.$http.post('uploadfile/case_cover_picture/', formData).then((res) => {
+                    this.$axios.post('uploadfile/case_cover_picture/', formData).then((res) => {
                         this.coverPictureURL = res.data['location'];
                         this.$emit('setCoverPictureURL', this.coverPictureURL);
                         this.$emit('closePictureCropperModal');

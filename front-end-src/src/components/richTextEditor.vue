@@ -51,7 +51,6 @@
 </template>
 
 <script>
-    import Vue from 'vue';
     import $ from 'jquery';
     import pictureCropper from './pictureCropper.vue';
     export default {
@@ -87,7 +86,7 @@
             bootstrapInputConfig () {
                 var config = {
                     language: 'zh',
-                    ajaxSettings: {headers: {Authorization: Vue.http.headers.common['Authorization']}},
+                    ajaxSettings: {headers: {Authorization: this.$axios.defaults.headers.common['Authorization']}},
                     deleteExtraData: {case_id: this.caseId},
                     msgPlaceholder: '案例封面图片',
                     initialPreviewAsData: false, // allows you to set a raw markup
@@ -126,7 +125,7 @@
                     postData['category_id'] = this.categoryNameToId[postData['category_name']];
                     delete postData['category_name'];
                     if (this.caseId.length > 0) {
-                        this.$http.put('cases/' + this.caseId + '/', postData).then(function (res) {
+                        this.$axios.put('cases/' + this.caseId + '/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
                             this.$root.jumpToThisPage('/viewCase/' + this.caseId);
@@ -135,7 +134,7 @@
                             console.log(err.body);
                         });
                     } else {
-                        this.$http.post('cases/', postData).then(function (res) {
+                        this.$axios.post('cases/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
                             this.$root.jumpToThisPage('/viewCase/' + res.data['id']);
@@ -163,7 +162,7 @@
             },
             // 请求案例分类信息
             getCategoryInfo () {
-                this.$http.get('categorys/')
+                this.$axios.get('categorys/')
                     .then((res) => {
                         this.categoryList = res.data;
                         for (var index1 in this.categoryList) {
@@ -204,7 +203,7 @@
                                 images_upload_handler: function (blobInfo, success, failure) {
                                     var formData = new FormData();
                                     formData.append('file', blobInfo.blob(), blobInfo.filename());
-                                    this.$http.post('uploadfile/rich_text_picture/', formData).then((res) => {
+                                    this.$axios.post('uploadfile/rich_text_picture/', formData).then((res) => {
                                         success(res.data['location']);
                                     }, (err) => {
                                         var errorReasonDict = err.body;
@@ -224,7 +223,7 @@
                     });
             },
             getCaseInfoById () {
-                this.$http.get('cases/' + this.caseId + '/')
+                this.$axios.get('cases/' + this.caseId + '/')
                     .then((res) => {
                         this.category_name = res.data['category']['name'];
                         this.name = res.data['name'];
@@ -258,7 +257,7 @@
                         file_name: key,
                         case_id: data['case_id']
                     };
-                    this.$http.post('deletefile/case_cover_picture/', postData).then((res) => {
+                    this.$axios.post('deletefile/case_cover_picture/', postData).then((res) => {
                         this.coverPictureURL = this.$root.$data.requestHost + '/static/image/fail.jpg';
                         this.refreshBootstrapInput();
                     }, (err) => {

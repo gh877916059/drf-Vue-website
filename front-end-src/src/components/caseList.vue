@@ -56,7 +56,7 @@
                 }
                 requestURL = requestURL.slice(0, -1);
                 var path = this.$route.path;
-                this.$http.get(requestURL)
+                this.$axios.get(requestURL)
                     .then((res) => {
                         if (path !== this.$route.path) {
                             return;

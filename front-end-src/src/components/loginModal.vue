@@ -29,7 +29,6 @@
 
 <script>
     import $ from 'jquery';
-    import Vue from 'vue';
 
     export default {
         data() {
@@ -67,9 +66,9 @@
                     return;
                 }
                 var postData = this.$root.getFormInput('loginForm');
-                this.$http.post('login/', postData)
+                this.$axios.post('login/', postData)
                     .then((res) => {
-                        Vue.http.headers.common['Authorization'] = 'JWT ' + res.data['token'];
+                        this.$axios.defaults.headers.common['Authorization'] = 'JWT' + res.data['token'];
                         window.sessionStorage.AuthorizationHeader = 'JWT ' + res.data['token'];
                         this.setUserName($('#loginForm input[name="username"]').val());
                         this.$emit('closeLoginModal');

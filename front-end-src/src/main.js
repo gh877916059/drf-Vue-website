@@ -1,14 +1,18 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import VueResource from 'vue-resource';
 import filters from './filters';
 import routes from './routers';
 import store from './vuex/store';
 import FastClick from 'fastclick';
 import Utils from './utils';
+import axios from 'axios';
+
+// 设置axios的请求Host（作用在this.$axios.get()或者this.$axios.post()方法上）
+const requestHost = 'http://127.0.0.1:8000';
+axios.defaults.baseURL = requestHost;
+Vue.prototype.$axios = axios;
 
 Vue.use(VueRouter);
-Vue.use(VueResource);
 // 为Vue加载过滤器（可以理解为字符串加工处理函数）
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 
@@ -41,7 +45,7 @@ if (window.sessionStorage.userName) {
     store.commit('setUserName', window.sessionStorage.userName);
 }
 if (window.sessionStorage.AuthorizationHeader) {
-    Vue.http.headers.common['Authorization'] = window.sessionStorage.AuthorizationHeader;
+    Vue.prototype.$axios.defaults.headers.common['Authorization'] = window.sessionStorage.AuthorizationHeader;
 }
 
 /*
@@ -70,10 +74,6 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
-
-// 设置vue-resource的请求Host（作用在this.$http.get()或者this.$http.post()方法上）
-const requestHost = 'http://127.0.0.1:8000';
-Vue.http.options.root = requestHost;
 
 /*
  store中state 的改变，都放置在store自身的 action 中去管理，这种集中式状态管理能够被更容易地理解哪种类型的mutation将会发生，以及它们是如何被触发

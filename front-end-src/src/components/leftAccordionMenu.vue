@@ -29,7 +29,7 @@
         methods: {
             // 请求案例分类信息
             getCategoryList: function () {
-                this.$http.get('categorys/')
+                this.$axios.get('categorys/')
                     .then((res) => {
                         this.categoryList = res.data;
                         this.$store.commit('setCaseFilterCondition', {top_category: this.categoryList[0].id});

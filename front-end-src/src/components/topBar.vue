@@ -72,7 +72,6 @@
 
 <script>
     import $ from 'jquery';
-    import Vue from 'vue';
     import loginModal from './loginModal.vue';
     import registerModal from './registerModal.vue';
     export default {
@@ -116,7 +115,7 @@
                 this.$store.commit('setUserName', '');
                 window.sessionStorage.userName = '';
                 delete window.sessionStorage.AuthorizationHeader;
-                delete Vue.http.headers.common['Authorization'];
+                delete this.$axios.defaults.headers.common['Authorization'];
                 this.$router.go(0);
             }
         },

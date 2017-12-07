@@ -30,7 +30,7 @@
         methods: {
             // 请求首页轮播图信息
             getBannerList: function () {
-                this.$http.get('banners/')
+                this.$axios.get('banners/')
                     .then((res) => {
                         this.bannerList = res.data;
                     }, (err) => {

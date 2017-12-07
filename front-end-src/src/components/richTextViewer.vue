@@ -36,7 +36,7 @@
                 if (this.caseId.length <= 0) {
                     console.log('---请传入案例ID作为query---');
                 } else {
-                    this.$http.get('cases/' + this.caseId + '/')
+                    this.$axios.get('cases/' + this.caseId + '/')
                         .then((res) => {
                             this.category_name = res.data['category']['name'];
                             this.name = res.data['name'];
@@ -59,7 +59,7 @@
                 if (this.caseId.length <= 0) {
                     console.log('---请传入案例ID作为query---');
                 } else {
-                    this.$http.delete('cases/' + this.caseId + '/')
+                    this.$axios.delete('cases/' + this.caseId + '/')
                         .then((res) => {
                             console.log('---删除案例成功---');
                             this.$store.commit('increaseForcedRequestCounter');

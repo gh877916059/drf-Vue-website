@@ -72,7 +72,6 @@
 
 <script>
     import $ from 'jquery';
-    import Vue from 'vue';
 
     export default {
         data() {
@@ -89,9 +88,9 @@
                     return;
                 }
                 var postData = this.$root.getFormInput('registerForm');
-                this.$http.post('users/', postData)
+                this.$axios.post('users/', postData)
                     .then((res) => {
-                        Vue.http.headers.common['Authorization'] = 'JWT ' + res.data['jwt_token'];
+                        this.$axios.defaults.headers.common['Authorization'] = 'JWT ' + res.data['jwt_token'];
                         window.sessionStorage.AuthorizationHeader = 'JWT ' + res.data['jwt_token'];
                         this.setUserName($('#registerForm input[name="username"]').val());
                         this.$emit('closeRegisterModal');
@@ -118,7 +117,7 @@
             },
             // 请求图片验证码
             requestForPictureCode: function () {
-                this.$http.get('picturecodes/')
+                this.$axios.get('picturecodes/')
                     .then((res) => {
                         this.pictureCodeSrc = this.$root.$data.requestHost + res.data['cptch_image'];
                         this.pictureToken = res.data['cptch_key'];
