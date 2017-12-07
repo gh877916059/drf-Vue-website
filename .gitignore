@@ -9,4 +9,5 @@ front-end-src/dist
 front-end-src/node_modules
 front-end-src/bower_components
 fabfile_conf/production.py
+dist/*
 *.swp

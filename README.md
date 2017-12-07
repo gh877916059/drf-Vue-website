@@ -2,8 +2,9 @@
 
 1. 后端Xadmin+Django2全家桶（①django；②django-REST-framework；③django-filter；④django-simple-captcha；⑤django-REST-framework-jwt ）项目框架（附注释）
 2. 前端webpack+Vue全家桶（①Vue2；②Vue-router；③axios；④Vuex）+Bootstrap3的前端项目框架（附注释）
-3. 后端部署脚本使用了fabric，
+3. 后端部署脚本使用了fabric
 4. 前端表单验证使用了1000hz-bootstrap-validator，文件上传使用了bootstrap-fileinput，富文本编辑使用了tinyMCE，图片编辑使用了cropper
+5. `github_commit.sh`是一个非常强大的脚本，只要在命令行输入`.github_commit.sh "你的注释"`即可完成代码的提交（最重要的是把所有敏感的服务器和数据库配置信息统统替换掉，然后再上传到github，上传完成后再还原回来）
 
 # 使用说明
 
