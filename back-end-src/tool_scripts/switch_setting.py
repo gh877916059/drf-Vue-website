@@ -51,7 +51,7 @@ if __name__ == "__main__":
                     elif first_char_behind_equal_sign == '{':
                         add_symbol = '{'
                         minus_symbol = '}'
-                    output_file.write(variable_name + ' = ' + simplejson.dumps(getattr(extra_setting, variable_name), indent=4))
+                    output_file.write(variable_name + ' = ' + simplejson.dumps(getattr(extra_setting, variable_name), indent=4) + '\n')
                     if add_symbol != '':
                         open_and_close_counter = 0
                         while line_num < sum_line:

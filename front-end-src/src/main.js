@@ -7,15 +7,6 @@ import store from './vuex/store';
 import FastClick from 'fastclick';
 import Utils from './utils';
 
-// 仅在本地（非CDN）模式下，才加载这些文件
-/*
-import('./assets/css/bootstrap-3.3.7/bootstrap.css');
-import('./assets/css/font-awesome-4.7.0/font-awesome.css');
-import('./assets/js/bootstrap-3.3.7/bootstrap.js');
-import('./assets/js/bootstrap-validator/validator.js');
-import('./assets/js/jQuery.autoIMG.min.js');
-*/
-
 Vue.use(VueRouter);
 Vue.use(VueResource);
 // 为Vue加载过滤器（可以理解为字符串加工处理函数）

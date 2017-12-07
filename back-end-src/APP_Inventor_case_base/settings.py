@@ -13,7 +13,8 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 REQUEST_HOST = 'http://127.0.0.1:8000'
 
 # 此密钥将会在REST-Framework-JWT中作为JWT_SECRET_KEY
-SECRET_KEY = "y0vj*z2@3@53nht9t!hn4jac*$6oufv+w24r65*4vom1a^2cca"# 请在正式发布代码的时候，将此项设置为False
+SECRET_KEY = "y0vj*z2@3@53nht9t!hn4jac*$6oufv+w24r65*4vom1a^2cca"
+
 DEBUG = True
 
 # 限定请求中的host值,以防止黑客构造包来发送请求.只有在列表中的host才能访问
@@ -101,7 +102,8 @@ DATABASES = {
             "init_command": "SET default_storage_engine=INNODB;"
         }
     }
-}# 密码强度检验规则（不允许跟用户某些属性高度相似、长度不允许过短、不能过于规则简单、不能全为数字
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -117,7 +119,6 @@ USE_TZ = False   # 默认是Ture，时间是utc时间，由于我们要用本地
 
 # 当需要验证一个用户的身份时，调用类的列表
 AUTHENTICATION_BACKENDS = ('users.views.CustomBackend',)
-
 
 # 搜索行为由STATICFILES_FINDERS这个列表来指定；如果含有FileSystemFinder，则会搜索STATICFILES_DIRS；如果含有AppDirectoriesFinder，则会搜索每个app的static子目录
 # STATIC_URL：设置的static file的起始url，这个只是在template里边引用到
@@ -176,6 +177,8 @@ CACHES = {
         }
     }
 }
+'''
+
 '''
 非Django原生setting项，仅用于REST-Framework-EXTENSIONS
 '''

@@ -8,9 +8,9 @@ import sys
 import re
 
 env.user = '服务器用户名'
-env.password = "对应密码"
+env.password = '对应密码'
 env.sudo_user = 'root'
-env.sudo_password = "root用户密码"
+env.sudo_password = 'root用户密码'
 env.hosts = ['服务器IP']
 
 _TAR_FILE = 'back-end-and-front-end-src.tar.gz'
