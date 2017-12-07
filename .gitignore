@@ -8,6 +8,5 @@ back-end-src/tool_scripts/data/setting/remote.py
 front-end-src/dist
 front-end-src/node_modules
 front-end-src/bower_components
-switch_fabfile_env.py
-github_commit.sh
+fabfile_conf/production.py
 *.swp
