@@ -25,7 +25,7 @@
         mounted: function () {
             this.$nextTick(function () {
                 if ($.isEmptyObject(this.$route.query)) {
-                    this.$store.commit('setCaseFilterCondition', {page: 1});
+                    this.$store.commit('setCaseFilterCondition', {page_size: 1, page: 1});
                 } else {
                     this.$store.commit('setCaseFilterCondition', this.$route.query);
                 }

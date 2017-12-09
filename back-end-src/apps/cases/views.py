@@ -38,7 +38,7 @@ class CasesListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Re
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = CasesFilter
     search_fields = ('name', 'cases_brief', 'cases_desc')
-    ordering_fields = ('sold_num', 'shop_price')
+    ordering_fields = ('click_num', 'add_time')
 
     def get_serializer_class(self):
         if self.action == "retrieve":

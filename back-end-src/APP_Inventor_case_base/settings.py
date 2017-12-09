@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'cases.apps.CasesConfig',
+    'questions.apps.CasesConfig',
     'user_operation.apps.UserOperationConfig',
     'DjangoUeditor',
     'crispy_forms',

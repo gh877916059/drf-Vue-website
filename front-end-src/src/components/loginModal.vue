@@ -2,9 +2,9 @@
     <form data-toggle="validator" role="form" id="loginForm" class="form-horizontal">
 
         <div class="form-group has-feedback has-success has-error">
-            <label for="usernameInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> 用户名：</label>
+            <label for="loginUsernameInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> 用户名：</label>
             <div class="col-sm-9">
-                <input type="text" id="usernameInput" class="form-control" name="username" placeholder="请输入用户名" data-pattern-error="用户名长度不足6位" data-required-error="用户名不可以为空" pattern="^.{6,}$" required data-serverValidation>
+                <input type="text" id="loginUsernameInput" class="form-control" name="username" placeholder="请输入用户名" data-pattern-error="用户名长度不足6位" data-required-error="用户名不可以为空" pattern="^.{6,}$" required data-serverValidation>
                 <span class="glyphicon glyphicon-ok form-control-feedback"></span>
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
@@ -12,9 +12,9 @@
         </div>
 
         <div class="form-group has-feedback has-success has-error">
-            <label for="passwordInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i> 密码：</label>
+            <label for="loginPasswordInput" class="col-sm-3 control-label"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i> 密码：</label>
             <div class="col-sm-9">
-                <input type="password" id="passwordInput" class="form-control" name="password" placeholder="请输入密码" data-pattern-error="密码长度不足6位" data-required-error="密码不可以为空" pattern="^.{6,}$" required>
+                <input type="password" id="loginPasswordInput" class="form-control" name="password" placeholder="请输入密码" data-pattern-error="密码长度不足6位" data-required-error="密码不可以为空" pattern="^.{6,}$" required>
                 <span class="glyphicon glyphicon-ok form-control-feedback"></span>
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>

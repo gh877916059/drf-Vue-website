@@ -8,19 +8,19 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <rich-text-viewer v-bind:caseId="caseId">
-                </rich-text-viewer>
+                <case-viewer v-bind:caseId="caseId">
+                </case-viewer>
             </div>
         </div>
     </div>
 </template>
 <script>
     import topBar from '../components/topBar.vue';
-    import richTextViewer from '../components/richTextViewer.vue';
+    import caseViewer from '../components/caseViewer.vue';
     export default {
         components: {
             topBar,
-            richTextViewer
+            caseViewer
         },
         computed: {
             caseId () {

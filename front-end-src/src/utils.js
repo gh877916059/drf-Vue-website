@@ -53,3 +53,23 @@ exports.convertBase64UrlToBlob = function (urlData) {
     }
     return new Blob([ab], {type: 'image/png'});
 };
+
+exports.isTwoObjectsEqual = function (objectA, objectB) {
+    if (!objectA && !objectB) {
+        return true;
+    }
+    if (!objectA || !objectB) {
+        return false;
+    }
+    for (var keyA in objectA) {
+        if (objectA[keyA] !== objectB[keyA]) {
+            return false;
+        }
+    }
+    for (var keyB in objectB) {
+        if (objectA[keyB] !== objectB[keyB]) {
+            return false;
+        }
+    }
+    return true;
+};

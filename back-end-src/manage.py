@@ -4,7 +4,7 @@ __author__ = 'HymanLu'
 import os
 import sys
 
-# 常用参数：makemigrations、migrate、runserver、startapp
+# 常用参数：makemigrations、migrate、runserver 0.0.0.0:8000、startapp
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "APP_Inventor_case_base.settings")
     try:

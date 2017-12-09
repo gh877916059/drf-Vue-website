@@ -13,7 +13,7 @@ class UserFavDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFav
-        fields = ("goods", "id")
+        fields = ("cases", "id")
 
 
 class UserFavSerializer(serializers.ModelSerializer):
@@ -26,9 +26,9 @@ class UserFavSerializer(serializers.ModelSerializer):
         validators = [
             UniqueTogetherValidator(
                 queryset=UserFav.objects.all(),
-                fields=('user', 'goods'),
+                fields=('user', 'cases'),
                 message="已经收藏"
             )
         ]
 
-        fields = ("user", "goods", "id")
+        fields = ("user", "cases", "id")

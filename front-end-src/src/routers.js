@@ -51,6 +51,14 @@ const routers = [{
         });
     }
 }, {
+    path: '/showAllQuestions',
+    name: 'showAllQuestions',
+    component(resolve) {
+        require.ensure(['./views/showAllQuestions.vue'], () => {
+            resolve(require('./views/showAllQuestions.vue'));
+        });
+    }
+}, {
     path: '*',
     component(resolve) {
         require.ensure(['./views/index.vue'], () => {

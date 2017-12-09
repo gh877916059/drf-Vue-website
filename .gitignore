@@ -2,12 +2,13 @@
 *.idea*
 *__pycache__*
 *.pyc
+*.swp
 back-end-src/media/*
 back-end-src/tool_scripts/data/setting/local.py
 back-end-src/tool_scripts/data/setting/remote.py
 front-end-src/dist
 front-end-src/node_modules
 front-end-src/bower_components
-fabfile_conf/production.py
-dist/*
-*.swp
+operation-and-deployment-src/fabfile_conf/production.py
+operation-and-deployment-src/dist/*
+operation-and-deployment-src/backup/*
