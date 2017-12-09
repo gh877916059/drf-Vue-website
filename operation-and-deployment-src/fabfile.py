@@ -8,11 +8,11 @@ import sys
 import re
 from reinit_migrations import deleteAllMigrationFiles, makemigrationAndMigrate
 
-env.user = '服务器用户名'
-env.password = '对应密码'
+env.user = 'hymanlu'
+env.password = '87319106'
 env.sudo_user = 'root'
-env.sudo_password = 'root用户密码'
-env.hosts = ['服务器IP']
+env.sudo_password = 'liYUE020'
+env.hosts = ['119.23.69.178']
 
 _TAR_FILE = 'back-end-and-front-end-src.tar.gz'
 _REMOTE_TMP_DIR = '/tmp'
