@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 REQUEST_HOST = 'http://127.0.0.1:8000'
 
 # 此密钥将会在REST-Framework-JWT中作为JWT_SECRET_KEY
-SECRET_KEY = "njl9wf4g%+r(2z9kjx(efbp2zv37e%*eqc6c*srg=mz58itr9@"
+SECRET_KEY = "y0vj*z2@3@53nht9t!hn4jac*$6oufv+w24r65*4vom1a^2cca"
 
 DEBUG = True
 
@@ -96,9 +96,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "APP_Inventor_case_base",
-        "USER": "root",
+        "USER": "your_user_name",
         "PASSWORD": "your_password",
-        "HOST": "localhost",
+        "HOST": "your_host_ip",
         "OPTIONS": {
             "init_command": "SET default_storage_engine=INNODB;"
         }
