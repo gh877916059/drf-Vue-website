@@ -14,7 +14,7 @@
 
 ①`tool_scripts/clean_useless_files.py`用于删除/media下已经失效的用户上传图片文件（完全没有被当前任何数据引用到的）；
 
-②`tool_scripts/import_category_data.py`用于往数据表中插入案例的类别数据，用于初始化数据库；
+②`tool_scripts/import_data.py`用于往数据表中插入预设数据（存放于`tool_scripts/data/wait_to_import`目录当中），用于初始化数据库；
 
 ③`tool_scripts/switch_setting.py`用于将`tool_scripts/data/db_backup`目录下制定文件（如`local.py`）替换到`APP_Inventor_case_base/settings.py`上
 

@@ -36,7 +36,7 @@
                 <input type="hidden" name="cases_front_image" v-bind:value="coverPictureURL"/>
             </div>
 
-            <input type="submit" class="btn btn-primary btn-block" v-on:click='postRichTextEditorData' value="提交"></input>
+            <input type="submit" class="btn btn-primary btn-block" v-on:click='postFormData' value="提交"></input>
         </form>
         <div class="modal fade" id="pictureCropperModal" tabindex="-1" role="dialog" aria-labelledby="pictureCropperModal">
             <div class="modal-dialog modal-lg" role="document">
@@ -76,11 +76,6 @@
                 imageData: '',
                 coverPictureType: '',
                 coverPictureName: '',
-                defaultMsg: '这里是UE测试',
-                config: {
-                    initialFrameWidth: null,
-                    initialFrameHeight: 350
-                },
                 $pictureInput: null
             };
         },
@@ -157,10 +152,9 @@
                 return config;
             },
             // 提交案例相关信息和富文本框内容
-            postRichTextEditorData: function () {
+            postFormData: function () {
                 window.tinymce.activeEditor.uploadImages(function(success) {
                     var postData = this.$root.getFormInput('richTextEditorForm');
-                    postData = this.$root.getFormInput('richTextEditorForm');
                     var casesDesc = window.tinymce.activeEditor.getContent();
                     postData['cases_desc'] = casesDesc;
                     postData['category_id'] = this.categoryNameToId[postData['category_name']];

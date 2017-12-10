@@ -59,6 +59,22 @@ const routers = [{
         });
     }
 }, {
+    path: '/editQuestion',
+    name: 'editQuestion',
+    component(resolve) {
+        require.ensure(['./views/editQuestion'], () => {
+            resolve(require('./views/editQuestion'));
+        });
+    }
+}, {
+    path: '/viewQuestion/:id',
+    name: 'viewQuestion',
+    component(resolve) {
+        require.ensure(['./views/viewQuestion.vue'], () => {
+            resolve(require('./views/viewQuestion.vue'));
+        });
+    }
+}, {
     path: '*',
     component(resolve) {
         require.ensure(['./views/index.vue'], () => {
@@ -68,3 +84,4 @@ const routers = [{
 }];
 
 export default routers;
+// /viewQuestion/

@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col-sm-12">
-                <top-bar activeIndex=1>
+                <top-bar activeIndex=3>
                 </top-bar>
             </div>
         </div>

@@ -18,16 +18,7 @@ class GetQuestionsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class PostQuestionsSerializer(serializers.ModelSerializer):
-    question_state_id = serializers.IntegerField(required=True, write_only=True, label="问题状态ID", help_text="问题状态ID")
-
-    def validate(self, attrs):
-        question_state_id = attrs['question_state_id']
-        question_state = QuestionState.objects.get(Q(id=question_state_id))
-        attrs['state'] = question_state
-        del attrs['question_state_id']
-        return attrs
 
     class Meta:
         model = Questions
-        fields = "__all__"
-        fields = ("question_state_id", "name", "cases_brief", "cases_desc")
+        fields = ("name", "label_1", "label_2", "label_3", "label_4", "label_5", "question_desc")

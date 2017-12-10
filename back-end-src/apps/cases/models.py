@@ -38,6 +38,7 @@ class Cases(models.Model):
     click_num = models.IntegerField(default=0, verbose_name="点击数")
     fav_num = models.IntegerField(default=0, verbose_name="收藏数")
     reply_num = models.IntegerField(default=0, verbose_name="回复数")
+    vote_num = models.IntegerField(default=0, verbose_name="点赞数")
     cases_brief = models.TextField(max_length=500, verbose_name="案例简短描述")
     #cases_desc = UEditorField(verbose_name=u"内容", imagePath="rich_text_picture/", width=1000, height=300, filePath="rich_text_file/", default='')
     cases_desc = models.TextField(max_length=50000, verbose_name="案例正文内容")

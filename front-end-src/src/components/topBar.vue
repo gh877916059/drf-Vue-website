@@ -20,7 +20,8 @@
                         <li><router-link to="/index">首页<!--<span class="sr-only">(current)</span>--></router-link></li>
                         <li><router-link to="/showAllCases">案例</router-link></li>
                         <li><router-link to="/editCase">发表</router-link></li>
-                        <li><router-link to="/showAllQuestions">问答</router-link></li>
+                        <li><router-link to="/showAllQuestions">问题</router-link></li>
+                        <li><router-link to="/editQuestion">提问</router-link></li>
                     </ul>
                     <form class="navbar-form navbar-left">
                         <div class="form-group">
