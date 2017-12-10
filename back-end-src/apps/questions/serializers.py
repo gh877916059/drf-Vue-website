@@ -3,15 +3,9 @@ __author__ = 'HymanLu'
 
 from rest_framework import serializers
 from django.db.models import Q
-from questions.models import Questions, QuestionState
-
-class QuestionStateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = QuestionState
-        fields = "__all__"
+from questions.models import Questions
 
 class GetQuestionsSerializer(serializers.ModelSerializer):
-    question_state = QuestionStateSerializer()
 
     class Meta:
         model = Questions

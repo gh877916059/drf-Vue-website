@@ -10,7 +10,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 from cases.views import CasesListViewSet, CategoryViewset, HotSearchsViewset, BannerViewset
-from questions.views import QuestionsListViewSet, QuestionStateViewset
+from questions.views import QuestionsListViewSet
 from users.views import SmsCodeViewset, UserViewset, PictureCodeView
 from user_operation.views import UserFavViewset
 from django.views.generic import TemplateView
@@ -20,7 +20,6 @@ router = DefaultRouter()    # 利用了ViewSet的重载as_view()方法进行请�
 router.register(r'cases', CasesListViewSet, base_name="cases")      # 案例列表的相关操作
 router.register(r'categorys', CategoryViewset, base_name="categorys")       # 案例类别的相关操作
 router.register(r'questions', QuestionsListViewSet, base_name="questions")      # 问题列表的相关操作
-router.register(r'question-states', QuestionStateViewset, base_name="question_states")       # 问题状态的相关操作
 router.register(r'smscodes', SmsCodeViewset, base_name="smscodes")    # 短信验证码的相关操作
 router.register(r'hotsearchs', HotSearchsViewset, base_name="hotsearchs")       # 热搜案例的相关操作
 router.register(r'users', UserViewset, base_name="users")       # 用户的相关操作

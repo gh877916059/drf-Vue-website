@@ -34,15 +34,5 @@ def import_category_data():
             lev2_intance.parent_category = lev1_intance
             lev2_intance.save()
 
-def import_question_state_data():
-    from questions.models import QuestionState
-    from tool_scripts.data.wait_to_import.question_state_data import row_data
-    for state_data in row_data:
-        question_state_intance = QuestionState()
-        question_state_intance.code = state_data["code"]
-        question_state_intance.name = state_data["name"]
-        question_state_intance.save()
-
 if __name__ == "__main__":
     import_category_data()
-    import_question_state_data()

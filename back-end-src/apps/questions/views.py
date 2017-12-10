@@ -9,9 +9,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.throttling import UserRateThrottle
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
-from .models import Questions, QuestionState
+from .models import Questions
 from .filters import CasesFilter
-from .serializers import GetQuestionsSerializer, PostQuestionsSerializer, QuestionStateSerializer
+from .serializers import GetQuestionsSerializer, PostQuestionsSerializer
 from rest_framework import status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -67,13 +67,3 @@ class QuestionsListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
         re_dict['id'] = case.id
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
-
-class QuestionStateViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    """
-    list:
-        问题状态列表数据
-    retrieve:
-        获取问题状态详情
-    """
-    queryset = QuestionState.objects.all()
-    serializer_class = QuestionStateSerializer
