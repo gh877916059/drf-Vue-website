@@ -37,7 +37,7 @@ def remoteBackupDB():
     dt = _now()
     f = 'remote-backup-APP_Inventor_case_base_website-%s.sql' % dt
     with cd(_REMOTE_TMP_DIR):
-        cmd_string = 'mysqldump --user=%s --password=%s -t --default-character-set=utf8 --quick %s %s > %s' % (_DB_USER_NAME, _DB_PASSWORD, _DB_NAME, ' '.join(_BACKUP_TABLES), f)
+        cmd_string = 'mysqldump --user=%s --password=%s -t -c --default-character-set=utf8 --quick %s %s > %s' % (_DB_USER_NAME, _DB_PASSWORD, _DB_NAME, ' '.join(_BACKUP_TABLES), f)
         run(cmd_string)
         run('tar -czvf %s.tar.gz %s' % (f, f))
         get('%s.tar.gz' % f, '%s/backup/' % _CURRENT_DIR)
@@ -52,7 +52,7 @@ def localBackupDB():
     f = 'local-backup-APP_Inventor_case_base_website-%s.sql' % dt
     backup_dir = os.path.join(_CURRENT_DIR, 'backup')
     with lcd(backup_dir):
-        cmd_string = 'mysqldump --user=%s --password=%s -t --default-character-set=utf8 --quick %s %s > %s' % (_DB_USER_NAME, _DB_PASSWORD, _DB_NAME, ' '.join(_BACKUP_TABLES), f)
+        cmd_string = 'mysqldump --user=%s --password=%s -t -c --default-character-set=utf8 --quick %s %s > %s' % (_DB_USER_NAME, _DB_PASSWORD, _DB_NAME, ' '.join(_BACKUP_TABLES), f)
         local(cmd_string)
         local('tar -czvf %s.tar.gz %s' % (f, f))
         local('rm -f %s' % f)

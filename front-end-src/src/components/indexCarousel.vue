@@ -33,6 +33,8 @@
                 this.$axios.get('banners/')
                     .then((res) => {
                         this.bannerList = res.data;
+                        console.log('---this.bannerList---');
+                        console.log(this.bannerList);
                     }, (err) => {
                         var errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
