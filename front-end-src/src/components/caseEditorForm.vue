@@ -55,6 +55,8 @@
 <script>
     import $ from 'jquery';
     import pictureCropper from './pictureCropper.vue';
+    import Constants from '../constants';
+    import Utils from '../utils';
     export default {
         components: {
             pictureCropper
@@ -71,7 +73,7 @@
                 cases_brief: '',
                 category_name: '',
                 categoryList: [],
-                coverPictureURL: this.$root.$data.requestHost + '/static/image/fail.jpg',
+                coverPictureURL: Constants.REQUEST_HOST + '/static/image/fail.jpg',
                 categoryNameToId: {},
                 imageData: '',
                 coverPictureType: '',
@@ -81,10 +83,10 @@
         },
         computed: {
             coverPictureFileName () {
-                return this.$root.convertURLtoRawFileName(this.coverPictureURL);
+                return Utils.convertURLtoRawFileName(this.coverPictureURL);
             },
             completePictureFileName () {
-                return this.$root.convertURLtoCompleteFileName(this.coverPictureURL);
+                return Utils.convertURLtoCompleteFileName(this.coverPictureURL);
             }
         },
         methods: {
@@ -96,7 +98,7 @@
                 window.tinymce.init({
                     selector: '#MyTextArea',
                     branding: false,
-                    language_url: this.$root.$data.requestHost + '/static/js/zh_CN.js',  // site absolute URL
+                    language_url: Constants.REQUEST_HOST + '/static/js/zh_CN.js',  // site absolute URL
                     height: 500,
                     menubar: false,
                     paste_data_images: true,
@@ -107,7 +109,7 @@
                     ],
                     toolbar: 'insert | undo redo |  formatselect image | bold italic strikethrough forecolor backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
                     // 配置了该选项后，才能进行上传文件
-                    images_upload_url: this.$root.$data.requestHost + '/uploadfile/rich_text_picture/',
+                    images_upload_url: Constants.REQUEST_HOST + '/uploadfile/rich_text_picture/',
                     images_upload_handler: function (blobInfo, success, failure) {
                         var formData = new FormData();
                         formData.append('file', blobInfo.blob(), blobInfo.filename());
@@ -128,7 +130,7 @@
             getBootstrapInputConfig () {
                 var config = {
                     showUpload: true,  // 显示上传文件按钮
-                    uploadUrl: this.$root.$data.requestHost + '/uploadfile/case_cover_picture/',    // 为了显示文件拖拽功能，必须开启
+                    uploadUrl: Constants.REQUEST_HOST + '/uploadfile/case_cover_picture/',    // 为了显示文件拖拽功能，必须开启
                     language: 'zh', // 简体中文
                     ajaxSettings: {headers: {Authorization: this.$axios.defaults.headers.common['Authorization']}}, // 添加HTTP验证头信息
                     ajaxDeleteSettings: {headers: {Authorization: this.$axios.defaults.headers.common['Authorization']}}, // 添加HTTP验证头信息
@@ -154,7 +156,7 @@
             // 提交案例相关信息和富文本框内容
             postFormData: function () {
                 window.tinymce.activeEditor.uploadImages(function(success) {
-                    var postData = this.$root.getFormInput('richTextEditorForm');
+                    var postData = Utils.getFormInput('richTextEditorForm');
                     var casesDesc = window.tinymce.activeEditor.getContent();
                     postData['cases_desc'] = casesDesc;
                     postData['category_id'] = this.categoryNameToId[postData['category_name']];
@@ -163,8 +165,8 @@
                         this.$axios.put('cases/' + this.caseId + '/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            this.$root.jumpToThisPage('/viewCase/' + this.caseId);
-                        }, (err) => {
+                            Utils.jumpToThisPage('/viewCase/' + this.caseId);
+                        }.bind(this), (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
                         });
@@ -172,7 +174,7 @@
                         this.$axios.post('cases/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            this.$root.jumpToThisPage('/viewCase/' + res.data['id']);
+                            Utils.jumpToThisPage('/viewCase/' + res.data['id']);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);

@@ -1,51 +1,46 @@
 <template>
     <div>
-        <router-link class="button expanded" v-bind:to="editCaseURL" data-toggle="tooltip" data-original-title="编辑">编辑</router-link>
-        <button class="button expanded" v-on:click="deleteCase">删除</button>
-        <div id="richTextViewerDiv" v-html="cases_desc">
+        <router-link class="button expanded" v-bind:to="editQuestionURL" data-toggle="tooltip" data-original-title="编辑">编辑</router-link>
+        <button class="button expanded" v-on:click="deleteQuestion">删除</button>
+        <div id="richTextViewerDiv" v-html="question_desc">
         </div>
     </div>
 </template>
 
 <script>
     import $ from 'jquery';
+    import Utils from '../utils';
     export default {
         props: {
-            caseId: {
+            questionId: {
                 type: String,
                 default: ''
             }
         },
         data() {
             return {
-                category_name: '',
                 name: '',
                 click_num: 0,
                 fav_num: 0,
                 reply_num: 0,
-                cases_brief: '',
-                cases_desc: '',
-                cases_front_image: '',
+                question_desc: '',
                 add_time: '',
                 id: 0
             };
         },
         methods: {
-            // 请求该案例的详细信息
-            getCaseDetail: function () {
-                if (this.caseId.length <= 0) {
-                    console.log('---请传入案例ID作为query---');
+            // 请求该问题的详细信息
+            getQuestionDetail: function () {
+                if (this.questionId.length <= 0) {
+                    console.log('---请传入问题ID作为query---');
                 } else {
-                    this.$axios.get('cases/' + this.caseId + '/')
+                    this.$axios.get('questions/' + this.questionId + '/')
                         .then((res) => {
-                            this.category_name = res.data['category']['name'];
                             this.name = res.data['name'];
                             this.click_num = res.data['click_num'];
                             this.fav_num = res.data['fav_num'];
                             this.reply_num = res.data['reply_num'];
-                            this.cases_brief = res.data['cases_brief'];
-                            this.cases_desc = res.data['cases_desc'];
-                            this.cases_front_image = res.data['cases_front_image'];
+                            this.question_desc = res.data['question_desc'];
                             this.add_time = res.data['add_time'];
                             this.id = res.data['id'];
                         }, (err) => {
@@ -55,15 +50,15 @@
                         });
                 }
             },
-            deleteCase: function () {
-                if (this.caseId.length <= 0) {
-                    console.log('---请传入案例ID作为query---');
+            deleteQuestion: function () {
+                if (this.questionId.length <= 0) {
+                    console.log('---请传入问题ID作为query---');
                 } else {
-                    this.$axios.delete('cases/' + this.caseId + '/')
+                    this.$axios.delete('questions/' + this.questionId + '/')
                         .then((res) => {
-                            console.log('---删除案例成功---');
+                            console.log('---删除问题成功---');
                             this.$store.commit('increaseForcedRequestCounter');
-                            this.$root.jumpToThisPage('/showAllCases');
+                            Utils.jumpToThisPage('/showAllQuestions');
                         }, (err) => {
                             var errorReasonDict = err.body;
                             console.log('---errorReasonDict---');
@@ -74,13 +69,13 @@
         },
         mounted: function () {
             this.$nextTick(function () {
-                this.getCaseDetail();
+                this.getQuestionDetail();
                 $('[data-toggle=tooltip]').tooltip();
             });
         },
         computed: {
-            editCaseURL () {
-                return '/editCase?id=' + this.id;
+            editQuestionURL () {
+                return '/editQuestion?id=' + this.id;
             }
         }
     };

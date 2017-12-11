@@ -19,6 +19,7 @@
 
 <script>
     import $ from 'jquery';
+    import Constants from '../constants';
     export default {
         data() {
             return {
@@ -32,7 +33,11 @@
                 this.$axios.get('categorys/')
                     .then((res) => {
                         this.categoryList = res.data;
-                        this.$store.commit('setCaseFilterCondition', {top_category: this.categoryList[0].id});
+                        this.$store.commit('setFilterCondition', {top_category: this.categoryList[0].id});
+                        const page = this.$route.query['page'] || 1;
+                        const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
+                        this.$store.commit('setCurrPageNum', page);
+                        this.$store.commit('setCurrPageSize', pageSize);
                     }, (err) => {
                         var errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
@@ -40,19 +45,19 @@
                     });
             },
             selectOneCategory: function (categoryId) {
-                this.$store.commit('setCaseFilterCondition', {top_category: categoryId});
+                this.$store.commit('setFilterCondition', {top_category: categoryId});
             },
             clickPanelTitle: function (panelIndex) {
                 if (this.currUnfoldPanelIndex !== panelIndex) {
                     this.currUnfoldPanelIndex = panelIndex;
                     var categoryId = this.categoryList[panelIndex].id;
-                    this.$store.commit('setCaseFilterCondition', {top_category: categoryId});
+                    this.$store.commit('setFilterCondition', {top_category: categoryId});
                 }
             }
         },
         mounted: function () {
+            this.getCategoryList();
             this.$nextTick(function () {
-                this.getCategoryList();
                 $('#leftAccordionMenu').on('hide.bs.collapse', function () {
                     var currUnfoldPanelIndex = parseInt($('#leftAccordionMenu div.panel-collapse.in').attr('id').substr(-1));
                     // 如果要隐藏的是当前正在显示的列表框，则不仅要阻止事件往上冒泡，而且要阻止事件本身
@@ -62,6 +67,9 @@
                     return true;
                 }.bind(this));
             });
+        },
+        destroyed: function () {
+            this.$store.commit('resetFilterCondition');
         }
     };
 </script>

@@ -72,7 +72,8 @@
 
 <script>
     import $ from 'jquery';
-
+    import Constants from '../constants';
+    import Utils from '../utils';
     export default {
         data() {
             return {
@@ -87,7 +88,7 @@
                 if (errorNum > 0) {
                     return;
                 }
-                var postData = this.$root.getFormInput('registerForm');
+                var postData = Utils.getFormInput('registerForm');
                 this.$axios.post('users/', postData)
                     .then((res) => {
                         this.$axios.defaults.headers.common['Authorization'] = 'JWT ' + res.data['jwt_token'];
@@ -119,7 +120,7 @@
             requestForPictureCode: function () {
                 this.$axios.get('picturecodes/')
                     .then((res) => {
-                        this.pictureCodeSrc = this.$root.$data.requestHost + res.data['cptch_image'];
+                        this.pictureCodeSrc = Constants.REQUEST_HOST + res.data['cptch_image'];
                         this.pictureToken = res.data['cptch_key'];
                         $('#registerForm input[name="code"]').val('');
                     }, (err) => {

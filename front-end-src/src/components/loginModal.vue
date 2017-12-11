@@ -29,7 +29,7 @@
 
 <script>
     import $ from 'jquery';
-
+    import Utils from '../utils';
     export default {
         data() {
             return {
@@ -65,10 +65,10 @@
                 if (errorNum > 0) {
                     return;
                 }
-                var postData = this.$root.getFormInput('loginForm');
+                var postData = Utils.getFormInput('loginForm');
                 this.$axios.post('login/', postData)
                     .then((res) => {
-                        this.$axios.defaults.headers.common['Authorization'] = 'JWT' + res.data['token'];
+                        this.$axios.defaults.headers.common['Authorization'] = 'JWT ' + res.data['token'];
                         window.sessionStorage.AuthorizationHeader = 'JWT ' + res.data['token'];
                         this.setUserName($('#loginForm input[name="username"]').val());
                         this.$emit('closeLoginModal');

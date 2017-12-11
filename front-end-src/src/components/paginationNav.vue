@@ -42,19 +42,28 @@
 </template>
 
 <script>
+    import Utils from '../utils';
     export default {
+        props: {
+            sumPageNum: {
+                type: Number,
+                default: 1
+            },
+            nextPageUrl: {
+                type: String,
+                default: ''
+            },
+            previousPageUrl: {
+                type: String,
+                default: ''
+            }
+        },
         computed: {
             currPageNum () {
                 return this.$store.state.currPageNum;
             },
             pageNumToShowList () {
-                return this.$store.state.pageNumToShowList;
-            },
-            nextPageUrl () {
-                return this.$store.state.nextPageUrl;
-            },
-            previousPageUrl () {
-                return this.$store.state.previousPageUrl;
+                return Utils.rangeArray(1, this.sumPageNum);
             }
         },
         methods: {

@@ -30,6 +30,7 @@
 
 <script>
     import $ from 'jquery';
+    import Utils from '../utils';
     export default {
         data() {
             return {
@@ -54,7 +55,7 @@
             // 异步上传封面图片
             uploadCoverPicture (event) {
                 this.coverPictureURL = '';
-                let bits = this.$root.convertBase64UrlToBlob(this.afterCroppingImageData);
+                let bits = Utils.convertBase64UrlToBlob(this.afterCroppingImageData);
                 var file = new File([bits], this.imageName, {type: this.imageType});
                 this.$emit('updatePictureFiles', file, this.afterCroppingImageData);
                 this.$emit('closePictureCropperModal');

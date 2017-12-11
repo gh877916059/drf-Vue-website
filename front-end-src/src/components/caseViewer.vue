@@ -9,6 +9,7 @@
 
 <script>
     import $ from 'jquery';
+    import Utils from '../utils';
     export default {
         props: {
             caseId: {
@@ -63,7 +64,7 @@
                         .then((res) => {
                             console.log('---删除案例成功---');
                             this.$store.commit('increaseForcedRequestCounter');
-                            this.$root.jumpToThisPage('/showAllCases');
+                            Utils.jumpToThisPage('/showAllCases');
                         }, (err) => {
                             var errorReasonDict = err.body;
                             console.log('---errorReasonDict---');

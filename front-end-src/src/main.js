@@ -4,12 +4,11 @@ import filters from './filters';
 import routes from './routers';
 import store from './vuex/store';
 import FastClick from 'fastclick';
-import Utils from './utils';
 import axios from 'axios';
+import Constants from './constants';
 
 // 设置axios的请求Host（作用在this.$axios.get()或者this.$axios.post()方法上）
-const requestHost = 'http://127.0.0.1:8000';
-axios.defaults.baseURL = requestHost;
+axios.defaults.baseURL = Constants.REQUEST_HOST;
 Vue.prototype.$axios = axios;
 
 Vue.use(VueRouter);
@@ -81,11 +80,5 @@ router.beforeEach((to, from, next) => {
  */
 new Vue({
     router, // ES6语法糖，相当于router:router
-    store,   // ES6语法糖，相当于store:store
-    methods: Utils,
-    data() {
-        return {
-            requestHost: requestHost
-        };
-    }
+    store   // ES6语法糖，相当于store:store
 }).$mount('#app');

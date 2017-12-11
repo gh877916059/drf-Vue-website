@@ -48,6 +48,8 @@
 
 <script>
     import $ from 'jquery';
+    import Constants from '../constants';
+    import Utils from '../utils';
     export default {
         props: {
             questionId: {
@@ -75,7 +77,7 @@
                 window.tinymce.init({
                     selector: '#MyTextArea',
                     branding: false,
-                    language_url: this.$root.$data.requestHost + '/static/js/zh_CN.js',  // site absolute URL
+                    language_url: Constants.REQUEST_HOST + '/static/js/zh_CN.js',  // site absolute URL
                     height: 500,
                     menubar: false,
                     paste_data_images: true,
@@ -86,7 +88,7 @@
                     ],
                     toolbar: 'insert | undo redo |  formatselect image | bold italic strikethrough forecolor backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
                     // 配置了该选项后，才能进行上传文件
-                    images_upload_url: this.$root.$data.requestHost + '/uploadfile/rich_text_picture/',
+                    images_upload_url: Constants.REQUEST_HOST + '/uploadfile/rich_text_picture/',
                     images_upload_handler: function (blobInfo, success, failure) {
                         var formData = new FormData();
                         formData.append('file', blobInfo.blob(), blobInfo.filename());
@@ -107,15 +109,15 @@
             // 提交案例相关信息和富文本框内容
             postFormData: function () {
                 window.tinymce.activeEditor.uploadImages(function(success) {
-                    var postData = this.$root.getFormInput('richTextEditorForm');
+                    var postData = Utils.getFormInput('richTextEditorForm');
                     var questionsDesc = window.tinymce.activeEditor.getContent();
                     postData['question_desc'] = questionsDesc;
                     if (this.questionId.length > 0) {
                         this.$axios.put('questions/' + this.questionId + '/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            this.$root.jumpToThisPage('/viewQuestion/' + this.questionId);
-                        }, (err) => {
+                            Utils.jumpToThisPage('/viewQuestion/' + this.questionId);
+                        }.bind(this), (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
                         });
@@ -123,7 +125,7 @@
                         this.$axios.post('questions/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            this.$root.jumpToThisPage('/viewQuestion/' + res.data['id']);
+                            Utils.jumpToThisPage('/viewQuestion/' + res.data['id']);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);

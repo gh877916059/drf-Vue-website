@@ -35,6 +35,7 @@
 
 <script>
     import $ from 'jquery';
+    import Utils from '../utils';
     export default {
         // 模板<template>默认替换挂载元素，如果 replace 选项为 false，模板将插入挂载元素内
         replace: true,
@@ -88,7 +89,7 @@
         },
         methods: {
             jumpToCaseDetailPage: function () {
-                this.$root.jumpToThisPage('/viewCase/' + this.id);
+                Utils.jumpToThisPage('/viewCase/' + this.id);
             }
         }
     };

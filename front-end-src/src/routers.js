@@ -65,7 +65,8 @@ const routers = [{
         require.ensure(['./views/editQuestion'], () => {
             resolve(require('./views/editQuestion'));
         });
-    }
+    },
+    meta: { requiresAuth: true }
 }, {
     path: '/viewQuestion/:id',
     name: 'viewQuestion',

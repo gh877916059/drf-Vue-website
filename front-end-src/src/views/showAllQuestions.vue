@@ -16,20 +16,17 @@
 <script>
     import topBar from '../components/topBar.vue';
     import questionList from '../components/questionList.vue';
-    import $ from 'jquery';
+    import Constants from '../constants';
     export default {
         components: {
             topBar,
             questionList
         },
         mounted: function () {
-            this.$nextTick(function () {
-                if ($.isEmptyObject(this.$route.query)) {
-                    this.$store.commit('setCaseFilterCondition', {page_size: 1, page: 1});
-                } else {
-                    this.$store.commit('setCaseFilterCondition', this.$route.query);
-                }
-            });
+            const page = this.$route.query['page'] || 1;
+            const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
+            this.$store.commit('setCurrPageNum', page);
+            this.$store.commit('setCurrPageSize', pageSize);
         }
     };
 </script>
