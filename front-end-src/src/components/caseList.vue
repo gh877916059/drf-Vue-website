@@ -3,7 +3,7 @@
         <template v-if="caseOutlineList.length > 0">
             <div class="col-sm-12">
                 <ul class="list-group">
-                    <li v-for="(caseOutline, index) in caseOutlineList" class="list-group-item"><question-outline-media-object v-bind="caseOutline"></question-outline-media-object></li>
+                    <li v-for="(caseOutline, index) in caseOutlineList" class="list-group-item"><case-outline-media-object v-bind="caseOutline"></case-outline-media-object></li>
                 </ul>
             </div>
             <div class="col-sm-8 col-sm-offset-4">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import questionOutlineMediaObject from './questionOutlineMediaObject.vue';
+    import caseOutlineMediaObject from './caseOutlineMediaObject.vue';
     import paginationNav from './paginationNav.vue';
     export default {
         data() {
@@ -32,7 +32,7 @@
             };
         },
         components: {
-            questionOutlineMediaObject,
+            caseOutlineMediaObject,
             paginationNav
         },
         mounted: function () {

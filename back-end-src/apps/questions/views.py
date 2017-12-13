@@ -43,7 +43,7 @@ class QuestionsListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixin
     def get_serializer_class(self):
         if self.action == "retrieve":
             return GetQuestionsSerializer
-        # 当进行的是注册新用户时
+        # 当进行的是创建新问题时
         elif self.action == "create":
             return PostQuestionsSerializer
         elif self.action == "update":

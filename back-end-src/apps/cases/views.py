@@ -43,7 +43,7 @@ class CasesListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Re
     def get_serializer_class(self):
         if self.action == "retrieve":
             return GetCasesSerializer
-        # 当进行的是注册新用户时
+        # 当进行的是创建新案例时
         elif self.action == "create":
             return PostCasesSerializer
         elif self.action == "update":

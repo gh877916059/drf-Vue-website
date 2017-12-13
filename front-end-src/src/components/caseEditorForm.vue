@@ -192,7 +192,8 @@
                 reader.onload = function (evt) {
                     imageInfoDict['data'] = evt.target.result;
                     // 强制触发子组件initCropper()函数
-                    this.$refs.pictureCropperModal.initCropper(imageInfoDict);
+                    // this.$refs.pictureCropperModal.initCropper(imageInfoDict);
+                    this.$refs.pictureCropperModal.loadPicture(imageInfoDict);
                     this.openPictureCropperModal();
                 }.bind(this);
                 reader.readAsDataURL(file);
