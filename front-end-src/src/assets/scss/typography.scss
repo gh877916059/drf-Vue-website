@@ -1,0 +1,244 @@
+@charset "utf-8";
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  line-height: 1.8;
+  background-color: #fff;
+  color: #384047;
+  font-weight: 500;
+  position: relative;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  -moz-overflow-scrolling: touch;
+  -ms-overflow-scrolling: touch;
+  -o-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+  -webkit-font-kerning: auto;
+  -moz-font-kerning: auto;
+  font-kerning: auto;
+  -o-font-kerning: auto;
+}
+body.preloader-active {
+  overflow-y: hidden;
+  -ms-touch-action: none;
+}
+.no-js body.preloader-active {
+  overflow-y: auto;
+  -ms-touch-action: auto;
+}
+* {
+  font-family: inherit;
+}
+/* Bugfix: IE 10 Windows 8 and Windows Phone8 */
+@-ms-viewport {
+  width: device-width;
+}
+@-o-viewport {
+  width: device-width;
+}
+@viewport {
+  width: device-width;
+}
+body,
+input,
+textarea {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+::selection {
+  background-color: #000;
+  color: #fff;
+  text-shadow: none;
+}
+::-moz-selection {
+  background-color: #000;
+  color: #fff;
+  text-shadow: none;
+}
+::-webkit-selection {
+  background-color: #000;
+  color: #fff;
+  text-shadow: none;
+}
+*,
+*:focus,
+*:active,
+a:link,
+a:hover,
+a:visited {
+  text-decoration: none;
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+a {
+  color: #314555;
+}
+a:hover,
+a:focus {
+  color: #26cc71;
+  text-decoration: none;
+}
+a,
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: pointer;
+}
+a,
+button,
+.btn,
+.form-control {
+  text-decoration: none;
+  -webkit-transition: all 400ms linear 0ms;
+  -ms-transition: all 400ms linear 0ms;
+  -o-transition: all 400ms linear 0ms;
+  transition: all 400ms linear 0ms;
+}
+select,
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* Remove chrome yellow autofill */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #f7f7f7 inset;
+}
+/* Rurn off number spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+/* Reset search styling */
+input[type="search"] {
+  outline: 0;
+}
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  display: block;
+  line-height: 1.4;
+  font-weight: 400;
+  margin: 0;
+  text-rendering: optimizeLegibility;
+}
+h1 {
+  font-size: 36px;
+}
+h2 {
+  font-size: 28px;
+}
+h3 {
+  font-size: 20px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 14px;
+}
+.h1 {
+  font-size: 36px;
+}
+.h2 {
+  font-size: 28px;
+}
+.h3 {
+  font-size: 20px;
+}
+.h4 {
+  font-size: 18px;
+}
+.h5 {
+  font-size: 16px;
+}
+.h6 {
+  font-size: 14px;
+}
+b,
+strong {
+  font-weight: bold;
+}
+ul,
+ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  -ms-interpolation-mode: bicubic;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+img::selection,
+img::-webkit-selection,
+img::-moz-selection {
+  background: transparent;
+}
+figure {
+  display: block;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+}
+iframe {
+  border: none;
+}
+video,
+audio {
+  width: 100%;
+  height: auto;
+}
+section {
+  position: relative;
+}
+label {
+  font-weight: normal;
+}
+.panel {
+  margin: 0;
+}

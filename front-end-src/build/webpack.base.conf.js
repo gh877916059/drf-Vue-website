@@ -77,7 +77,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                include: [resolve('src'), resolve('test')]
+                include: [resolve('src'), resolve('test'), resolve('node_modules/axios'), resolve('node_modules/timeago.js'), resolve('node_modules/vue'), resolve('node_modules/vuex'), resolve('node_modules/vue-router')]
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

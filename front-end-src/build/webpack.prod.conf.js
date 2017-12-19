@@ -41,12 +41,14 @@ var webpackConfig = merge(baseWebpackConfig, {
         new webpack.DefinePlugin({
             'process.env': env
         }),
+        /*
         // UglifyJsPlugin压缩代码
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
             }
         }),
+        */
         // ExtractTextPlugin会将所有的入口chunk中的require("style.css")移动到分开的css文件
         new ExtractTextPlugin({
             filename: utils.assetsPath('css/[name].[contenthash].css'),

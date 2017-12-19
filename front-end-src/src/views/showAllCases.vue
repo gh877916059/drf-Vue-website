@@ -6,11 +6,13 @@
                 </top-bar>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <case-list></case-list>
+        <main id="mainContent" class="main-content">
+            <div class="page-container ptb-10">
+                <div class="container">
+                    <case-list></case-list>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 </template>
 <script>
@@ -22,11 +24,24 @@
             topBar,
             caseList
         },
+        methods: {
+            requestCaseList: function () {
+                if (this.$route.query['top_category']) {
+                    this.$store.commit('setFilterCondition', {top_category: this.$route.query['top_category']});
+                }
+                const page = this.$route.query['page'] || 1;
+                const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
+                this.$store.commit('setCurrPageNum', page);
+                this.$store.commit('setCurrPageSize', pageSize);
+            }
+        },
         mounted: function () {
-            const page = this.$route.query['page'] || 1;
-            const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
-            this.$store.commit('setCurrPageNum', page);
-            this.$store.commit('setCurrPageSize', pageSize);
+            this.requestCaseList();
+        },
+        watch: {
+            '$route'(to, from) {
+                this.requestCaseList();
+            }
         }
     };
 </script>

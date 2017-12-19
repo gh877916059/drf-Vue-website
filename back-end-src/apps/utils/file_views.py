@@ -47,11 +47,11 @@ class UploadFileView(views.APIView, FileInfoRecorder):
         if not os.path.exists(localFileDir):
             os.makedirs(localFileDir)
         local_file_path = os.path.join(localFileDir, file_name)
-        request_url = REQUEST_HOST + '/media/' + media_dir + '/' + user_name + '/' + file_name
+        request_url = '/media/' + media_dir + '/' + user_name + '/' + file_name
         with open(local_file_path, 'wb') as fout:
             for chrunk in file.chunks():
                 fout.write(chrunk)
-        return_data = { 'location' : request_url }
+        return_data = {'location': request_url}
 
         return Response(return_data, status=status.HTTP_201_CREATED)
 

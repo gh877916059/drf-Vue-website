@@ -30,6 +30,7 @@
 <script>
     import $ from 'jquery';
     import Utils from '../utils';
+    import NetworkCommunication from '../vuex/networkCommunication';
     export default {
         data() {
             return {
@@ -68,8 +69,7 @@
                 var postData = Utils.getFormInput('loginForm');
                 this.$axios.post('login/', postData)
                     .then((res) => {
-                        this.$axios.defaults.headers.common['Authorization'] = 'JWT ' + res.data['token'];
-                        window.sessionStorage.AuthorizationHeader = 'JWT ' + res.data['token'];
+                        NetworkCommunication.setAuthorizationToken(res.data['token']);
                         this.setUserName($('#loginForm input[name="username"]').val());
                         this.$emit('closeLoginModal');
                     }, (err) => {

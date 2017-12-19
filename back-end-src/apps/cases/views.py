@@ -15,6 +15,8 @@ from .serializers import GetCasesSerializer, PostCasesSerializer, CategorySerial
 from rest_framework import status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import views
+from django.db.models import Count
 # Create your views here.
 
 
@@ -23,7 +25,6 @@ class CasesPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     page_query_param = "page"
     max_page_size = 100
-
 
 class CasesListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """
@@ -78,6 +79,13 @@ class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
     queryset = CasesCategory.objects.filter(category_type=1)
     serializer_class = CategorySerializer
 
+class HotCategoryView(views.APIView):
+    """
+    获取案例类型的案例数量排行榜
+    """
+    def get(self, request):
+        hot_category_list = CasesCategory.objects.annotate(num_cases=Count('cases')).values('num_cases', 'name', 'parent_category_id').order_by('-num_cases')[:9]
+        return Response(hot_category_list, status=status.HTTP_200_OK)
 
 class HotSearchsViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """

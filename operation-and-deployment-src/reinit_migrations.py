@@ -1,6 +1,5 @@
 import os
 import shutil
-import sys
 BACK_END_BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'back-end-src')
 
 def deleteAllMigrationFiles():
@@ -20,26 +19,5 @@ def deleteAllMigrationFiles():
                         elif os.path.isdir(migration_file_path) and migration_file_name == '__pycache__':
                             shutil.rmtree(migration_file_path)
 
-def makemigrationAndMigrate():
-    os.chdir(BACK_END_BASE_DIR)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "APP_Inventor_case_base.settings")
-    try:
-        from django.core.management import execute_from_command_line
-    except ImportError:
-        # The above import may fail for some other reason. Ensure that the
-        # issue is really that Django is missing to avoid masking other
-        # exceptions on Python 2.
-        try:
-            import django
-        except ImportError:
-            raise ImportError(
-                "Couldn't import Django. Are you sure it's installed and "
-                "available on your PYTHONPATH environment variable? Did you "
-                "forget to activate a virtual environment?"
-            )
-        raise
-    manage_script_path = os.path.join(BACK_END_BASE_DIR, 'manage.py')
-    argv = [manage_script_path, 'makemigrations']
-    execute_from_command_line(argv)
-    argv = [manage_script_path, 'migrate']
-    execute_from_command_line(argv)
+if __name__ == "__main__":
+    deleteAllMigrationFiles()

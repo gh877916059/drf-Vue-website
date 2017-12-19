@@ -6,12 +6,14 @@
                 </top-bar>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <case-viewer v-bind:caseId="caseId">
-                </case-viewer>
+        <main id="mainContent" class="main-content">
+            <div class="page-container ptb-10">
+                <div class="container">
+                    <case-viewer v-bind:caseId="caseId">
+                    </case-viewer>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 </template>
 <script>

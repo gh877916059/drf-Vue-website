@@ -45,7 +45,7 @@
                             this.fav_num = res.data['fav_num'];
                             this.reply_num = res.data['reply_num'];
                             this.cases_brief = res.data['cases_brief'];
-                            this.cases_desc = res.data['cases_desc'];
+                            this.cases_desc = Utils.completeAllHostInImgLabel(res.data['cases_desc']);
                             this.cases_front_image = res.data['cases_front_image'];
                             this.add_time = res.data['add_time'];
                             this.id = res.data['id'];
@@ -64,7 +64,7 @@
                         .then((res) => {
                             console.log('---删除案例成功---');
                             this.$store.commit('increaseForcedRequestCounter');
-                            Utils.jumpToThisPage('/showAllCases');
+                            this.$root.jumpToThisPage('/showAllCases');
                         }, (err) => {
                             var errorReasonDict = err.body;
                             console.log('---errorReasonDict---');

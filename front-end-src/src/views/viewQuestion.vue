@@ -6,12 +6,15 @@
                 </top-bar>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <question-viewer v-bind:questionId="questionId">
-                </question-viewer>
+        <main id="mainContent" class="main-content">
+            <div class="page-container ptb-10">
+                <div class="container">
+                    <question-viewer v-bind:questionId="questionId">
+                    </question-viewer>
+                </div>
             </div>
-        </div>
+        </main>
+
     </div>
 </template>
 <script>

@@ -9,12 +9,13 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
-from cases.views import CasesListViewSet, CategoryViewset, HotSearchsViewset, BannerViewset
+from cases.views import CasesListViewSet, CategoryViewset, HotSearchsViewset, BannerViewset, HotCategoryView
 from questions.views import QuestionsListViewSet
 from users.views import SmsCodeViewset, UserViewset, PictureCodeView
 from user_operation.views import UserFavViewset
 from django.views.generic import TemplateView
 from utils.file_views import UploadFileView, DeleteFileView
+from utils.home_page_view import HomePageView
 
 router = DefaultRouter()    # 利用了ViewSet的重载as_view()方法进行请求方法和处理函数的动态绑定（简单好用，只需要逐一register，然后urls函数即可）
 router.register(r'cases', CasesListViewSet, base_name="cases")      # 案例列表的相关操作
@@ -29,6 +30,8 @@ router.register(r'banners', BannerViewset, base_name="banners")     # 轮播图�
 urlpatterns = [
     url(r'^uploadfile/(.+)/$', UploadFileView.as_view()),    # 上传文件接口
     url(r'^deletefile/(.+)/$', DeleteFileView.as_view()),    # 删除文件接口
+    url(r'^hotcategory/', HotCategoryView.as_view()),   # 获取案例数量最多的若干个案例类型
+    url(r'^index/', HomePageView.as_view()),   # 网站首页
     url(r'^picturecodes/', PictureCodeView.as_view(), name='picturecodes'),       # 获取验证码图片
     url(r'^', include(router.urls)),        # 将调用刚才注册到router的各个ViewSet的as_view()方法，得到最终的URL映射配置
     url(r'^xadmin/', xadmin.site.urls),     # 注册xadmin后台管理平台的URL处理函数

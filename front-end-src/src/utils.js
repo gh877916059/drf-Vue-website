@@ -1,13 +1,95 @@
 import $ from 'jquery';
+import Constants from './constants';
 
-const jumpToThisPage = function (path, query) {
-    if (query) {
-        path = path + '?';
-        for (var key in query) {
-            path = path + key + '=' + query[key];
+const imgLabelBeginSymbol = '<img';
+const imgLabelEndSymbol = '>';
+const imgSrcBeginSymbol = 'src="';
+const imgSrcEndSymbol = '"';
+
+const extractImgLabel = function (htmlContent) {
+    var beginIndex = 0;
+    var result = [];
+    while (true) {
+        var ImgLabelIndex1 = htmlContent.indexOf(imgLabelBeginSymbol, beginIndex);
+        if (ImgLabelIndex1 < 0) {
+            result.push({content: htmlContent.substr(beginIndex),
+                isImg: false});
+            break;
+        }
+        var imgSrcBeginIndex = ImgLabelIndex1 + imgLabelBeginSymbol.length;
+        var ImgLabelIndex2 = htmlContent.indexOf(imgLabelEndSymbol, imgSrcBeginIndex);
+        result.push({content: htmlContent.substr(beginIndex, ImgLabelIndex1 - beginIndex),
+            isImg: false});
+        result.push({content: htmlContent.substr(imgSrcBeginIndex, ImgLabelIndex2 - imgSrcBeginIndex),
+            isImg: true});
+        beginIndex = ImgLabelIndex2 + imgLabelEndSymbol.length;
+    }
+    return result;
+};
+
+const deleteHost = function (imgSrc) {
+    if (imgSrc.length > 0) {
+        if (imgSrc[0] !== '/') {
+            var doubleSlashIndex = imgSrc.indexOf('//');
+            if (doubleSlashIndex >= 0) {
+                imgSrc = imgSrc.substr(doubleSlashIndex + 2);
+            }
+            var firstSlashIndex = imgSrc.indexOf('/');
+            if (firstSlashIndex < 0) {
+                console.log('---存在非法src的img元素---');
+            } else {
+                imgSrc = imgSrc.substr(firstSlashIndex);
+            }
         }
     }
-    this.$router.push({ path });
+    return imgSrc;
+};
+
+const deleteAllHostInImgLabel = function (htmlContent) {
+    var segmentationList = extractImgLabel(htmlContent);
+    var result = '';
+    for (var index in segmentationList) {
+        var segmentation = segmentationList[index];
+        if (segmentation.isImg) {
+            var imgContent = segmentation.content;
+            var srcBeginIndex = imgContent.indexOf(imgSrcBeginSymbol) + imgSrcBeginSymbol.length;
+            var srcEndIndex = imgContent.indexOf(imgSrcEndSymbol, srcBeginIndex);
+            var imgSrc = imgSrcBeginSymbol + deleteHost(imgContent.substr(srcBeginIndex, srcEndIndex - srcBeginIndex)) + imgSrcEndSymbol;
+            imgSrc = imgContent.substr(0, srcBeginIndex - imgSrcBeginSymbol.length) + imgSrc + imgContent.substr(srcEndIndex + 1);
+            result = result + imgLabelBeginSymbol + imgSrc + imgLabelEndSymbol;
+        } else {
+            result = result + segmentation.content;
+        }
+    }
+    return result;
+};
+
+const completeHost = function (imgSrc) {
+    if (imgSrc.length > 0) {
+        if (imgSrc[0] === '/') {
+            imgSrc = Constants.REQUEST_HOST + imgSrc;
+        }
+    }
+    return imgSrc;
+};
+
+const completeAllHostInImgLabel = function (htmlContent) {
+    var segmentationList = extractImgLabel(htmlContent);
+    var result = '';
+    for (var index in segmentationList) {
+        var segmentation = segmentationList[index];
+        if (segmentation.isImg) {
+            var imgContent = segmentation.content;
+            var srcBeginIndex = imgContent.indexOf(imgSrcBeginSymbol) + imgSrcBeginSymbol.length;
+            var srcEndIndex = imgContent.indexOf(imgSrcEndSymbol, srcBeginIndex);
+            var imgSrc = imgSrcBeginSymbol + completeHost(imgContent.substr(srcBeginIndex, srcEndIndex - srcBeginIndex)) + imgSrcEndSymbol;
+            imgSrc = imgContent.substr(0, srcBeginIndex - imgSrcBeginSymbol.length) + imgSrc + imgContent.substr(srcEndIndex + 1);
+            result = result + imgLabelBeginSymbol + imgSrc + imgLabelEndSymbol;
+        } else {
+            result = result + segmentation.content;
+        }
+    }
+    return result;
 };
 
 const convertURLtoCompleteFileName = function (url) {
@@ -74,44 +156,25 @@ const isTwoObjectsEqual = function (objectA, objectB) {
     return true;
 };
 
-const requestList = function (vuexState) {
-    var self = vuexState.listComponent;
-    if (!self) {
-        return;
-    }
-    var requestUrl = self.requestUrl + '?';
-    requestUrl = requestUrl + 'page' + '=' + vuexState.currPageNum + '&';
-    requestUrl = requestUrl + 'page_size' + '=' + vuexState.currPageSize + '&';
-    for (var key in vuexState.filterCondition) {
-        requestUrl = requestUrl + key + '=' + vuexState.filterCondition[key] + '&';
-    }
-    requestUrl = requestUrl.slice(0, -1);
-    if (requestUrl === vuexState.lastRequestUrl) {
-        return;
-    }
-    console.log('---requestUrl---');
-    console.log(requestUrl);
-    vuexState.lastRequestUrl = requestUrl;
-    self.$axios.get(requestUrl)
-        .then((res) => {
-            vuexState.listComponent.previousPageUrl = res.data['previous'];
-            vuexState.listComponent.nextPageUrl = res.data['next'];
-            vuexState.listComponent.sumPageNum = Math.ceil(res.data['count'] / vuexState.currPageSize);
-            self.setOutlineList(res.data.results);
-        }, (err) => {
-            var errorReasonDict = err.body;
-            console.log('---errorReasonDict---');
-            console.log(errorReasonDict);
-        });
+const initAllBackgroundImage = function() {
+    $('[data-bg-img]').each(function() {
+        var attr = $(this).attr('data-bg-img');
+        if (typeof attr !== typeof undefined && attr !== false && attr !== '') {
+            $(this).css('background-image', 'url(' + attr + ')');
+        }
+    });
 };
 
 export default {
-    jumpToThisPage,
     convertURLtoCompleteFileName,
     convertURLtoRawFileName,
     getFormInput,
     rangeArray,
     convertBase64UrlToBlob,
     isTwoObjectsEqual,
-    requestList
+    initAllBackgroundImage,
+    deleteAllHostInImgLabel,
+    completeAllHostInImgLabel,
+    deleteHost,
+    completeHost
 };

@@ -9,7 +9,6 @@
 
 <script>
     import $ from 'jquery';
-    import Utils from '../utils';
     export default {
         props: {
             questionId: {
@@ -58,7 +57,7 @@
                         .then((res) => {
                             console.log('---删除问题成功---');
                             this.$store.commit('increaseForcedRequestCounter');
-                            Utils.jumpToThisPage('/showAllQuestions');
+                            this.$root.jumpToThisPage('/showAllQuestions');
                         }, (err) => {
                             var errorReasonDict = err.body;
                             console.log('---errorReasonDict---');

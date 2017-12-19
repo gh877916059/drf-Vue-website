@@ -3,12 +3,12 @@
         <div v-for="(parentCategory, index) in categoryList" class="panel panel-default">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
-                    <a v-on:click="clickPanelTitle(index)" role="button" data-toggle="collapse" data-parent="#leftAccordionMenu" v-bind:href="'#collapse'+index" v-bind:class="[index===0?'':'collapsed']" v-bind:aria-expanded="index===0?'true':'false'" v-bind:aria-controls="'collapse'+index">
+                    <a v-on:click="clickPanelTitle(index)" role="button" data-toggle="collapse" data-parent="#leftAccordionMenu" v-bind:href="'#collapse'+index" v-bind:class="[index===currUnfoldPanelIndex?'':'collapsed']" v-bind:aria-expanded="index===currUnfoldPanelIndex?'true':'false'" v-bind:aria-controls="'collapse'+index">
                         {{parentCategory.name}}
                     </a>
                 </h4>
             </div>
-            <div v-bind:id="'collapse'+index" v-bind:class="[index===0?'in':'', 'panel-collapse','collapse']" role="tabpanel">
+            <div v-bind:id="'collapse'+index" v-bind:class="[index===currUnfoldPanelIndex?'in':'', 'panel-collapse','collapse']" role="tabpanel">
                 <div class="list-group">
                     <a style="cursor: pointer" v-for="subCategory in parentCategory.sub_cat" v-on:click="selectOneCategory(subCategory.id)" class="list-group-item">{{subCategory.name}}</a>
                 </div>
@@ -20,30 +20,19 @@
 <script>
     import $ from 'jquery';
     import Constants from '../constants';
+    import NetworkCommunication from '../vuex/networkCommunication';
     export default {
         data() {
             return {
-                categoryList: [],
-                currUnfoldPanelIndex: 0
+                currUnfoldPanelIndex: 1
             };
         },
+        computed: {
+            categoryList () {
+                return this.$store.state.categoryList;
+            }
+        },
         methods: {
-            // 请求案例分类信息
-            getCategoryList: function () {
-                this.$axios.get('categorys/')
-                    .then((res) => {
-                        this.categoryList = res.data;
-                        this.$store.commit('setFilterCondition', {top_category: this.categoryList[0].id});
-                        const page = this.$route.query['page'] || 1;
-                        const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
-                        this.$store.commit('setCurrPageNum', page);
-                        this.$store.commit('setCurrPageSize', pageSize);
-                    }, (err) => {
-                        var errorReasonDict = err.body;
-                        console.log('---errorReasonDict---');
-                        console.log(errorReasonDict);
-                    });
-            },
             selectOneCategory: function (categoryId) {
                 this.$store.commit('setFilterCondition', {top_category: categoryId});
             },
@@ -53,10 +42,17 @@
                     var categoryId = this.categoryList[panelIndex].id;
                     this.$store.commit('setFilterCondition', {top_category: categoryId});
                 }
+            },
+            initCaseListRequestParameters: function (categoryList) {
+                this.$store.commit('setFilterCondition', {top_category: categoryList[this.currUnfoldPanelIndex].id});
+                const page = this.$route.query['page'] || 1;
+                const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
+                this.$store.commit('setCurrPageNum', page);
+                this.$store.commit('setCurrPageSize', pageSize);
             }
         },
         mounted: function () {
-            this.getCategoryList();
+            NetworkCommunication.requestCategoryListWithCache(this.initCaseListRequestParameters);
             this.$nextTick(function () {
                 $('#leftAccordionMenu').on('hide.bs.collapse', function () {
                     var currUnfoldPanelIndex = parseInt($('#leftAccordionMenu div.panel-collapse.in').attr('id').substr(-1));

@@ -76,7 +76,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',   # 引擎后端，备选项还有'django.template.backends.jinja2.Jinja2'
         'DIRS': [os.path.join(BASE_DIR, 'templates')],      # 模板源文件存放目录列表（引擎会按顺序搜索符合规则的template源文件）
-        'APP_DIRS': True,       # 是否会在installed_app里面搜索符合规则的template源文件
+        'APP_DIRS': False,       # 是否会在installed_app里面搜索符合规则的template源文件
         'OPTIONS': {            # 传给引擎后端的额外参数（各后端之间的差异很大）
             'context_processors': [
                 'django.template.context_processors.debug',

@@ -116,7 +116,7 @@
                         this.$axios.put('questions/' + this.questionId + '/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            Utils.jumpToThisPage('/viewQuestion/' + this.questionId);
+                            this.$root.jumpToThisPage('/viewQuestion/' + this.questionId);
                         }.bind(this), (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
@@ -125,7 +125,7 @@
                         this.$axios.post('questions/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            Utils.jumpToThisPage('/viewQuestion/' + res.data['id']);
+                            this.$root.jumpToThisPage('/viewQuestion/' + res.data['id']);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);

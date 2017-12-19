@@ -74,6 +74,7 @@
     import $ from 'jquery';
     import Constants from '../constants';
     import Utils from '../utils';
+    import NetworkCommunication from '../vuex/networkCommunication';
     export default {
         data() {
             return {
@@ -91,9 +92,8 @@
                 var postData = Utils.getFormInput('registerForm');
                 this.$axios.post('users/', postData)
                     .then((res) => {
-                        this.$axios.defaults.headers.common['Authorization'] = 'JWT ' + res.data['jwt_token'];
-                        window.sessionStorage.AuthorizationHeader = 'JWT ' + res.data['jwt_token'];
-                        this.setUserName($('#registerForm input[name="username"]').val());
+                        NetworkCommunication.setAuthorizationToken(res.data['jwt_token']);
+                        this.$store.commit('setUserName', $('#registerForm input[name="username"]').val());
                         this.$emit('closeRegisterModal');
                     }, (err) => {
                         var errorReasonDict = err.body;
@@ -127,10 +127,6 @@
                         console.log('图片验证码请求错误');
                         console.log(err);
                     });
-            },
-            setUserName: function(userName) {
-                this.$store.commit('setUserName', userName);
-                window.sessionStorage.userName = userName;
             }
         },
         mounted: function () {

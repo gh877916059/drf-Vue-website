@@ -2,7 +2,7 @@
     <div class="media">
         <div class="media-left media-middle">
             <router-link v-bind:to="questionDetailUrl">
-                <img v-bind:src="user_avatar" class="media-object" style="width:80px">
+                <img v-bind:src="user_avatar" class="media-object" style="height:80px">
             </router-link>
         </div>
         <div class="media-body">

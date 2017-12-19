@@ -1,0 +1,60 @@
+@charset "utf-8";
+
+.overflow-hidden,
+.no-scroll {
+  overflow: hidden !important;
+}
+.overflow-auto {
+  overflow: auto !important;
+}
+.overflow-scroll {
+  overflow: scroll !important;
+}
+.overflow-visible {
+  overflow: visible !important;
+}
+@media (min-width: 768px) {
+  .overflow-sm-hidden,
+  .no-scroll-sm {
+    overflow: hidden !important;
+  }
+  .overflow-sm-auto {
+    overflow: auto !important;
+  }
+  .overflow-sm-scroll {
+    overflow: scroll !important;
+  }
+  .overflow-sm-visible {
+    overflow: visible !important;
+  }
+}
+@media (min-width: 992px) {
+  .overflow-md-hidden,
+  .no-scroll-md {
+    overflow: hidden !important;
+  }
+  .overflow-md-auto {
+    overflow: auto !important;
+  }
+  .overflow-md-scroll {
+    overflow: scroll !important;
+  }
+  .overflow-md-visible {
+    overflow: visible !important;
+  }
+}
+@media (min-width: 1200px) {
+  .overflow-lg-hidden,
+  .no-scroll-lg {
+    overflow: hidden !important;
+  }
+  .overflow-lg-auto {
+    overflow: auto !important;
+  }
+  .overflow-lg-scroll {
+    overflow: scroll !important;
+  }
+  .overflow-lg-visible {
+    overflow: visible !important;
+  }
+}

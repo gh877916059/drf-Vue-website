@@ -6,11 +6,14 @@
                 </top-bar>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <question-list></question-list>
+        <main id="mainContent" class="main-content">
+            <div class="page-container ptb-10">
+                <div class="container">
+                    <question-list></question-list>
+                </div>
             </div>
-        </div>
+        </main>
+
     </div>
 </template>
 <script>

@@ -91,7 +91,7 @@
         },
         methods: {
             // 加载强大的富文本编辑器TinyMCE
-            initTinyMCE () {
+            initTinyMCE (successCallback) {
                 // Remove all editors
                 window.tinymce.remove();
                 // 初始化富文本编辑器TinyMCE
@@ -114,7 +114,7 @@
                         var formData = new FormData();
                         formData.append('file', blobInfo.blob(), blobInfo.filename());
                         this.$axios.post('uploadfile/rich_text_picture/', formData).then((res) => {
-                            success(res.data['location']);
+                            success(Constants.REQUEST_HOST + res.data['location']);
                         }, (err) => {
                             var errorReasonDict = err.body;
                             console.log('---errorReasonDict---');
@@ -124,7 +124,8 @@
                     }.bind(this),
                     content_css: [
                         '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-                        '//www.tinymce.com/css/codepen.min.css']
+                        '//www.tinymce.com/css/codepen.min.css'],
+                    init_instance_callback: successCallback
                 });
             },
             getBootstrapInputConfig () {
@@ -158,14 +159,14 @@
                 window.tinymce.activeEditor.uploadImages(function(success) {
                     var postData = Utils.getFormInput('richTextEditorForm');
                     var casesDesc = window.tinymce.activeEditor.getContent();
+                    casesDesc = Utils.deleteAllHostInImgLabel(casesDesc);
                     postData['cases_desc'] = casesDesc;
                     postData['category_id'] = this.categoryNameToId[postData['category_name']];
+                    postData['cases_front_image'] = Utils.deleteHost(postData['cases_front_image']);
                     delete postData['category_name'];
                     if (this.caseId.length > 0) {
                         this.$axios.put('cases/' + this.caseId + '/', postData).then(function (res) {
-                            console.log('---res.data---');
-                            console.log(res.data);
-                            Utils.jumpToThisPage('/viewCase/' + this.caseId);
+                            this.$root.jumpToThisPage('/viewCase/' + this.caseId);
                         }.bind(this), (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
@@ -174,7 +175,7 @@
                         this.$axios.post('cases/', postData).then(function (res) {
                             console.log('---res.data---');
                             console.log(res.data);
-                            Utils.jumpToThisPage('/viewCase/' + res.data['id']);
+                            this.$root.jumpToThisPage('/viewCase/' + res.data['id']);
                         }, (err) => {
                             console.log('---err.body---');
                             console.log(err.body);
@@ -222,9 +223,11 @@
                         this.category_name = res.data['category']['name'];
                         this.name = res.data['name'];
                         this.cases_brief = res.data['cases_brief'];
-                        this.coverPictureURL = res.data['cases_front_image'];
+                        this.setCoverPictureURL(res.data['cases_front_image']);
                         var casesDesc = res.data['cases_desc'];
-                        $('#richTextEditorDiv').html(casesDesc);
+                        casesDesc = Utils.completeAllHostInImgLabel(casesDesc);
+                        window.tinymce.activeEditor.setContent(casesDesc);
+                        this.refreshBootstrapInput();
                     }, (err) => {
                         var errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
@@ -240,7 +243,7 @@
                 $('#pictureCropperModal').modal({backdrop: 'static', keyboard: false});
             },
             setCoverPictureURL (coverPictureURL) {
-                this.coverPictureURL = coverPictureURL;
+                this.coverPictureURL = Constants.REQUEST_HOST + coverPictureURL;
             },
             confirmDeletion: function () {
                 var aborted = !window.confirm('你确定要删除该封面图片吗?');
@@ -270,7 +273,9 @@
                 this.getCategoryInfo();
                 // 如果caseId不为空，则为修改已经存在的案例，而不是新建
                 if (this.caseId.length > 0) {
-                    this.getCaseInfoById();
+                    this.initTinyMCE(this.getCaseInfoById);
+                } else {
+                    this.initTinyMCE();
                 }
                 $('#pictureCropperModal').on('hidden.bs.modal', function (e) {
                     // 强制触发子组件destroyCropper()函数
@@ -288,7 +293,6 @@
                 this.$pictureInput.on('fileselect', function() {
                     this.readPictureData();
                 }.bind(this));
-                this.initTinyMCE();
             });
         }
     };
@@ -297,8 +301,5 @@
 <style>
     body {
         padding: 5px
-    }
-    .cover-picture-tip {
-        color:red;
     }
 </style>

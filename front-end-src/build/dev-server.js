@@ -57,9 +57,9 @@ app.use(require('connect-history-api-fallback')());
 app.use(devMiddleware);
 app.use(hotMiddleware);
 
-// 将静态资源文件所在的目录作为参数传递给express.static中间件就可以提供静态资源文件的访问了（staticPath的值为"/public")
+// 将静态资源文件所在的目录作为参数传递给express.static中间件就可以提供静态资源文件的访问了（staticPath的值为"/static")
 var staticPath = path.posix.join(config.build.assetsPublicPath, config.build.assetsSubDirectory);
-app.use(staticPath, express.static('./public'));
+app.use(staticPath, express.static('./static'));
 
 module.exports = app.listen(port, function (err) {
     if (err) {

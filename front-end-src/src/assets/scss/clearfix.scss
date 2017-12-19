@@ -1,0 +1,55 @@
+@charset "utf-8";
+
+.is-cf:before,
+.is-cf:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+.is-cf:after {
+  clear: both;
+}
+@media (max-width: 767px) {
+  .is-cf-xs:before,
+  .is-cf-xs:after {
+    display: table;
+    line-height: 0;
+    content: "";
+  }
+  .is-cf-xs:after {
+    clear: both;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .is-cf-sm:before,
+  .is-cf-sm:after {
+    display: table;
+    line-height: 0;
+    content: "";
+  }
+  .is-cf-sm:after {
+    clear: both;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .is-cf-md:before,
+  .is-cf-md:after {
+    display: table;
+    line-height: 0;
+    content: "";
+  }
+  .is-cf-md:after {
+    clear: both;
+  }
+}
+@media (min-width: 1200px) {
+  .is-cf-lg:before,
+  .is-cf-lg:after {
+    display: table;
+    line-height: 0;
+    content: "";
+  }
+  .is-cf-lg:after {
+    clear: both;
+  }
+}

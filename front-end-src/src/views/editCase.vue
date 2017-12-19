@@ -6,12 +6,16 @@
                 </top-bar>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <case-editor-form v-bind:caseId="caseId">
-                </case-editor-form>
+
+        <main id="mainContent" class="main-content">
+            <div class="page-container ptb-10">
+                <div class="container">
+                    <case-editor-form v-bind:caseId="caseId">
+                    </case-editor-form>
+                </div>
             </div>
-        </div>
+        </main>
+
     </div>
 </template>
 <script>

@@ -1,0 +1,161 @@
+@charset "utf-8";
+
+.bg-green {
+  background-color: #2ed87b !important;
+}
+.bg-blue {
+  background-color: #314555 !important;
+}
+.bg-white {
+  background-color: #fff !important;
+}
+.bg-gray {
+  background-color: #e9ebee;
+}
+.bg-lighter {
+  background-color: #f9fafa !important;
+}
+.bg-light {
+  background-color: #eee !important;
+}
+.bg-mid {
+  background-color: #eee !important;
+}
+.bg-dark {
+  background-color: #ddd !important;
+}
+.bg-inherit {
+  background-color: inherit !important;
+}
+.bg-success {
+  background-color: #000 !important;
+}
+.bg-info {
+  background-color: #000 !important;
+}
+.bg-warning {
+  background-color: #000 !important;
+}
+.bg-danger {
+  background-color: #000 !important;
+}
+.bg-h-green:hover {
+  background-color: #2ed87b !important;
+}
+.bg-h-blue:hover {
+  background-color: #314555 !important;
+}
+.bg-h-white:hover {
+  background-color: #fff !important;
+}
+.bg-h-gray:hover {
+  background-color: #e9ebee !important;
+}
+.bg-h-lighter:hover {
+  background-color: #f9fafa !important;
+}
+.bg-h-light:hover {
+  background-color: #eee !important;
+}
+.bg-h-mid:hover {
+  background-color: #eee !important;
+}
+.bg-h-dark:hover {
+  background-color: #ddd !important;
+}
+.bg-h-inherit:hover {
+  background-color: inherit !important;
+}
+.bg-h-success:hover {
+  background-color: #000 !important;
+}
+.bg-h-info:hover {
+  background-color: #000 !important;
+}
+.bg-h-warning:hover {
+  background-color: #000 !important;
+}
+.bg-h-danger:hover {
+  background-color: #000 !important;
+}
+.b-link.bg-h-green:hover {
+  background-color: #23ba67 !important;
+}
+.b-link.bg-h-blue:hover {
+  background-color: #22303b !important;
+}
+.b-link.bg-h-success:hover {
+  background-color: #000000 !important;
+}
+.b-link.bg-h-info:hover {
+  background-color: #000000 !important;
+}
+.b-link.bg-h-warning:hover {
+  background-color: #000000 !important;
+}
+.b-link.bg-h-danger:hover {
+  background-color: #000000 !important;
+}
+
+
+.bg-cover,
+*[data-bg-img] {
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.bg-contain {
+  background-size: contain;
+}
+.bg-fixed {
+  background-attachment: fixed;
+}
+.bg-cc {
+  background-position: center center;
+}
+.bg-ct {
+  background-position: center top;
+}
+.bg-cb {
+  background-position: center bottom;
+}
+.bg-lc {
+  background-position: left center;
+}
+.bg-lt {
+  background-position: left top;
+}
+.bg-lb {
+  background-position: left bottom;
+}
+.bg-rc {
+  background-position: right center;
+}
+.bg-rt {
+  background-position: right top;
+}
+.bg-rb {
+  background-position: right bottom;
+}
+.no-bg {
+  background: transparent none;
+}
+/* |–––––––––––––[ Z-index Styles ]––––––––––––| */
+.zi--1 {
+  z-index: -1;
+}
+.zi-0 {
+  z-index: 0;
+}
+.zi-1 {
+  z-index: 1;
+}
+.zi-2 {
+  z-index: 2;
+}
+.zindex-999 {
+  z-index: 999;
+}

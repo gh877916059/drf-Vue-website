@@ -76,7 +76,6 @@
                     const formData = new FormData();
                     formData.append('file', file);
                     this.$axios.post('uploadfile/case_cover_picture/', formData).then((res) => {
-                        this.$emit('updatePictureFiles', file, afterCroppingImageData);
                         this.$emit('setCoverPictureURL', res.data['location']);
                         this.$emit('closePictureCropperModal');
                     }, (err) => {
@@ -108,7 +107,7 @@
                     this.$img = $('<img src="' + this.pictureDataUri + '">');
                     this.$avatarWrapper.empty().html(this.$img);
                     this.$img.cropper({
-                        aspectRatio: 1,
+                        aspectRatio: 1.78,
                         preview: this.$avatarPreview.selector,
                         strict: false
                     });

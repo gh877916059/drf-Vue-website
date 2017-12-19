@@ -6,6 +6,7 @@ import store from './vuex/store';
 import FastClick from 'fastclick';
 import axios from 'axios';
 import Constants from './constants';
+import NetworkCommunication from './vuex/networkCommunication';
 
 // 设置axios的请求Host（作用在this.$axios.get()或者this.$axios.post()方法上）
 axios.defaults.baseURL = Constants.REQUEST_HOST;
@@ -40,12 +41,7 @@ FastClick.attach(document.body);
 
 console.log('---重新加载页面，尝试从本地存储sessionStorage中恢复Vuex---');
 // 一般情况下（使用Vue-router进行页面跳转）Vuex的数据是不会丢失的，但是如果用户手动在浏览器输入网址进行强制跳转时，就需要从sessionStorage中还原
-if (window.sessionStorage.userName) {
-    store.commit('setUserName', window.sessionStorage.userName);
-}
-if (window.sessionStorage.AuthorizationHeader) {
-    Vue.prototype.$axios.defaults.headers.common['Authorization'] = window.sessionStorage.AuthorizationHeader;
-}
+NetworkCommunication.restoreStateFromSessionStorageIfExist();
 
 /*
  添加身份验证的全局前置导航守卫（登录检查中间件）
@@ -80,5 +76,16 @@ router.beforeEach((to, from, next) => {
  */
 new Vue({
     router, // ES6语法糖，相当于router:router
-    store   // ES6语法糖，相当于store:store
+    store,   // ES6语法糖，相当于store:store
+    methods: {
+        jumpToThisPage: function (path, query) {
+            if (query) {
+                path = path + '?';
+                for (var key in query) {
+                    path = path + key + '=' + query[key];
+                }
+            }
+            this.$router.push({ path });
+        }
+    }
 }).$mount('#app');
