@@ -8,10 +8,8 @@ import sys
 import re
 from reinit_migrations import deleteAllMigrationFiles
 
-env.user = '服务器用户名'
-env.password = '对应密码'
-env.sudo_user = 'root'
-env.sudo_password = 'root用户密码'
+env.user = 'root'
+env.password = 'root用户密码'
 env.hosts = ['服务器IP']
 
 _TAR_FILE = 'back-end-and-front-end-src.tar.gz'
@@ -24,7 +22,7 @@ _LOCAL_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _LOCAL_ROOT_DIR = os.path.dirname(_LOCAL_CURRENT_DIR)
 _LOCAL_FRONT_SRC_DIR = os.path.join(_LOCAL_ROOT_DIR, 'front-end-src')
 _LOCAL_BACK_SRC_DIR = os.path.join(_LOCAL_ROOT_DIR, 'back-end-src')
-sys.path.insert(0, os.path.join(os.path.join(os.path.join(os.path.join(_LOCAL_ROOT_DIR, 'back-end-src'), 'tool_scripts'), 'data'), 'setting'))
+sys.path.insert(0, os.path.join(_LOCAL_ROOT_DIR, 'back-end-src', 'tool_scripts', 'data', 'setting'))
 import local as local_setting, remote as remote_setting
 _LOCAL_DB_USER_NAME = local_setting.DATABASES['default']['USER']
 _LOCAL_DB_PASSWORD = local_setting.DATABASES['default']['PASSWORD']
@@ -152,19 +150,31 @@ def build():
     '''
     将本地项目代码进行打包，用作备份或者上传服务器进行部署
     '''
-    constant_js_file = os.path.join(os.path.join(_LOCAL_FRONT_SRC_DIR, 'src'), 'constants.js')
-    original_line_list = open(constant_js_file, 'r').readlines()
+    target_host = env.hosts[0]
+    constant_js_file = os.path.join(_LOCAL_FRONT_SRC_DIR, 'src', 'constants.js')
+    original_js_line_list = open(constant_js_file, 'r').readlines()
+    constant_css_file = os.path.join(_LOCAL_FRONT_SRC_DIR, 'src', 'assets', 'scss', 'constant.scss')
+    original_css_line_list = open(constant_css_file, 'r').readlines()
     with open(constant_js_file, 'w') as fout:
-        for original_line in original_line_list:
-            if original_line.startswith('exports.REQUEST_HOST = '):
-                fout.write("exports.REQUEST_HOST = 'http://119.23.69.178:8000';\n")
+        for original_js_line in original_js_line_list:
+            if original_js_line.startswith('const REQUEST_HOST = '):
+                fout.write("const REQUEST_HOST = 'http://" + target_host + ":8000';\n")
             else:
-                fout.write(original_line)
+                fout.write(original_js_line)
+    with open(constant_css_file, 'w') as fout:
+        for original_css_line in original_css_line_list:
+            if original_css_line.startswith('$RequestHost: '):
+                fout.write("$RequestHost: 'http://" + target_host + ":8000';\n")
+            else:
+                fout.write(original_css_line)
     with lcd(_LOCAL_FRONT_SRC_DIR):
         local('npm run build')
     with open(constant_js_file, 'w') as fout:
-        for original_line in original_line_list:
-            fout.write(original_line)
+        for original_js_line in original_js_line_list:
+            fout.write(original_js_line)
+    with open(constant_css_file, 'w') as fout:
+        for original_css_line in original_css_line_list:
+            fout.write(original_css_line)
     includes = ['back-end-src', 'front-end-src/dist', 'python-lib-requirements.txt', 'operation-and-deployment-src/reinit_migrations.py']
     excludes = ['*__pycache__*', '*.idea*', '*.pyc', 'front-end-src/node_modules']
     local('rm -f dist/%s' % _TAR_FILE)

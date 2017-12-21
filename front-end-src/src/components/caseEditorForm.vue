@@ -148,7 +148,7 @@
                     // 由于initialPreview是HTML原生标签，所以previewAsData应该为false
                     // key对应于filebeforedelete事件的key参数
                     config['initialPreviewConfig'] = [
-                        {previewAsData: false, type: 'image', caption: this.coverPictureFileName, url: 'http://127.0.0.1:8000/deletefile/case_cover_picture/', key: this.completePictureFileName, downloadUrl: false}
+                        {previewAsData: false, type: 'image', caption: this.coverPictureFileName, url: Constants.REQUEST_HOST + '/deletefile/case_cover_picture/', key: this.completePictureFileName, downloadUrl: false}
                     ];
                     config['initialCaption'] = this.coverPictureFileName + '（已上传）';
                 }
