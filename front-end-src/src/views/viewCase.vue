@@ -16,21 +16,22 @@
         </main>
     </div>
 </template>
-<script>
+<script lang="ts">
     import topBar from '../components/topBar.vue';
     import caseViewer from '../components/caseViewer.vue';
-    export default {
+    import {Component, Vue} from 'vue-property-decorator';
+    @Component({
         components: {
             topBar,
             caseViewer
-        },
-        computed: {
-            caseId () {
-                if (this.$route.params.id) {
-                    return this.$route.params.id;
-                }
-                return '';
+        }
+    })
+    export default class viewCaseView extends Vue{
+        get caseId(): string{
+            if (this.$route.params['id']) {
+                return this.$route.params['id'];
             }
+            return '';
         }
     };
 </script>

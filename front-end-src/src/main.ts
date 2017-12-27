@@ -1,18 +1,14 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
 import filters from './filters';
-import routes from './routers';
 import store from './vuex/store';
 import FastClick from 'fastclick';
 import axios from 'axios';
 import Constants from './constants';
 import NetworkCommunication from './vuex/networkCommunication';
+import {Component, Vue} from 'vue-property-decorator'
+import router from './router';
 
-// 设置axios的请求Host（作用在this.$axios.get()或者this.$axios.post()方法上）
+// 设置axios的请求Host（作用在axios.get()或者axios.post()方法上）
 axios.defaults.baseURL = Constants.REQUEST_HOST;
-Vue.prototype.$axios = axios;
-
-Vue.use(VueRouter);
 // 为Vue加载过滤器（可以理解为字符串加工处理函数）
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 
@@ -23,18 +19,6 @@ Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
   或者通过管道在模板或者标签中使用，如{{ msg | uppercase }}或者<input type="password" v-model="psw | validate">
  */
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
-
-/*
-  实例化VueRouter，下面详细剖析mode属性的含义
-  vue-router默认使用hash模式——使用URL的hash来模拟一个完整的URL
-  如果不想要很丑的hash，我们可以用路由的 history 模式，这种模式充分利用 history.pushState API 来完成URL跳转而无须重新加载页面
-  当你使用history模式时，URL就像正常的url，例如 http://yoursite.com/user/id
-  但是使用这种模式，最好要在服务端增加一个覆盖所有情况的候选资源：如果 URL 匹配不到任何静态资源，则应该返回同一个index.html页面，这个页面就是我们的app所依赖的页面
- */
-const router = new VueRouter({
-    mode: 'history',
-    routes  // ES6语法糖，相当于routes:routes
-});
 
 // FastClick 是一个简单，易于使用的JS库用于消除在移动浏览器上触发click事件与一个物理Tap(敲击)之间的300延迟
 FastClick.attach(document.body);
@@ -74,18 +58,4 @@ router.beforeEach((to, from, next) => {
  store中state 的改变，都放置在store自身的 action 中去管理，这种集中式状态管理能够被更容易地理解哪种类型的mutation将会发生，以及它们是如何被触发
  当Vue实例没有el属性时，则该实例尚没有挂载到某个dom中；假如需要延迟挂载，可以在之后手动调用vm.$mount()方法来挂载
  */
-new Vue({
-    router, // ES6语法糖，相当于router:router
-    store,   // ES6语法糖，相当于store:store
-    methods: {
-        jumpToThisPage: function (path, query) {
-            if (query) {
-                path = path + '?';
-                for (var key in query) {
-                    path = path + key + '=' + query[key];
-                }
-            }
-            this.$router.push({ path });
-        }
-    }
-}).$mount('#app');
+new Vue({store, router}).$mount('#app');

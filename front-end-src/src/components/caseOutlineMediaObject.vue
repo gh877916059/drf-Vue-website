@@ -1,15 +1,15 @@
 <template>
     <div class="deal-single panel" v-bind:id="rootDivId">
-        <figure class="deal-thumbnail embed-responsive embed-responsive-16by9" v-bind:data-bg-img="cases_front_image">
-            <div class="label-discount" v-text="category_name"></div>
+        <figure class="deal-thumbnail embed-responsive embed-responsive-16by9" v-bind:data-bg-img="caseOutline.cases_front_image">
+            <div class="label-discount" v-text="caseOutline.category_name"></div>
             <div class="time-left font-md-14" style="bottom: 15px;right: 20px">
                 <span>
                     <i class="fa fa-clock-o mr-10"></i>
-                    <span class="t-uppercase">{{add_time | makeTimeFriendly()}}</span>
+                    <span class="t-uppercase">{{caseOutline.add_time | makeTimeFriendly()}}</span>
                 </span>
             </div>
             <div class="deal-store-logo">
-                <img v-bind:src="user_avatar">
+                <img v-bind:src="caseOutline.user_avatar">
             </div>
         </figure>
         <div class="bg-white pt-20 pl-20 pr-15">
@@ -19,7 +19,7 @@
                         <i v-for="index in starSum" class="fa fa-star-o" v-on:click="refreshRating(starSum - index + 1)"></i>
                     </span>
                     <span class="rating-reviews">
-                        ( <span v-text="rating_num"></span> rates )
+                        ( <span v-text="caseOutline.rating_num"></span> rates )
                     </span>
                     <ul class="deal-actions">
                         <li class="like-deal">
@@ -40,94 +40,42 @@
                     </ul>
                 </div>
                 <h3 class="mb-10">
-                    <router-link v-bind:to="viewCaseUrl" v-text="name"></router-link>
+                    <router-link v-bind:to="viewCaseUrl" v-text="caseOutline.name"></router-link>
                 </h3>
                 <ul class="list-inline mb-10 color-mid">
-                    <li><i class="glyphicon glyphicon-eye-open mr-10"></i> {{click_num}}</li>
-                    <li><i class="glyphicon glyphicon-comment mr-10"></i> {{reply_num}}</li>
-                    <li><i class="glyphicon glyphicon-star mr-10"></i> {{fav_num}}</li>
+                    <li><i class="glyphicon glyphicon-eye-open mr-10"></i> {{caseOutline.click_num}}</li>
+                    <li><i class="glyphicon glyphicon-comment mr-10"></i> {{caseOutline.reply_num}}</li>
+                    <li><i class="glyphicon glyphicon-star mr-10"></i> {{caseOutline.fav_num}}</li>
                 </ul>
-                <p class="text-muted mb-20" v-text="cases_brief"></p>
+                <p class="text-muted mb-20" v-text="caseOutline.cases_brief"></p>
             </div>
         </div>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import Constants from '../constants';
     import $ from 'jquery';
+    import JQuery from 'jquery/dist/jquery.slim';
     import Utils from '../utils';
-    export default {
-        // 模板<template>默认替换挂载元素，如果 replace 选项为 false，模板将插入挂载元素内
-        replace: true,
-        data() {
-            return {
-                $rootDiv: null,
-                $shareIcons: null,
-                $ratingStars: null,
-                starSum: 5,
-                ratingScore: 3
-            };
-        },
-        props: {
-            cases_front_image: {
-                type: String,
-                default: ''
-            },
-            name: {
-                type: String,
-                default: '暂无标题'
-            },
-            cases_brief: {
-                type: String,
-                default: '暂无简介'
-            },
-            category_name: {
-                type: String,
-                default: '未知类别'
-            },
-            add_time: {
-                type: String,
-                default: '未知日期'
-            },
-            click_num: {
-                type: Number,
-                default: 0
-            },
-            reply_num: {
-                type: Number,
-                default: 0
-            },
-            fav_num: {
-                type: Number,
-                default: 0
-            },
-            id: {
-                type: Number,
-                default: 0
-            },
-            user_avatar: {
-                type: String,
-                default: Constants.REQUEST_HOST + '/static/image/fail.jpg'
-            },
-            rating_num: {
-                type: Number,
-                default: 0
-            },
-            sum_rating_score: {
-                type: Number,
-                default: 0
-            }
-        },
-        computed: {
-            viewCaseUrl () {
-                return '/viewCase/' + this.id;
-            },
-            rootDivId () {
-                return 'caseMediaObject' + this.id;
-            }
-        },
-        mounted: function () {
+    import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {CaseData} from '../commonType';
+    @Component
+    export default class caseOutlineMediaObject extends Vue{
+        $rootDiv: JQuery<HTMLElement>|null = null;
+        $shareIcons: JQuery<HTMLElement>|null = null;
+        $ratingStars: JQuery<HTMLElement>|null = null;
+        starSum: number = 5;
+        ratingScore: number = 3;
+        @Prop()
+        caseOutline: CaseData;
+        get viewCaseUrl (): string{
+            return '/viewCase/' + this.caseOutline.id;
+        }
+        get rootDivId (): string{
+            return 'caseMediaObject' + this.caseOutline.id;
+        }
+        mounted(): void{
             this.$nextTick(function () {
                 this.$rootDiv = $('#' + this.rootDivId);
                 this.$shareIcons = this.$rootDiv.find('.deal-actions .share-btn .share-tooltip');
@@ -135,28 +83,32 @@
                 Utils.initAllBackgroundImage();
                 this.initRating();
             });
-        },
-        methods: {
-            initRating: function() {
-                var ratingScore = Math.ceil(this.sum_rating_score / this.rating_num);
-                this.refreshRating(ratingScore);
-            },
-            refreshRating: function(ratingScore) {
-                if (ratingScore) {
-                    this.ratingScore = ratingScore;
-                }
-                var ratingIndex = this.starSum - this.ratingScore;
-                this.$ratingStars.eq(ratingIndex).addClass('star-active');
-            },
-            clickSnsShare: function() {
-                this.$shareIcons.toggleClass('in');
-            },
-            mouseEnterStars: function () {
-                this.$ratingStars.removeClass('star-active');
-            },
-            mouseLeaveStars: function() {
-                this.refreshRating();
+        }
+        initRating(): void{
+            let ratingScore: number = Math.ceil(this.caseOutline.sum_rating_score / this.caseOutline.rating_num);
+            this.refreshRating(ratingScore);
+        }
+        refreshRating(ratingScore: number|undefined): void{
+            if (ratingScore) {
+                this.ratingScore = ratingScore;
             }
+            let ratingIndex: number = this.starSum - this.ratingScore;
+            if(this.$ratingStars) {
+                this.$ratingStars.eq(ratingIndex).addClass('star-active');
+            }
+        }
+        clickSnsShare(): void{
+            if(this.$shareIcons) {
+                this.$shareIcons.toggleClass('in');
+            }
+        }
+        mouseEnterStars(): void{
+            if(this.$ratingStars) {
+                this.$ratingStars.removeClass('star-active');
+            }
+        }
+        mouseLeaveStars(): void{
+            this.refreshRating(undefined);
         }
     };
 </script>

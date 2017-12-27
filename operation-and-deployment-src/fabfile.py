@@ -186,7 +186,15 @@ def build():
 
 def startServer():
     with cd(_REMOTE_BACK_SRC_DIR):
-        run('python3 manage.py runserver 0.0.0.0:8000')
+        run('supervisorctl start programmingcases')
+
+def stopServer():
+    with cd(_REMOTE_BACK_SRC_DIR):
+        run('supervisorctl stop programmingcases')
+
+def checkServer():
+    with cd(_REMOTE_BACK_SRC_DIR):
+        run('supervisorctl status')
 
 def deploy():
     '''

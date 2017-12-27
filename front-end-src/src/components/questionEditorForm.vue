@@ -46,113 +46,109 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import $ from 'jquery';
     import Constants from '../constants';
     import Utils from '../utils';
-    export default {
-        props: {
-            questionId: {
-                type: String,
-                default: ''
-            }
-        },
-        data() {
-            return {
-                name: '',
-                label_1: '',
-                label_2: '',
-                label_3: '',
-                label_4: '',
-                label_5: '',
-                $pictureInput: null
-            };
-        },
-        methods: {
-            // 加载强大的富文本编辑器TinyMCE
-            initTinyMCE () {
-                // Remove all editors
-                window.tinymce.remove();
-                // 初始化富文本编辑器TinyMCE
-                window.tinymce.init({
-                    selector: '#MyTextArea',
-                    branding: false,
-                    language_url: Constants.REQUEST_HOST + '/static/js/zh_CN.js',  // site absolute URL
-                    height: 500,
-                    menubar: false,
-                    paste_data_images: true,
-                    plugins: [
-                        'advlist autolink lists link image charmap print preview anchor textcolor colorpicker',
-                        'searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table contextmenu paste code help'
-                    ],
-                    toolbar: 'insert | undo redo |  formatselect image | bold italic strikethrough forecolor backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                    // 配置了该选项后，才能进行上传文件
-                    images_upload_url: Constants.REQUEST_HOST + '/uploadfile/rich_text_picture/',
-                    images_upload_handler: function (blobInfo, success, failure) {
-                        var formData = new FormData();
-                        formData.append('file', blobInfo.blob(), blobInfo.filename());
-                        this.$axios.post('uploadfile/rich_text_picture/', formData).then((res) => {
-                            success(res.data['location']);
-                        }, (err) => {
-                            var errorReasonDict = err.body;
-                            console.log('---errorReasonDict---');
-                            console.log(errorReasonDict);
-                            failure(errorReasonDict['detail']);
-                        });
-                    }.bind(this),
-                    content_css: [
-                        '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-                        '//www.tinymce.com/css/codepen.min.css']
-                });
-            },
-            // 提交案例相关信息和富文本框内容
-            postFormData: function () {
-                window.tinymce.activeEditor.uploadImages(function(success) {
-                    var postData = Utils.getFormInput('richTextEditorForm');
-                    var questionsDesc = window.tinymce.activeEditor.getContent();
-                    postData['question_desc'] = questionsDesc;
-                    if (this.questionId.length > 0) {
-                        this.$axios.put('questions/' + this.questionId + '/', postData).then(function (res) {
-                            console.log('---res.data---');
-                            console.log(res.data);
-                            this.$root.jumpToThisPage('/viewQuestion/' + this.questionId);
-                        }.bind(this), (err) => {
-                            console.log('---err.body---');
-                            console.log(err.body);
-                        });
-                    } else {
-                        this.$axios.post('questions/', postData).then(function (res) {
-                            console.log('---res.data---');
-                            console.log(res.data);
-                            this.$root.jumpToThisPage('/viewQuestion/' + res.data['id']);
-                        }, (err) => {
-                            console.log('---err.body---');
-                            console.log(err.body);
-                        });
-                    }
-                }.bind(this));
-            },
-            getQuestionInfoById () {
-                this.$axios.get('questions/' + this.questionId + '/')
-                    .then((res) => {
-                        this.name = res.data['name'];
-                        this.label_1 = res.data['label_1'];
-                        this.label_2 = res.data['label_2'];
-                        this.label_3 = res.data['label_3'];
-                        this.label_4 = res.data['label_4'];
-                        this.label_5 = res.data['label_5'];
-                        var questionDesc = res.data['question_desc'];
-                        $('#richTextEditorDiv').html(questionDesc);
+    import axios from 'axios';
+    import {jumpToThisPage} from '../router';
+    import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {Mutation} from 'vuex-class';
+    @Component
+    export default class questionEditorForm extends Vue{
+        name: string = '';
+        label_1: string = '';
+        label_2: string = '';
+        label_3: string = '';
+        label_4: string = '';
+        label_5: string = '';
+        $pictureInput: JQuery<HTMLElement>|null = null;
+        @Prop({type: String, default: ''})
+        questionId: string;
+        // 加载强大的富文本编辑器TinyMCE
+        initTinyMCE(successCallback: (() => void)|undefined): void{
+            // Remove all editors
+            (<any>window).tinymce.remove();
+            // 初始化富文本编辑器TinyMCE
+            (<any>window).tinymce.init({
+                selector: '#MyTextArea',
+                branding: false,
+                language_url: Constants.REQUEST_HOST + '/static/js/zh_CN.js',  // site absolute URL
+                height: 500,
+                menubar: false,
+                paste_data_images: true,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor textcolor colorpicker',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table contextmenu paste code help'
+                ],
+                toolbar: 'insert | undo redo |  formatselect image | bold italic strikethrough forecolor backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                // 配置了该选项后，才能进行上传文件
+                images_upload_url: Constants.REQUEST_HOST + '/uploadfile/rich_text_picture/',
+                images_upload_handler: function (blobInfo, success, failure) {
+                    var formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+                    axios.post('uploadfile/rich_text_picture/', formData).then((res) => {
+                        success(Constants.REQUEST_HOST + res.data['location']);
                     }, (err) => {
                         var errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
                         console.log(errorReasonDict);
+                        failure(errorReasonDict['detail']);
                     });
-            }
-        },
-        mounted: function () {
-            this.$nextTick(function () {
+                }.bind(this),
+                content_css: [
+                    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                    '//www.tinymce.com/css/codepen.min.css'],
+                init_instance_callback: successCallback
+            });
+        }
+        // 提交案例相关信息和富文本框内容
+        postFormData() {
+            (<any>window).tinymce.activeEditor.uploadImages(function(this: questionEditorForm, success) {
+                var postData = Utils.getFormInput('richTextEditorForm');
+                var questionsDesc = (<any>window).tinymce.activeEditor.getContent();
+                postData['question_desc'] = questionsDesc;
+                if (this.questionId.length > 0) {
+                    axios.put('questions/' + this.questionId + '/', postData).then(function (this: questionEditorForm, res) {
+                        console.log('---res.data---');
+                        console.log(res.data);
+                        jumpToThisPage('/viewQuestion/' + this.questionId);
+                    }.bind(this), (err) => {
+                        console.log('---err.body---');
+                        console.log(err.body);
+                    });
+                } else {
+                    axios.post('questions/', postData).then(function (res) {
+                        console.log('---res.data---');
+                        console.log(res.data);
+                        jumpToThisPage('/viewQuestion/' + res.data['id']);
+                    }, (err) => {
+                        console.log('---err.body---');
+                        console.log(err.body);
+                    });
+                }
+            }.bind(this));
+        }
+        getQuestionInfoById(): void{
+            axios.get('questions/' + this.questionId + '/')
+                .then((res) => {
+                    this.name = res.data['name'];
+                    this.label_1 = res.data['label_1'];
+                    this.label_2 = res.data['label_2'];
+                    this.label_3 = res.data['label_3'];
+                    this.label_4 = res.data['label_4'];
+                    this.label_5 = res.data['label_5'];
+                    let questionDesc = res.data['question_desc'];
+                    $('#richTextEditorDiv').html(questionDesc);
+                }, (err) => {
+                    let errorReasonDict = err.body;
+                    console.log('---errorReasonDict---');
+                    console.log(errorReasonDict);
+                });
+        }
+        mounted(): void{
+            this.$nextTick(function (this: questionEditorForm) {
                 // 阻止表单的默认提交操作
                 $('#richTextEditorForm').submit(function (e) {
                     e.preventDefault();
@@ -161,7 +157,7 @@
                 if (this.questionId.length > 0) {
                     this.getQuestionInfoById();
                 }
-                this.initTinyMCE();
+                this.initTinyMCE(undefined);
             });
         }
     };

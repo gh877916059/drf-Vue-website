@@ -3,7 +3,7 @@
         <template v-if="questionOutlineList.length > 0">
             <div class="col-sm-12">
                 <ul class="list-group">
-                    <li v-for="(questionOutline, index) in questionOutlineList" class="list-group-item"><question-outline-media-object v-bind="questionOutline"></question-outline-media-object></li>
+                    <li v-for="(questionOutline, index) in questionOutlineList" class="list-group-item"><question-outline-media-object v-bind:questionOutline="questionOutline"></question-outline-media-object></li>
                 </ul>
             </div>
             <div class="col-sm-8 col-sm-offset-4">
@@ -18,33 +18,37 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import questionOutlineMediaObject from './questionOutlineMediaObject.vue';
     import paginationNav from './paginationNav.vue';
-    export default {
-        data() {
-            return {
-                questionOutlineList: [],
-                requestUrl: 'questions/',
-                sumPageNum: 1,
-                nextPageUrl: '',
-                previousPageUrl: ''
-            };
-        },
+    import {Component, Vue} from 'vue-property-decorator';
+    import {Mutation} from 'vuex-class';
+    import {Dict, QuestionData} from '../commonType';
+    @Component({
         components: {
             questionOutlineMediaObject,
             paginationNav
-        },
-        mounted: function () {
-            this.$store.commit('setListComponent', this);
-        },
-        destroyed: function () {
-            this.$store.commit('setListComponent', null);
-        },
-        methods: {
-            // 请求该案例的详细信息
-            setOutlineList: function (questionOutlineList) {
-                this.questionOutlineList = questionOutlineList;
+        }
+    })
+    export default class questionList extends Vue{
+        questionOutlineList: QuestionData[] = [];
+        requestUrl: string = 'questions/';
+        sumPageNum: number = 1;
+        nextPageUrl: string = '';
+        previousPageUrl: string = '';
+        @Mutation('setListComponent') mutationSetListComponent;
+        mounted(): void{
+            this.mutationSetListComponent(this);
+        }
+        destroyed(): void{
+            this.mutationSetListComponent(null);
+        }
+        // 请求该案例的详细信息
+        setOutlineList(resDataList: Dict[]): void{
+            this.questionOutlineList = [];
+            for (let resDict of resDataList) {
+                let caseOutline = new QuestionData(resDict);
+                this.questionOutlineList.push(caseOutline);
             }
         }
     };

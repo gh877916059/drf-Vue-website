@@ -40,25 +40,24 @@
         </main>
     </div>
 </template>
-<script>
+<script lang="ts">
+    import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
     import topBar from '../components/topBar.vue';
     import leftAccordionMenu from '../components/leftAccordionMenu.vue';
     import hotCategoryList from '../components/hotCategoryList.vue';
     import indexCarousel from '../components/indexCarousel.vue';
     import caseList from '../components/caseList.vue';
-    export default {
+    @Component({
         components: {
             topBar,
             leftAccordionMenu,
             hotCategoryList,
             caseList,
             indexCarousel
-        },
-        data() {
-            return {
-                isShowPagination: false
-            };
         }
+    })
+    export default class indexView extends Vue{
+        isShowPagination: boolean =  false
     };
 </script>
 <style lang="scss">

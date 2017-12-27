@@ -9,14 +9,16 @@ from cases.models import Cases, CasesCategory, HotSearchWords, CasesImage, Banne
 class CategorySerializer2(serializers.ModelSerializer):
     class Meta:
         model = CasesCategory
-        fields = "__all__"
+        # fields = "__all__"
+        fields = ("id", "name", "parent_category")
 
 
 class CategorySerializer(serializers.ModelSerializer):
     sub_cat = CategorySerializer2(many=True)
     class Meta:
         model = CasesCategory
-        fields = "__all__"
+        #fields = "__all__"
+        fields = ("id", "name", "sub_cat")
 
 
 class CasesImageSerializer(serializers.ModelSerializer):
@@ -46,7 +48,7 @@ class PostCasesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cases
-        fields = "__all__"
+        #fields = "__all__"
         fields = ("category_id", "name", "cases_brief", "cases_desc", "cases_front_image")
 
 

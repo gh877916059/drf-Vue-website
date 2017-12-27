@@ -41,40 +41,32 @@
     </nav>
 </template>
 
-<script>
+<script lang="ts">
     import Utils from '../utils';
-    export default {
-        props: {
-            sumPageNum: {
-                type: Number,
-                default: 1
-            },
-            nextPageUrl: {
-                type: String,
-                default: ''
-            },
-            previousPageUrl: {
-                type: String,
-                default: ''
+    import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {Mutation} from 'vuex-class';
+    @Component
+    export default class paginationNav extends Vue{
+        @Prop({type: Number, default: 1})
+        sumPageNum: number;
+        @Prop({type: String, default: ''})
+        nextPageUrl: string;
+        @Prop({type: String, default: ''})
+        previousPageUrl: string;
+        get currPageNum(): number{
+            return this.$store.state.currPageNum;
+        }
+        get pageNumToShowList(): number[]{
+            return Utils.rangeArray(1, this.sumPageNum);
+        }
+        @Mutation('setCurrPageNum') mutationSetCurrPageNum;
+        jumpToPage(pageNum: number): void{
+            if (pageNum < 1) {
+                pageNum = 1;
+            } else if (pageNum > this.pageNumToShowList.length) {
+                pageNum = this.pageNumToShowList.length;
             }
-        },
-        computed: {
-            currPageNum () {
-                return this.$store.state.currPageNum;
-            },
-            pageNumToShowList () {
-                return Utils.rangeArray(1, this.sumPageNum);
-            }
-        },
-        methods: {
-            jumpToPage: function (PageId) {
-                if (PageId < 1) {
-                    PageId = 1;
-                } else if (PageId > this.pageNumToShowList.length) {
-                    PageId = this.pageNumToShowList.length;
-                }
-                this.$store.commit('setCurrPageNum', PageId);
-            }
+            this.mutationSetCurrPageNum(pageNum);
         }
     };
 </script>

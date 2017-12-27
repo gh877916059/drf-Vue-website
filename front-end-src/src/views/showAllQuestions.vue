@@ -16,20 +16,26 @@
 
     </div>
 </template>
-<script>
+<script lang="ts">
     import topBar from '../components/topBar.vue';
     import questionList from '../components/questionList.vue';
     import Constants from '../constants';
-    export default {
+    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Mutation} from 'vuex-class';
+    @Component({
         components: {
             topBar,
             questionList
-        },
-        mounted: function () {
+        }
+    })
+    export default class showAllQuestionsView extends Vue{
+        @Mutation('setCurrPageNum') mutationSetCurrPageNum;
+        @Mutation('setCurrPageSize') mutationSetCurrPageSize;
+        mounted() {
             const page = this.$route.query['page'] || 1;
             const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
-            this.$store.commit('setCurrPageNum', page);
-            this.$store.commit('setCurrPageSize', pageSize);
+            this.mutationSetCurrPageNum(page);
+            this.mutationSetCurrPageSize(pageSize);
         }
     };
 </script>

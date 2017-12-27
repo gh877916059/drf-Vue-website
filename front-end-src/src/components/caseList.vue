@@ -9,7 +9,7 @@
 
                 <div class="row row-masnory row-tb-20">
                     <div v-bind:class="[isShowPagination?'col-sm-6 col-lg-4':'col-xs-12 col-sm-6', 'mb-20']"v-for="caseOutline in caseOutlineList" :key="caseOutline.id">
-                        <case-outline-media-object v-bind="caseOutline"></case-outline-media-object>
+                        <case-outline-media-object v-bind:caseOutline="caseOutline"></case-outline-media-object>
                     </div>
                 </div>
             </section>
@@ -25,46 +25,39 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import caseOutlineMediaObject from './caseOutlineMediaObject.vue';
     import paginationNav from './paginationNav.vue';
-    import Constants from '../constants';
-    export default {
-        data() {
-            return {
-                caseOutlineList: [],
-                requestUrl: 'cases/',
-                sumPageNum: 1,
-                nextPageUrl: '',
-                previousPageUrl: ''
-            };
-        },
+    import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {CaseData, Dict} from '../commonType';
+    import {Mutation} from 'vuex-class';
+    @Component({
         components: {
             caseOutlineMediaObject,
             paginationNav
-        },
-        mounted: function () {
-            this.$store.commit('setListComponent', this);
-        },
-        destroyed: function () {
-            this.$store.commit('setListComponent', null);
-        },
-        props: {
-            isShowPagination: {
-                type: Boolean,
-                default: true
-            }
-        },
-        methods: {
-            // 请求该案例的详细信息
-            setOutlineList: function (caseOutlineList) {
-                this.caseOutlineList = caseOutlineList;
-                for (var index in this.caseOutlineList) {
-                    this.caseOutlineList[index]['category_name'] = this.caseOutlineList[index]['category']['name'];
-                    delete this.caseOutlineList[index]['category'];
-                    delete this.caseOutlineList[index]['cases_desc'];
-                    this.caseOutlineList[index]['cases_front_image'] = Constants.REQUEST_HOST + this.caseOutlineList[index]['cases_front_image'];
-                }
+        }
+    })
+    export default class caseList extends Vue{
+        caseOutlineList: CaseData[] = [];
+        requestUrl: string = 'cases/';
+        sumPageNum: number = 1;
+        nextPageUrl: string = '';
+        previousPageUrl: string = '';
+        @Prop({type: Boolean, default: true})
+        isShowPagination: boolean;
+        @Mutation('setListComponent') mutationSetListComponent;
+        mounted(): void{
+            this.mutationSetListComponent(this);
+        }
+        destroyed(): void{
+            this.mutationSetListComponent(null);
+        }
+        // 请求该案例的详细信息
+        setOutlineList(resDictList: Dict[]): void{
+            this.caseOutlineList = [];
+            for (let resDict of resDictList) {
+                let caseOutline = new CaseData(resDict);
+                this.caseOutlineList.push(caseOutline);
             }
         }
     };

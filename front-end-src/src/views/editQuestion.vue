@@ -17,21 +17,22 @@
         </main>
     </div>
 </template>
-<script>
+<script lang="ts">
     import topBar from '../components/topBar.vue';
     import questionEditorForm from '../components/questionEditorForm.vue';
-    export default {
+    import {Component, Vue} from 'vue-property-decorator';
+    @Component({
         components: {
             topBar,
             questionEditorForm
-        },
-        computed: {
-            questionId () {
-                if (this.$route.query.id) {
-                    return this.$route.query.id;
-                }
-                return '';
+        }
+    })
+    export default class editQuestionView extends Vue{
+        get questionId () {
+            if (this.$route.query['id']) {
+                return this.$route.query['id'];
             }
+            return '';
         }
     };
 </script>

@@ -15,33 +15,37 @@
         </main>
     </div>
 </template>
-<script>
+<script lang="ts">
     import topBar from '../components/topBar.vue';
     import caseList from '../components/caseList.vue';
     import Constants from '../constants';
-    export default {
+    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Mutation} from 'vuex-class';
+    @Component({
         components: {
             topBar,
             caseList
-        },
-        methods: {
-            requestCaseList: function () {
-                if (this.$route.query['top_category']) {
-                    this.$store.commit('setFilterCondition', {top_category: this.$route.query['top_category']});
-                }
-                const page = this.$route.query['page'] || 1;
-                const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
-                this.$store.commit('setCurrPageNum', page);
-                this.$store.commit('setCurrPageSize', pageSize);
+        }
+    })
+    export default class showAllCasesView extends Vue{
+        @Mutation('setFilterCondition') mutationSetFilterCondition;
+        @Mutation('setCurrPageNum') mutationSetCurrPageNum;
+        @Mutation('setCurrPageSize') mutationSetCurrPageSize;
+        requestCaseList(): void{
+            if (this.$route.query['top_category']) {
+                this.mutationSetFilterCondition({top_category: this.$route.query['top_category']});
             }
-        },
-        mounted: function () {
+            const page = this.$route.query['page'] || 1;
+            const pageSize = this.$route.query['page_size'] || Constants.PAGE_SIZE;
+            this.mutationSetCurrPageNum(page);
+            this.mutationSetCurrPageSize(pageSize);
+        }
+        mounted(): void{
             this.requestCaseList();
-        },
-        watch: {
-            '$route'(to, from) {
-                this.requestCaseList();
-            }
+        }
+        @Watch('$route')
+        onQueryArgsChanged() {
+            this.requestCaseList();
         }
     };
 </script>

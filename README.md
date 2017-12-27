@@ -26,8 +26,9 @@ http://119.23.69.178:8000/index/
 
 ## 1. 架构说明
 
-1. webpack+Vue全家桶（①Vue2；②Vue-router；③axios；④Vuex）+Bootstrap3的前端项目框架（附注释）
-2. 前端表单验证使用了1000hz-bootstrap-validator；文件上传使用了bootstrap-fileinput；富文本编辑使用了tinyMCE；图片编辑使用了cropper；轮播图使用了Owl-Carousel 2
+1. 项目整体使用TypeScript（它是JavaScript的一个超集，而且本质上向这个语言添加了可选的静态类型和基于类的面向对象编程）
+2. webpack+Vue全家桶（①Vue2；②Vue-router；③axios；④Vuex）+Bootstrap3的前端项目框架（附注释）
+3. 前端表单验证使用了1000hz-bootstrap-validator；文件上传使用了bootstrap-fileinput；富文本编辑使用了tinyMCE；图片编辑使用了cropper；轮播图使用了Owl-Carousel 2
 
 ## 2. 使用教程（下面的命令皆以front-end-src为当前目录运行）
 
@@ -39,6 +40,8 @@ http://119.23.69.178:8000/index/
 ## 1. 架构说明
 
 1. fabric
+2. Supervisor（将`operation-and-deployment-src/supervisor/ProgrammingCases.conf`拷贝到`/etc/supervisor/conf.d/`目录下）
+3. ​
 
 ## 2. 使用教程（下面的命令皆以operation-and-deployment-src为当前目录运行）
 
@@ -50,7 +53,9 @@ http://119.23.69.178:8000/index/
 6. `fab build`使用webpack将前端代码进行编译压缩，然后将前后端项目代码进行打包，用作备份或者上传服务器进行部署
 7. `fab deploy`将在本地打包好的项目代码上传到服务器然后再解包
 8. `fab rollback`项目代码回退到上一个版本，并重启任务
-9. `fab startServer`启动网站
+9. `fab startServer`利用Supervisor启动网站
+10. `fab stopServer`利用Supervisor停止网站的运行
+11. `fab checkServer`利用Supervisor查看当前网站的运行状态
 
 # 五、补充说明
 

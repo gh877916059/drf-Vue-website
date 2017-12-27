@@ -7,82 +7,58 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import $ from 'jquery';
-    import Utils from '../utils';
-    export default {
-        props: {
-            caseId: {
-                type: String,
-                default: ''
+    import axios from 'axios';
+    import {jumpToThisPage} from '../router';
+    import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {CaseData} from '../commonType';
+    import {Mutation} from 'vuex-class';
+    @Component
+    export default class caseViewer extends Vue{
+        caseOutline: CaseData;
+        @Prop({type: String, default: ''})
+        caseId: string;
+        get editCaseURL(): string{
+            return '/editCase?id=' + this.caseId;
+        }
+        @Mutation('increaseForcedRequestCounter') mutationIncreaseForcedRequestCounter;
+        // 请求该案例的详细信息
+        getCaseDetail(): void{
+            if (this.caseId.length <= 0) {
+                console.log('---请传入案例ID作为query---');
+            } else {
+                axios.get('cases/' + this.caseId + '/')
+                    .then((res) => {
+                        this.caseOutline = new CaseData(res.data);
+                    }, (err) => {
+                        var errorReasonDict = err.body;
+                        console.log('---errorReasonDict---');
+                        console.log(errorReasonDict);
+                    });
             }
-        },
-        data() {
-            return {
-                category_name: '',
-                name: '',
-                click_num: 0,
-                fav_num: 0,
-                reply_num: 0,
-                cases_brief: '',
-                cases_desc: '',
-                cases_front_image: '',
-                add_time: '',
-                id: 0
-            };
-        },
-        methods: {
-            // 请求该案例的详细信息
-            getCaseDetail: function () {
-                if (this.caseId.length <= 0) {
-                    console.log('---请传入案例ID作为query---');
-                } else {
-                    this.$axios.get('cases/' + this.caseId + '/')
-                        .then((res) => {
-                            this.category_name = res.data['category']['name'];
-                            this.name = res.data['name'];
-                            this.click_num = res.data['click_num'];
-                            this.fav_num = res.data['fav_num'];
-                            this.reply_num = res.data['reply_num'];
-                            this.cases_brief = res.data['cases_brief'];
-                            this.cases_desc = Utils.completeAllHostInImgLabel(res.data['cases_desc']);
-                            this.cases_front_image = res.data['cases_front_image'];
-                            this.add_time = res.data['add_time'];
-                            this.id = res.data['id'];
-                        }, (err) => {
-                            var errorReasonDict = err.body;
-                            console.log('---errorReasonDict---');
-                            console.log(errorReasonDict);
-                        });
-                }
-            },
-            deleteCase: function () {
-                if (this.caseId.length <= 0) {
-                    console.log('---请传入案例ID作为query---');
-                } else {
-                    this.$axios.delete('cases/' + this.caseId + '/')
-                        .then((res) => {
-                            console.log('---删除案例成功---');
-                            this.$store.commit('increaseForcedRequestCounter');
-                            this.$root.jumpToThisPage('/showAllCases');
-                        }, (err) => {
-                            var errorReasonDict = err.body;
-                            console.log('---errorReasonDict---');
-                            console.log(errorReasonDict);
-                        });
-                }
+        }
+        deleteCase(): void{
+            if (this.caseId.length <= 0) {
+                console.log('---请传入案例ID作为query---');
+            } else {
+                axios.delete('cases/' + this.caseId + '/')
+                    .then((res) => {
+                        console.log('---删除案例成功---');
+                        this.mutationIncreaseForcedRequestCounter();
+                        jumpToThisPage('/showAllCases');
+                    }, (err) => {
+                        var errorReasonDict = err.body;
+                        console.log('---errorReasonDict---');
+                        console.log(errorReasonDict);
+                    });
             }
-        },
-        mounted: function () {
+        }
+        mounted(): void{
             this.$nextTick(function () {
                 this.getCaseDetail();
                 $('[data-toggle=tooltip]').tooltip();
             });
-        },
-        computed: {
-            editCaseURL () {
-                return '/editCase?id=' + this.id;
-            }
         }
     };
 </script>

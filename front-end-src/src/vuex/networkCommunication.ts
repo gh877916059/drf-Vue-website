@@ -1,7 +1,7 @@
 import store from './store';
 import axios from 'axios';
 
-const restoreStateFromSessionStorageIfExist = function () {
+function restoreStateFromSessionStorageIfExist(): void{
     if (window.sessionStorage.userName) {
         store.commit('setUserName', window.sessionStorage.userName);
     }
@@ -14,13 +14,18 @@ const restoreStateFromSessionStorageIfExist = function () {
     }
 };
 
-const setAuthorizationToken = function (jwtToken) {
-    const authorizationHeader = 'JWT ' + jwtToken;
+function setAuthorizationToken(jwtToken: string): void{
+    const authorizationHeader: string = 'JWT ' + jwtToken;
     axios.defaults.headers.common['Authorization'] = authorizationHeader;
     window.sessionStorage.AuthorizationHeader = authorizationHeader;
 };
 
-const requestCategoryListWithCache = function (callbackFun) {
+function deleteAuthorizationToken(): void{
+    delete window.sessionStorage.AuthorizationHeader;
+    delete axios.defaults.headers.common['Authorization'];
+};
+
+function requestCategoryListWithCache(callbackFun) {
     if (store.state.categoryList) {
         callbackFun(store.state.categoryList);
         return store.state.categoryList;
@@ -36,18 +41,18 @@ const requestCategoryListWithCache = function (callbackFun) {
             console.log('---errorReasonDict---');
             console.log(errorReasonDict);
         });
-    return false;
+    return null;
 };
 
-const requestListInfo = function (vuexState) {
-    var self = vuexState.listComponent;
+function requestListInfo(vuexState) {
+    let self = vuexState.listComponent;
     if (!self) {
         return;
     }
-    var requestUrl = self.requestUrl + '?';
+    let requestUrl = self.requestUrl + '?';
     requestUrl = requestUrl + 'page' + '=' + vuexState.currPageNum + '&';
     requestUrl = requestUrl + 'page_size' + '=' + vuexState.currPageSize + '&';
-    for (var key in vuexState.filterCondition) {
+    for (let key in vuexState.filterCondition) {
         requestUrl = requestUrl + key + '=' + vuexState.filterCondition[key] + '&';
     }
     requestUrl = requestUrl.slice(0, -1);
@@ -57,14 +62,14 @@ const requestListInfo = function (vuexState) {
     vuexState.lastRequestUrl = requestUrl;
     console.log('---requestUrl---');
     console.log(requestUrl);
-    self.$axios.get(requestUrl)
+    axios.get(requestUrl)
         .then((res) => {
             vuexState.listComponent.previousPageUrl = res.data['previous'];
             vuexState.listComponent.nextPageUrl = res.data['next'];
             vuexState.listComponent.sumPageNum = Math.ceil(res.data['count'] / vuexState.currPageSize);
             self.setOutlineList(res.data.results);
         }, (err) => {
-            var errorReasonDict = err.body;
+            let errorReasonDict = err.body;
             console.log('---errorReasonDict---');
             console.log(errorReasonDict);
         });
@@ -74,5 +79,6 @@ export default {
     requestListInfo,
     setAuthorizationToken,
     restoreStateFromSessionStorageIfExist,
-    requestCategoryListWithCache
+    requestCategoryListWithCache,
+    deleteAuthorizationToken
 };

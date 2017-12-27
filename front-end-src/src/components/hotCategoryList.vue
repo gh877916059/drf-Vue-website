@@ -13,42 +13,40 @@
     </aside>
 </template>
 
-<script>
-    export default {
-        data() {
-            return {
-                hotCategoryList: []
-            };
-        },
-        methods: {
-            // 请求首页轮播图信息
-            getHotCategoryList: function () {
-                this.$axios.get('hotcategory/')
-                    .then((res) => {
-                        this.hotCategoryList = res.data;
-                        this.convertParentCategoryToIconClass();
-                    }, (err) => {
-                        var errorReasonDict = err.body;
-                        console.log('---errorReasonDict---');
-                        console.log(errorReasonDict);
-                    });
-            },
-            convertParentCategoryToIconClass: function () {
-                for (var index in this.hotCategoryList) {
-                    if (this.hotCategoryList[index]['parent_category_id'] === 1) {
-                        this.hotCategoryList[index]['class'] = 'fa fa-graduation-cap';
-                    } else if (this.hotCategoryList[index]['parent_category_id'] === 12) {
-                        this.hotCategoryList[index]['class'] = 'fa fa-paint-brush';
-                    } else if (this.hotCategoryList[index]['parent_category_id'] === 27) {
-                        this.hotCategoryList[index]['class'] = 'fa fa-gamepad';
-                    } else {
-                        this.hotCategoryList[index]['class'] = 'fa fa-cutlery';
-                    }
+<script lang="ts">
+    import axios from 'axios';
+    import {Component, Vue} from 'vue-property-decorator';
+    import {CaseCategory} from '../commonType';
+    @Component
+    export default class hotCategoryList extends Vue{
+        hotCategoryList: CaseCategory[] = [];
+        // 请求首页轮播图信息
+        getHotCategoryList(): void{
+            axios.get('hotcategory/')
+                .then((res) => {
+                    this.hotCategoryList = res.data;
+                    this.convertParentCategoryToIconClass();
+                }, (err) => {
+                    let errorReasonDict = err.body;
+                    console.log('---errorReasonDict---');
+                    console.log(errorReasonDict);
+                });
+        }
+        convertParentCategoryToIconClass(): void{
+            for (let hotCategory of this.hotCategoryList) {
+                if (hotCategory['parent_category_id'] === 1) {
+                    hotCategory['class'] = 'fa fa-graduation-cap';
+                } else if (hotCategory['parent_category_id'] === 12) {
+                    hotCategory['class'] = 'fa fa-paint-brush';
+                } else if (hotCategory['parent_category_id'] === 27) {
+                    hotCategory['class'] = 'fa fa-gamepad';
+                } else {
+                    hotCategory['class'] = 'fa fa-cutlery';
                 }
             }
-        },
-        mounted: function () {
-            this.$nextTick(function () {
+        }
+        mounted(): void{
+            this.$nextTick(function (this: hotCategoryList) {
                 this.getHotCategoryList();
             });
         }

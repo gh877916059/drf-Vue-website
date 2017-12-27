@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        // 语法编译为es5语法，与Vue的浏览器支持保持一致
+        "target": "es5",
+        // 模块采用import语法且不作转换（利用webpack 2+的tree-shake）
+        "module": "es2015",
+        // 这可以对'this'上的数据属性进行更严格的推断
+        "strict": true,
+        // 用NPM模式加载
+        "moduleResolution": "node",
+        // 对于没有Export的库进行兼容
+        "allowSyntheticDefaultImports": true,
+        // 开启修饰器模式
+        "experimentalDecorators": true,
+        // 启用设计类型元数据（用于反射）
+        "emitDecoratorMetadata": true,
+        // 在表达式和声明上有隐含的any类型时报错
+        "noImplicitAny": false,
+        // 不是函数的所有返回路径都有返回值时报错。
+        "noImplicitReturns": true,
+        // 移除注释
+        "removeComments": true,
+        // 识别基本的系统类库
+        "lib": [
+            "dom",
+            "es5",
+            "es2015"
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

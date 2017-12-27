@@ -27,65 +27,67 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
     import $ from 'jquery';
+    import JQuery from 'jquery/dist/jquery.slim';
     import Utils from '../utils';
     import NetworkCommunication from '../vuex/networkCommunication';
-    export default {
-        data() {
-            return {
-                serverValidationResult: {}
-            };
-        },
-        mounted: function () {
-            this.$nextTick(function () {
+    import axios from 'axios';
+    import {Component, Vue} from 'vue-property-decorator';
+    import {Mutation} from 'vuex-class';
+    import {Dict} from '../commonType';
+    @Component
+    export default class loginModal extends Vue{
+        serverValidationResult: Dict = {};
+        $loginForm: JQuery<HTMLElement>|null = null;
+        @Mutation('setUserName') mutationSetUserName;
+        mounted(): void{
+            this.$nextTick(function (this: loginModal) {
+                this.$loginForm = $('#loginForm');
                 // 阻止表单的默认提交操作
-                $('#loginForm').submit(function (e) {
+                this.$loginForm.submit(function (e) {
                     e.preventDefault();
                 });
                 $('label').css('text-align', 'left');
-                $('#loginForm').validator({
+                this.$loginForm.validator({
                     custom: {
-                        serverValidation: function ($el) {
+                        serverValidation: function (this: loginModal, $el) {
                             // 存储服务器验证错误信息的字典为空，则说明所有输入均合法（或者还没提交表单）
-                            var inputFieldName = $el.attr('name');
+                            let inputFieldName: string = $el.attr('name') || '';
                             if (inputFieldName in this.serverValidationResult) {
-                                var result = this.serverValidationResult[inputFieldName];
-                                return result;
+                                return this.serverValidationResult[inputFieldName];
                             } else {
                                 return false;
                             }
                         }.bind(this)
                     }
                 });
-            });
-        },
-        methods: {
-            postLoginData: function () {
-                var errorNum = $('#loginForm').validator('validate').has('.has-error').length;
+            }.bind(this));
+        }
+        postLoginData(): void{
+            if(this.$loginForm) {
+                let errorNum: number = this.$loginForm.validator('validate').has('.has-error').length;
                 if (errorNum > 0) {
                     return;
                 }
-                var postData = Utils.getFormInput('loginForm');
-                this.$axios.post('login/', postData)
+                let postData = Utils.getFormInput('loginForm');
+                axios.post('login/', postData)
                     .then((res) => {
                         NetworkCommunication.setAuthorizationToken(res.data['token']);
-                        this.setUserName($('#loginForm input[name="username"]').val());
+                        this.mutationSetUserName(postData['username']);
                         this.$emit('closeLoginModal');
                     }, (err) => {
-                        var errorReasonDict = err.body;
+                        let errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
                         console.log(errorReasonDict);
-                        for (var key in errorReasonDict) {
+                        for (let key in errorReasonDict) {
                             this.serverValidationResult[key] = errorReasonDict[key];
-                        };
-                        $('#loginForm').validator('validate');
+                        }
+                        if(this.$loginForm) {
+                            this.$loginForm.validator('validate');
+                        }
                         this.serverValidationResult = {};
                     });
-            },
-            setUserName: function(userName) {
-                this.$store.commit('setUserName', userName);
-                window.sessionStorage.userName = userName;
             }
         }
     };

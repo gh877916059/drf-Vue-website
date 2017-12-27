@@ -53,7 +53,7 @@
         <div class="form-group has-feedback has-success has-error">
             <label class="col-sm-3"><img v-bind:src="pictureCodeSrc" style="cursor: pointer" v-on:click='requestForPictureCode'></label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" name="code" placeholder="请输入图片验证码" data-pattern-error="验证码的长度必须为4位" data-required-error="验证码不可以为空" pattern="^.{4,4}$" required data-serverValidation>
+                <input type="text" id="captchaCodeInput" class="form-control" name="code" placeholder="请输入图片验证码" data-pattern-error="验证码的长度必须为4位" data-required-error="验证码不可以为空" pattern="^.{4,4}$" required data-serverValidation>
                 <span class="glyphicon glyphicon-ok form-control-feedback"></span>
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
@@ -70,38 +70,68 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
     import $ from 'jquery';
+    import JQuery from 'jquery/dist/jquery.slim';
     import Constants from '../constants';
     import Utils from '../utils';
     import NetworkCommunication from '../vuex/networkCommunication';
-    export default {
-        data() {
-            return {
-                pictureCodeSrc: '',
-                pictureToken: '',
-                serverValidationResult: {}
-            };
-        },
-        methods: {
-            postRegisterData: function () {
-                var errorNum = $('#registerForm').validator('validate').has('.has-error').length;
+    import {Component, Vue} from 'vue-property-decorator';
+    import {Mutation} from 'vuex-class';
+    import {Dict} from '../commonType';
+    import axios from 'axios';
+
+    @Component
+    export default class registerModal extends Vue{
+        pictureCodeSrc: string = '';
+        pictureToken: string = '';
+        serverValidationResult: Dict = {};
+        $registerForm: JQuery<HTMLElement>|null = null;
+        $captchaCodeInput: JQuery<HTMLElement>|null = null;
+        @Mutation('setUserName') mutationSetUserName;
+        mounted(): void{
+            this.$nextTick(function(this: registerModal) {
+                this.$registerForm = $('#registerForm');
+                this.$captchaCodeInput = $('#captchaCodeInput');
+                // 阻止表单的默认提交操作
+                this.$registerForm.submit(function (e) {
+                    e.preventDefault();
+                });
+                $('label').css('text-align', 'left');
+                this.$registerForm.validator({
+                    custom: {
+                        serverValidation: function (this: registerModal, $el) {
+                            // 存储服务器验证错误信息的字典为空，则说明所有输入均合法（或者还没提交表单）
+                            let inputFieldName: string = $el.attr('name');
+                            if (inputFieldName in this.serverValidationResult) {
+                                return this.serverValidationResult[inputFieldName];
+                            } else {
+                                return false;
+                            }
+                        }.bind(this)
+                    }
+                });
+            }.bind(this));
+        }
+        postRegisterData(): void{
+            if(this.$registerForm) {
+                let errorNum: number = this.$registerForm.validator('validate').has('.has-error').length;
                 if (errorNum > 0) {
                     return;
                 }
-                var postData = Utils.getFormInput('registerForm');
-                this.$axios.post('users/', postData)
+                let postData: Dict = Utils.getFormInput('registerForm');
+                axios.post('users/', postData)
                     .then((res) => {
                         NetworkCommunication.setAuthorizationToken(res.data['jwt_token']);
-                        this.$store.commit('setUserName', $('#registerForm input[name="username"]').val());
+                        this.mutationSetUserName(postData['username']);
                         this.$emit('closeRegisterModal');
                     }, (err) => {
-                        var errorReasonDict = err.body;
+                        let errorReasonDict: Dict = err.body;
                         console.log('---errorReasonDict---');
                         console.log(errorReasonDict);
-                        for (var key in errorReasonDict) {
+                        for (let key in errorReasonDict) {
                             if (key === 'non_field_errors') {
-                                var reason = errorReasonDict[key][0];
+                                let reason: string = errorReasonDict[key][0];
                                 if (reason.indexOf('令牌') === -1) {
                                     this.serverValidationResult['code'] = errorReasonDict[key];
                                 }
@@ -111,46 +141,27 @@
                             } else {
                                 this.serverValidationResult[key] = errorReasonDict[key];
                             }
-                        };
-                        $('#registerForm').validator('validate');
+                        }
+                        if(this.$registerForm) {
+                            this.$registerForm.validator('validate');
+                        }
                         this.serverValidationResult = {};
                     });
-            },
-            // 请求图片验证码
-            requestForPictureCode: function () {
-                this.$axios.get('picturecodes/')
-                    .then((res) => {
-                        this.pictureCodeSrc = Constants.REQUEST_HOST + res.data['cptch_image'];
-                        this.pictureToken = res.data['cptch_key'];
-                        $('#registerForm input[name="code"]').val('');
-                    }, (err) => {
-                        console.log('图片验证码请求错误');
-                        console.log(err);
-                    });
             }
-        },
-        mounted: function () {
-            this.$nextTick(function () {
-                // 阻止表单的默认提交操作
-                $('#registerForm').submit(function (e) {
-                    e.preventDefault();
-                });
-                $('label').css('text-align', 'left');
-                $('#registerForm').validator({
-                    custom: {
-                        serverValidation: function ($el) {
-                            // 存储服务器验证错误信息的字典为空，则说明所有输入均合法（或者还没提交表单）
-                            var inputFieldName = $el.attr('name');
-                            if (inputFieldName in this.serverValidationResult) {
-                                var result = this.serverValidationResult[inputFieldName];
-                                return result;
-                            } else {
-                                return false;
-                            }
-                        }.bind(this)
+        }
+        // 请求图片验证码
+        requestForPictureCode(): void{
+            axios.get('picturecodes/')
+                .then((res) => {
+                    this.pictureCodeSrc = Constants.REQUEST_HOST + res.data['cptch_image'];
+                    this.pictureToken = res.data['cptch_key'];
+                    if(this.$captchaCodeInput) {
+                        this.$captchaCodeInput.val('');
                     }
+                }, (err) => {
+                    console.log('图片验证码请求错误');
+                    console.log(err);
                 });
-            });
         }
     };
 </script>

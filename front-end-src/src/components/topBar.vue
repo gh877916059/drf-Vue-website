@@ -4,9 +4,9 @@
             <div class="container">
                 <div class="row row-rl-0 row-tb-20 row-md-cell">
                     <div class="brand col-md-3 t-xs-center t-md-left valign-middle pt-15">
-                        <a href="#" class="logo">
+                        <router-link to="/index" class="logo">
                             <img v-bind:src="logoUrl" alt="" width="250">
-                        </a>
+                        </router-link>
                     </div>
                     <div class="header-search col-md-9">
                         <div class="row row-tb-10 ">
@@ -138,128 +138,123 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import $ from 'jquery';
+    import JQuery from 'jquery/dist/jquery.slim';
     import loginModal from './loginModal.vue';
     import registerModal from './registerModal.vue';
     import Constants from '../constants';
-    import FixedData from '../vuex/fixedData';
-    export default {
-        // 模板<template>默认替换挂载元素，如果 replace 选项为 false，模板将插入挂载元素内
-        replace: true,
-        props: {
-            activeIndex: {
-                type: String,
-                default: '0'
-            }
-        },
+    import FixedData, {questionState} from '../vuex/fixedData';
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {jumpToThisPage} from '../router';
+    import {State, Mutation} from 'vuex-class';
+    import networkCommunication from "../vuex/networkCommunication";
+
+    @Component({
         components: {
             loginModal,
             registerModal
-        },
-        computed: {
-            userName () {
-                return this.$store.state.userName;
-            },
-            logoUrl () {
-                return Constants.REQUEST_HOST + '/static/image/logo.png';
-            },
-            categoryList () {
-                return this.$store.state.categoryList;
-            },
-            questionStateList () {
-                return FixedData.questionStateList;
+        }
+    })
+    export default class topBar extends Vue{
+        windowWidth: number|undefined = $(window).width();
+        @Prop({type: String, default: '0'})
+        activeIndex: string;
+        @State('userName') userName;
+        @State('categoryList') categoryList;
+        get logoUrl(): string{
+            return Constants.REQUEST_HOST + '/static/image/logo.png';
+        }
+        get questionStateList(): questionState[]{
+            return FixedData.questionStateList;
+        }
+        @Mutation('setUserName') mutationSetUserName;
+        closeLoginModal(): void{
+            $('#loginModal').modal('hide');
+        }
+        closeRegisterModal(): void{
+            $('#registerModal').modal('hide');
+        }
+        openLoginModal(): void{
+            // backdrop 为 static 时，点击模态对话框的外部区域不会将其关闭
+            // keyboard 为 false 时，按下 Esc 键不会关闭 Modal
+            $('#loginModal').modal({backdrop: 'static', keyboard: false});
+        }
+        openRegisterModal(): void{
+            // backdrop 为 static 时，点击模态对话框的外部区域不会将其关闭
+            // keyboard 为 false 时，按下 Esc 键不会关闭 Modal
+            $('#registerModal').modal({backdrop: 'static', keyboard: false});
+            // 触发手机号码的检测函数（因为它可以为空，需要特殊处理）
+            $('#mobileInput').trigger('change');
+        }
+        logout(): void{
+            this.mutationSetUserName('');
+            window.sessionStorage.userName = '';
+            networkCommunication.deleteAuthorizationToken();
+            this.$router.go(0);
+        }
+        jumpToShowCaseByCategoryPage(topCategory) {
+            jumpToThisPage('/showAllCases', {top_category: topCategory});
+        }
+        navbarResizeLoad() {
+            if ($('.nav-header').css('display') === 'block') {
+                $('.nav-bar').addClass('nav-mobile');
+                $('.nav-menu').find('li.active').addClass('active-mobile');
+            } else {
+                $('.nav-bar').removeClass('nav-mobile');
             }
-        },
-        methods: {
-            closeLoginModal: function () {
-                $('#loginModal').modal('hide');
-            },
-            closeRegisterModal: function () {
-                $('#registerModal').modal('hide');
-            },
-            openLoginModal: function () {
-                // backdrop 为 static 时，点击模态对话框的外部区域不会将其关闭
-                // keyboard 为 false 时，按下 Esc 键不会关闭 Modal
-                $('#loginModal').modal({backdrop: 'static', keyboard: false});
-            },
-            openRegisterModal: function () {
-                // backdrop 为 static 时，点击模态对话框的外部区域不会将其关闭
-                // keyboard 为 false 时，按下 Esc 键不会关闭 Modal
-                $('#registerModal').modal({backdrop: 'static', keyboard: false});
-                // 触发手机号码的检测函数（因为它可以为空，需要特殊处理）
-                $('#mobileInput').trigger('change');
-            },
-            logout: function () {
-                this.$store.commit('setUserName', '');
-                window.sessionStorage.userName = '';
-                delete window.sessionStorage.AuthorizationHeader;
-                delete this.$axios.defaults.headers.common['Authorization'];
-                this.$router.go(0);
-            },
-            jumpToShowCaseByCategoryPage: function(topCategory) {
-                this.$root.jumpToThisPage('/showAllCases', {top_category: topCategory});
-            },
-            navbarResizeLoad: function() {
-                if ($('.nav-header').css('display') === 'block') {
-                    $('.nav-bar').addClass('nav-mobile');
-                    $('.nav-menu').find('li.active').addClass('active-mobile');
-                } else {
-                    $('.nav-bar').removeClass('nav-mobile');
-                }
-                if ($(window).width() >= 943) {
-                    $('.dropdown-mega-menu a, .nav-menu li:has( > ul) a').each(function () {
-                        $(this).parent().children('ul, .mega-menu').slideUp(0);
-                    });
-                    $($('.nav-toggle').data('toggle')).show();
-                    $('.nav-menu').find('li').removeClass('active-mobile');
-                }
-            },
-            navbarInit: function() {
-                $('.nav-menu > li:has( > ul) > a').append('<span class="indicator"><i class="fa fa-angle-down"></i></span>');
-                $('.nav-menu > li ul > li:has( > ul) > a').append('<span class=\"indicator\"><i class=\"fa fa-angle-right\"></i></span>');
-                $('.nav-menu li:has( > ul)').on('mouseenter', function () {
-                    if ($(window).width() > 943) {
-                        $(this).children('ul, .mega-menu').fadeIn(100);
-                    }
+            if (this.windowWidth && this.windowWidth >= 943) {
+                $('.dropdown-mega-menu a, .nav-menu li:has( > ul) a').each(function () {
+                    $(this).parent().children('ul, .mega-menu').slideUp(0);
                 });
-                $('.nav-menu li:has( > ul)').on('mouseleave', function () {
-                    if ($(window).width() > 943) {
-                        $(this).children('ul, .mega-menu').fadeOut(100);
-                    }
-                });
-                $('.nav-menu li:has( > ul) > a').on('click', function (e) {
-                    if ($(window).width() <= 943) {
-                        $(this).parent().addClass('active-mobile').children('ul, .mega-menu').slideToggle(150, function() {
+                $($('.nav-toggle').data('toggle')).show();
+                $('.nav-menu').find('li').removeClass('active-mobile');
+            }
+        }
+        navbarInit() {
+            $('.nav-menu > li:has( > ul) > a').append('<span class="indicator"><i class="fa fa-angle-down"></i></span>');
+            $('.nav-menu > li ul > li:has( > ul) > a').append('<span class=\"indicator\"><i class=\"fa fa-angle-right\"></i></span>');
+            let _this: topBar = this;
+            $('.nav-menu li:has( > ul)').on('mouseenter', function () {
+                if (_this.windowWidth && _this.windowWidth > 943) {
+                    $(this).children('ul, .mega-menu').fadeIn(100);
+                }
+            });
+            $('.nav-menu li:has( > ul)').on('mouseleave', function () {
+                if (_this.windowWidth && _this.windowWidth > 943) {
+                    $(this).children('ul, .mega-menu').fadeOut(100);
+                }
+            });
+            $('.nav-menu li:has( > ul) > a').on('click', function (e) {
+                if (_this.windowWidth && _this.windowWidth <= 943) {
+                    $(this).parent().addClass('active-mobile').children('ul, .mega-menu').slideToggle(150, function() {
 
-                        });
-                        $(this).parent().siblings().removeClass('active-mobile').children('ul, .mega-menu').slideUp(150);
-                    }
-                    e.preventDefault();
-                });
-                $('.nav-toggle').on('click', function (e) {
-                    var toggleId = $(this).data('toggle');
-                    $(toggleId).slideToggle(150);
-                    e.preventDefault();
-                });
-            }
-        },
-        // 参数或查询的改变并不会触发进入/离开的导航守卫，因此需要通过观察$route对象来应对这些变化
-        watch: {
-            $route: function () {
-                if (this.$route.query.needToLogin) {
-                    this.openLoginModal();
-                    delete this.$route.query.needToLogin;
+                    });
+                    $(this).parent().siblings().removeClass('active-mobile').children('ul, .mega-menu').slideUp(150);
                 }
+                e.preventDefault();
+            });
+            $('.nav-toggle').on('click', function (e) {
+                var toggleId = $(this).data('toggle');
+                $(toggleId).slideToggle(150);
+                e.preventDefault();
+            });
+        }
+        // 参数或查询的改变并不会触发进入/离开的导航守卫，因此需要通过观察$route对象来应对这些变化
+        @Watch('$route')
+        onQueryArgsChanged() {
+            if (this.$route.query['needToLogin']) {
+                this.openLoginModal();
+                delete this.$route.query['needToLogin'];
             }
-        },
-        mounted: function () {
+        }
+        mounted(): void{
             this.$nextTick(function () {
-                var $selector = $('#navUl > li');
+                let $selector: JQuery<HTMLElement> = $('#navUl > li');
                 $($selector[parseInt(this.activeIndex)]).addClass('active');
-                $('#registerModal').on('show.bs.modal', function () {
+                $('#registerModal').on('show.bs.modal', function (this: topBar) {
                     // 请求图片验证码
-                    this.$refs.registerModal.requestForPictureCode();
+                    (<registerModal>this.$refs.registerModal).requestForPictureCode();
                 }.bind(this));
                 if (this.$route.query.needToLogin) {
                     this.openLoginModal();

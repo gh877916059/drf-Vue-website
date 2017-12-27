@@ -4,16 +4,16 @@
     </ul>
 </template>
 
-<script>
+<script lang="ts">
     import questionOutlineMediaObject from '../components/questionOutlineMediaObject.vue';
-    export default {
+    import {QuestionData} from '../commonType';
+    import {Component, Vue} from 'vue-property-decorator';
+    @Component({
         components: {
             questionOutlineMediaObject
-        },
-        data() {
-            return {
-                questionOutlineList: []
-            };
         }
+    })
+    export default class questionListView extends Vue{
+        questionOutlineList: QuestionData[] = [];
     };
 </script>

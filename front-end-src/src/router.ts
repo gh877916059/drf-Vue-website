@@ -8,8 +8,11 @@
   head.appendChild(script);
   而我们的require.ensure(dependencies: String[], callback: function(require), chunkName: String)就是负责完成这一任务
  */
+import {Vue} from "vue-property-decorator";
+import VueRouter from "vue-router";
+Vue.use(VueRouter);
 
-const routers = [{
+const routes = [{
     path: '/',
     name: 'home',
     component(resolve) {
@@ -84,5 +87,26 @@ const routers = [{
     }
 }];
 
-export default routers;
-// /viewQuestion/
+/*
+  实例化VueRouter，下面详细剖析mode属性的含义
+  vue-router默认使用hash模式——使用URL的hash来模拟一个完整的URL
+  如果不想要很丑的hash，我们可以用路由的 history 模式，这种模式充分利用 history.pushState API 来完成URL跳转而无须重新加载页面
+  当你使用history模式时，URL就像正常的url，例如 http://yoursite.com/user/id
+  但是使用这种模式，最好要在服务端增加一个覆盖所有情况的候选资源：如果 URL 匹配不到任何静态资源，则应该返回同一个index.html页面，这个页面就是我们的app所依赖的页面
+ */
+const router = new VueRouter({
+    mode: 'history',
+    routes,  // ES6语法糖，相当于routes:routes
+});
+
+export function jumpToThisPage(path: string, query?: Object) {
+    if (query) {
+        path = path + '?';
+        for (var key in query) {
+            path = path + key + '=' + query[key];
+        }
+    }
+    router.push({ path });
+}
+
+export default router;

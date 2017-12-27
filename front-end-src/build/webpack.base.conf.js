@@ -17,7 +17,7 @@ module.exports = {
     ③当entry是一个对象时，通常是为了实现关注点分离，例如分离应用程序(app)和公共库(vendor)入口
      */
     entry: {
-        app: './src/main.js'
+        app: './src/main.ts'
     },
     /*
     path：打包后的文件存放的地方
@@ -34,7 +34,7 @@ module.exports = {
     alias：创建 import 或 require 的别名，来确保模块引入变得更简单
      */
     resolve: {
-        extensions: ['.css', '.js', '.vue'],
+        extensions: ['.ts', '.css', '.js', '.vue'],
         // fallback: [path.join(__dirname, '../node_modules')],
         alias: {
             'vue$': 'vue/dist/vue',
@@ -59,7 +59,8 @@ module.exports = {
     ①ExtractTextPlugin会将所有的入口chunk中的require("style.css")移动到分开的css文件
      */
     module: {
-        rules: [{
+        rules: [
+            {
                 test: /\.(js|vue)$/,
                 loader: 'eslint-loader',
                 // enforce用于指示加载器的执行顺序
@@ -74,11 +75,29 @@ module.exports = {
                 loader: 'vue-loader',
                 options: vueLoaderConfig
             },
+            /*
+            awesome-typescript-loader等同于
+            thread-loader/happypack是进行多线程/进程编译，可充分利用多核cpu。
+            hard-source-webpack-plugin/cache-loader是记录编译缓存，编译增量编译。
+            ts-loader进行 TypeScript编译。
+            fork-ts-checker单独线程/进程进行错误检查。
+             */
+            {
+                test: /\.ts$/,
+                loader:'ts-loader',
+                exclude: /node_modules/,
+                options: {
+                    appendTsSuffixTo: [/\.vue$/],
+                }
+            },
+            /*
+            由于使用了ts-loader，同样实现了babel的功能
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 include: [resolve('src'), resolve('test'), resolve('node_modules/axios'), resolve('node_modules/timeago.js'), resolve('node_modules/vue'), resolve('node_modules/vuex'), resolve('node_modules/vue-router')]
             },
+             */
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
@@ -117,6 +136,7 @@ module.exports = {
     },
     // 由于已经从CDN中加载了jquery，后续只要使用jQuery这个引用变量即可
     externals: {
-        jquery: 'jQuery'
+        jquery: 'jQuery',
+        cropperjs: 'cropperjs'
     }
 }

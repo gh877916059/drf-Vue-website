@@ -28,24 +28,26 @@
     </form>
 </template>
 
-<script>
+<script lang="ts">
     import $ from 'jquery';
+    import JQuery from 'jquery/dist/jquery.slim';
     import Utils from '../utils';
-    export default {
-        data() {
-            return {
-                active: false,
-                pictureDataUri: '',
-                imageName: '',
-                imageType: '',
-                $avatarForm: null,
-                $avatarWrapper: null,
-                $avatarPreview: null,
-                $img: null
-            };
-        },
-        mounted: function () {
-            this.$nextTick(function () {
+    import {Component, Vue} from 'vue-property-decorator';
+    import axios from 'axios';
+
+    @Component
+    export default class pictureCropper extends Vue{
+        active: boolean = false;
+        pictureDataUri: string = '';
+        imageName: string ='';
+        imageType: string = '';
+        avatarPreviewSelector: string = '.avatar-preview';
+        $avatarForm: JQuery<HTMLElement>|null = null;
+        $avatarWrapper: JQuery<HTMLElement>|null = null;
+        $avatarPreview: JQuery<HTMLElement>|null = null;
+        $img: JQuery<HTMLElement>|null = null;
+        mounted() {
+            this.$nextTick(function(this: pictureCropper) {
                 this.$avatarForm = $('#avatarForm');
                 // 阻止表单的默认提交操作
                 this.$avatarForm.submit(function (e) {
@@ -53,66 +55,66 @@
                 });
                 this.$avatarWrapper = this.$avatarForm.find('.avatar-wrapper');
                 this.$avatarPreview = this.$avatarForm.find('.avatar-preview');
-                // 避免因jQuery版本过时而移除了selector属性
-                this.$avatarPreview.selector = '.avatar-preview';
             });
-        },
-        methods: {
-            rotate: function (e) {
-                var data;
-                if (this.active) {
-                    data = $(e.target).data();
-                    if (data.method) {
-                        this.$img.cropper(data.method, data.option);
-                    }
+        }
+        rotate(e) {
+            let data;
+            if (this.active) {
+                data = $(e.target).data();
+                if (data.method && this.$img) {
+                    (<any>this.$img).cropper(data.method, data.option);
                 }
-            },
-            // 异步上传封面图片
-            uploadCoverPicture () {
-                var afterCroppingImageData = this.cropThePicture();
-                let bits = Utils.convertBase64UrlToBlob(afterCroppingImageData);
-                var file = new File([bits], this.imageName, {type: this.imageType});
-                if (file) {
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    this.$axios.post('uploadfile/case_cover_picture/', formData).then((res) => {
-                        this.$emit('setCoverPictureURL', res.data['location']);
-                        this.$emit('closePictureCropperModal');
-                    }, (err) => {
-                        var errorReasonDict = err.body;
-                        console.log('---errorReasonDict---');
-                        console.log(errorReasonDict);
-                    });
-                }
-            },
-            cropThePicture: function () {
-                var croppedCanvas = this.$img.cropper('getCroppedCanvas');
+            }
+        }
+        // 异步上传封面图片
+        uploadCoverPicture() {
+            var afterCroppingImageData = this.cropThePicture();
+            let bits = Utils.convertBase64UrlToBlob(afterCroppingImageData);
+            var file = new File([bits], this.imageName, {type: this.imageType});
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                axios.post('uploadfile/case_cover_picture/', formData).then((res) => {
+                    this.$emit('setCoverPictureURL', res.data['location']);
+                    this.$emit('closePictureCropperModal');
+                }, (err) => {
+                    let errorReasonDict = err.body;
+                    console.log('---errorReasonDict---');
+                    console.log(errorReasonDict);
+                });
+            }
+        }
+        cropThePicture() {
+            if(this.$img) {
+                let croppedCanvas = (<any>this.$img).cropper('getCroppedCanvas');
                 return croppedCanvas.toDataURL();
-            },
-            destroyCropper: function () {
-                if (this.active) {
-                    this.$img.cropper('destroy');
-                    this.$img.remove();
-                    this.active = false;
-                }
-            },
-            loadPicture: function(imageInfoDict) {
-                this.pictureDataUri = imageInfoDict['data'];
-                this.imageType = imageInfoDict['type'];
-                this.imageName = imageInfoDict['name'];
+            }
+        }
+        destroyCropper() {
+            if (this.active && this.$img) {
+                (<any>this.$img).cropper('destroy');
+                this.$img.remove();
+                this.active = false;
+            }
+        }
+        loadPicture(imageInfoDict) {
+            this.pictureDataUri = imageInfoDict['data'];
+            this.imageType = imageInfoDict['type'];
+            this.imageName = imageInfoDict['name'];
+            if(this.$avatarPreview) {
                 this.$avatarPreview.empty().html('<img src="' + this.pictureDataUri + '">');
-                if (this.active) {
-                    this.$img.cropper('replace', this.pictureDataUri);
-                } else {
-                    this.$img = $('<img src="' + this.pictureDataUri + '">');
-                    this.$avatarWrapper.empty().html(this.$img);
-                    this.$img.cropper({
-                        aspectRatio: 1.78,
-                        preview: this.$avatarPreview.selector,
-                        strict: false
-                    });
-                    this.active = true;
-                }
+            }
+            if (this.active && this.$img) {
+                (<any>this.$img).cropper('replace', this.pictureDataUri);
+            } else if(this.$avatarWrapper) {
+                this.$img = $('<img src="' + this.pictureDataUri + '">');
+                this.$avatarWrapper.empty().html(<any>this.$img);
+                (<any>this.$img).cropper({
+                    aspectRatio: 1.78,
+                    preview: this.avatarPreviewSelector,
+                    strict: false
+                });
+                this.active = true;
             }
         }
     };
@@ -123,7 +125,6 @@
         padding-right: 15px;
         padding-left: 15px;
     }
-
     .avatar-wrapper {
         height: 364px;
         width: 100%;
@@ -132,13 +133,11 @@
         background-color: #fcfcfc;
         overflow: hidden;
     }
-
     .avatar-wrapper img {
         display: block;
         height: auto;
         max-width: 100%;
     }
-
     .avatar-preview {
         float: left;
         margin-top: 15px;
@@ -148,47 +147,38 @@
         background-color: #fff;
         overflow: hidden;
     }
-
     .avatar-preview:hover {
         border-color: #ccf;
         box-shadow: 0 0 5px rgba(0,0,0,.15);
     }
-
     .avatar-preview img {
         width: 100%;
     }
-
     .preview-lg {
         height: 184px;
         width: 184px;
         margin-top: 15px;
     }
-
     .preview-md {
         height: 100px;
         width: 100px;
     }
-
     .preview-sm {
         height: 50px;
         width: 50px;
     }
-
     @media (min-width: 992px) {
         .avatar-preview {
             float: none;
         }
     }
-
     .avatar-btns {
         margin-top: 30px;
         margin-bottom: 15px;
     }
-
     .avatar-btns .btn-group {
         margin-right: 5px;
     }
-
     .loading {
         display: none;
         position: absolute;
