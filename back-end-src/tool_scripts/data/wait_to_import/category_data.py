@@ -58,4 +58,12 @@ row_data = [
         'code': 'you_xi',
         'name': '游戏'
     },
+    {
+        'sub_categorys': [
+            {'code': 'deeplearnjs', 'name': 'Deeplearn.js'},
+            {'code': 'tensorflow', 'name': 'Tensorflow'},
+        ],
+        'code': 'AI',
+        'name': '人工智能'
+    },
 ]

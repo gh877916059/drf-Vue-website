@@ -2,7 +2,7 @@
     <div>
         <router-link class="button expanded" v-bind:to="editCaseURL" data-toggle="tooltip" data-original-title="编辑">编辑</router-link>
         <button class="button expanded" v-on:click="deleteCase">删除</button>
-        <div id="richTextViewerDiv" v-html="cases_desc">
+        <div id="richTextViewerDiv" v-html="casesDesc">
         </div>
     </div>
 </template>
@@ -12,11 +12,11 @@
     import axios from 'axios';
     import {jumpToThisPage} from '../router';
     import {Component, Vue, Prop} from 'vue-property-decorator';
-    import {CaseData} from '../commonType';
+    import Utils from '../utils';
     import {Mutation} from 'vuex-class';
     @Component
     export default class caseViewer extends Vue{
-        caseOutline: CaseData;
+        casesDesc: string = '案例详情';
         @Prop({type: String, default: ''})
         caseId: string;
         get editCaseURL(): string{
@@ -30,9 +30,10 @@
             } else {
                 axios.get('cases/' + this.caseId + '/')
                     .then((res) => {
-                        this.caseOutline = new CaseData(res.data);
+                        let casesDesc = res.data['cases_desc'];
+                        this.casesDesc = Utils.completeAllHostInImgLabel(casesDesc);
                     }, (err) => {
-                        var errorReasonDict = err.body;
+                        let errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
                         console.log(errorReasonDict);
                     });
@@ -48,7 +49,7 @@
                         this.mutationIncreaseForcedRequestCounter();
                         jumpToThisPage('/showAllCases');
                     }, (err) => {
-                        var errorReasonDict = err.body;
+                        let errorReasonDict = err.body;
                         console.log('---errorReasonDict---');
                         console.log(errorReasonDict);
                     });

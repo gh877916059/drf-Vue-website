@@ -7,6 +7,7 @@ var baseWebpackConfig = require('./webpack.base.conf')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var env = config.build.env
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 var webpackConfig = merge(baseWebpackConfig, {
     /*
@@ -41,14 +42,8 @@ var webpackConfig = merge(baseWebpackConfig, {
         new webpack.DefinePlugin({
             'process.env': env
         }),
-        /*
         // UglifyJsPlugin压缩代码
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),
-        */
+        new UglifyJsPlugin(),
         // ExtractTextPlugin会将所有的入口chunk中的require("style.css")移动到分开的css文件
         new ExtractTextPlugin({
             filename: utils.assetsPath('css/[name].[contenthash].css'),

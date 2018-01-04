@@ -54,7 +54,6 @@
 </template>
 
 <script lang="ts">
-    import Constants from '../constants';
     import $ from 'jquery';
     import JQuery from 'jquery/dist/jquery.slim';
     import Utils from '../utils';

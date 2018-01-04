@@ -221,7 +221,7 @@
                     this.name = res.data['name'];
                     this.cases_brief = res.data['cases_brief'];
                     this.setCoverPictureURL(res.data['cases_front_image']);
-                    var casesDesc = res.data['cases_desc'];
+                    let casesDesc = res.data['cases_desc'];
                     casesDesc = Utils.completeAllHostInImgLabel(casesDesc);
                     (<any>window).tinymce.activeEditor.setContent(casesDesc);
                     this.refreshBootstrapInput();

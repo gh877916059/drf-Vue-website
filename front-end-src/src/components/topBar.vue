@@ -267,7 +267,7 @@
         }
     };
 </script>
-<style lang="scss">
+<style lang="scss" >
     @import '../assets/scss/base';
     /* |–––––––––––––––––[ Top bar ]–––––––––––––––| */
     .nav-top ul {

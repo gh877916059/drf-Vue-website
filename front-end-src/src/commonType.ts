@@ -22,6 +22,7 @@ export class CaseData {
     cases_brief: string = '暂无简介';
     category_name: string = '未知类别';
     add_time: string = '未知日期';
+    cases_desc: string = '案例详情';
     user_avatar: string = Constants.REQUEST_HOST + '/static/image/fail.jpg';
     click_num: number = 0;
     reply_num: number = 0;

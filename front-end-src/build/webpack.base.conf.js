@@ -90,14 +90,6 @@ module.exports = {
                     appendTsSuffixTo: [/\.vue$/],
                 }
             },
-            /*
-            由于使用了ts-loader，同样实现了babel的功能
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                include: [resolve('src'), resolve('test'), resolve('node_modules/axios'), resolve('node_modules/timeago.js'), resolve('node_modules/vue'), resolve('node_modules/vuex'), resolve('node_modules/vue-router')]
-            },
-             */
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
