@@ -3,7 +3,9 @@ __author__ = 'HymanLu'
 
 from datetime import datetime
 from django.db import models
-from DjangoUeditor.models import UEditorField
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class CasesCategory(models.Model):
     """
@@ -42,12 +44,10 @@ class Cases(models.Model):
     rating_num = models.IntegerField(default=1, verbose_name="评分人数")
     sum_rating_score = models.IntegerField(default=3, verbose_name="所有评分总和")
     cases_brief = models.TextField(max_length=500, verbose_name="案例简短描述")
-    #cases_desc = UEditorField(verbose_name=u"内容", imagePath="rich_text_picture/", width=1000, height=300, filePath="rich_text_file/", default='')
     cases_desc = models.TextField(max_length=50000, verbose_name="案例正文内容")
-    #cases_front_image = models.ImageField(upload_to="cases/images/", null=True, blank=True, verbose_name="封面图")
     cases_front_image = models.CharField(max_length=200, verbose_name="封面图URL", default='/static/image/fail.jpg')
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
-
+    submitter = models.ForeignKey(User, verbose_name="提交者", on_delete=models.DO_NOTHING, default=1)
 
     class Meta:
         verbose_name = '案例'

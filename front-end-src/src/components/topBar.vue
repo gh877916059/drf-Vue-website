@@ -35,6 +35,10 @@
                             <div class="col-sm-4 t-xs-center t-md-right pt-15">
                                 <template v-if="userName.length > 0">
                                     <div class="header-login">
+                                        <span>当前用户：</span>
+                                        <span v-text="userName"></span>
+                                    </div>
+                                    <div class="header-login">
                                         <a v-on:click="logout">
                                             <span class="icon fa fa-lock"></span>
                                             <span class="title pt-10">注销</span>

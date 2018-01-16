@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import views
 import os
-from APP_Inventor_case_base.settings import REQUEST_HOST
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 import time

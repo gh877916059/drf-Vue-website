@@ -4,7 +4,7 @@ import FastClick from 'fastclick';
 import axios from 'axios';
 import Constants from './constants';
 import NetworkCommunication from './vuex/networkCommunication';
-import {Component, Vue} from 'vue-property-decorator'
+import {Vue} from 'vue-property-decorator'
 import router from './router';
 
 // 设置axios的请求Host（作用在axios.get()或者axios.post()方法上）

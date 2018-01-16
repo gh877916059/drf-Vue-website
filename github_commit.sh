@@ -4,11 +4,8 @@
 script_file_path=$(readlink -f $0)
 base_dir=$(dirname ${script_file_path})
 switch_fabfile_env_script_path=${base_dir}"/operation-and-deployment-src/switch_fabfile_env.py"
-switch_setting_script_path=${base_dir}"/back-end-src/tool_scripts/switch_setting.py"
 python "${switch_fabfile_env_script_path}" "github"
-python "${switch_setting_script_path}" "initial"
 git "add" "."
 git "commit" "-m" "$1"
 git "push" "origin" "master"
 python "${switch_fabfile_env_script_path}" "production"
-python "${switch_setting_script_path}" "local"

@@ -4,8 +4,8 @@
 *.pyc
 *.swp
 back-end-src/media/*
-back-end-src/tool_scripts/data/setting/local.py
-back-end-src/tool_scripts/data/setting/remote.py
+back-end-src/APP_Inventor_case_base/setting_split/local.py
+back-end-src/APP_Inventor_case_base/setting_split/remote.py
 front-end-src/dist
 front-end-src/node_modules
 front-end-src/bower_components

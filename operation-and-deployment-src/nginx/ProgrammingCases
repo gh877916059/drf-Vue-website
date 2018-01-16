@@ -1,0 +1,16 @@
+server {
+    listen      80;
+    root       /srv/APP_Inventor_case_base_website/src/front-end-src/dist;
+    access_log /srv/log/nginx/access_log;
+    error_log  /srv/log/nginx/error_log;
+
+    location ~ ^\/static\/.*$ {
+        root /srv/APP_Inventor_case_base_website/src/front-end-src/dist;
+    }
+
+    location / {
+        root /srv/APP_Inventor_case_base_website/src/front-end-src/dist;
+        index index.html;
+    }
+
+}

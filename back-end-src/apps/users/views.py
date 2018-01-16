@@ -10,15 +10,11 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from random import choice
 from rest_framework import permissions
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
-from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
-from APP_Inventor_case_base.settings import APIKEY
-from utils.yunpian import YunPian
-from .models import SmsVerifyCode
+from .serializers import UserRegSerializer, UserDetailSerializer
 from rest_framework.views import APIView
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
@@ -50,48 +46,6 @@ class PictureCodeView(APIView):
         response_data['cptch_key'] = CaptchaStore.generate_key()
         response_data['cptch_image'] = captcha_image_url(response_data['cptch_key'])
         return Response(response_data, status=status.HTTP_200_OK, content_type='application/json')
-
-class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
-    """
-    发送短信验证码
-    """
-    serializer_class = SmsSerializer
-
-    def generate_code(self):
-        """
-        生成四位数字的验证码
-        :return:
-        """
-        seeds = "1234567890"
-        random_str = []
-        for i in range(4):
-            random_str.append(choice(seeds))
-
-        return "".join(random_str)
-
-    def create(self, request, *args, **kwargs):
-        print(request.data)
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        mobile = serializer.validated_data["mobile"]
-
-        yun_pian = YunPian(APIKEY)
-
-        code = self.generate_code()
-
-        sms_status = yun_pian.send_sms(code=code, mobile=mobile)
-
-        if sms_status["code"] != 0:
-            return Response({
-                "mobile":sms_status["msg"]
-            }, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            code_record = SmsVerifyCode(code=code, mobile=mobile)
-            code_record.save()
-            return Response({
-                "mobile":mobile
-            }, status=status.HTTP_201_CREATED)
 
 class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """

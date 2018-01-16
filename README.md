@@ -6,7 +6,7 @@ http://119.23.69.178:8000/index/
 
 ## 1. 架构说明
 
-1. Xadmin+Django2全家桶（①django；②django-REST-framework；③django-filter；④django-simple-captcha；⑤django-REST-framework-jwt）
+1. Xadmin+Django2全家桶（①django；②django-REST-framework；③django-filter；④django-simple-captcha；⑤django-REST-framework-jwt；⑥django-favicon）
 
 ## 2. 使用教程（下面的命令皆以back-end-src为当前目录运行）
 

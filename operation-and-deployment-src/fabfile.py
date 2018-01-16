@@ -22,7 +22,7 @@ _LOCAL_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _LOCAL_ROOT_DIR = os.path.dirname(_LOCAL_CURRENT_DIR)
 _LOCAL_FRONT_SRC_DIR = os.path.join(_LOCAL_ROOT_DIR, 'front-end-src')
 _LOCAL_BACK_SRC_DIR = os.path.join(_LOCAL_ROOT_DIR, 'back-end-src')
-sys.path.insert(0, os.path.join(_LOCAL_ROOT_DIR, 'back-end-src', 'tool_scripts', 'data', 'setting'))
+sys.path.insert(0, os.path.join(_LOCAL_ROOT_DIR, 'back-end-src', 'APP_Inventor_case_base', 'setting_split'))
 import local as local_setting, remote as remote_setting
 _LOCAL_DB_USER_NAME = local_setting.DATABASES['default']['USER']
 _LOCAL_DB_PASSWORD = local_setting.DATABASES['default']['PASSWORD']
@@ -151,16 +151,16 @@ def build():
     将本地项目代码进行打包，用作备份或者上传服务器进行部署
     '''
     target_host = env.hosts[0]
-    constant_js_file = os.path.join(_LOCAL_FRONT_SRC_DIR, 'src', 'constants.js')
-    original_js_line_list = open(constant_js_file, 'r').readlines()
+    constant_ts_file = os.path.join(_LOCAL_FRONT_SRC_DIR, 'src', 'constants.ts')
+    original_ts_line_list = open(constant_ts_file, 'r').readlines()
     constant_css_file = os.path.join(_LOCAL_FRONT_SRC_DIR, 'src', 'assets', 'scss', 'constant.scss')
     original_css_line_list = open(constant_css_file, 'r').readlines()
-    with open(constant_js_file, 'w') as fout:
-        for original_js_line in original_js_line_list:
-            if original_js_line.startswith('const REQUEST_HOST = '):
-                fout.write("const REQUEST_HOST = 'http://" + target_host + ":8000';\n")
+    with open(constant_ts_file, 'w') as fout:
+        for original_ts_line in original_ts_line_list:
+            if original_ts_line.startswith('const REQUEST_HOST: string = '):
+                fout.write("const REQUEST_HOST: string = 'http://" + target_host + ":8000';\n")
             else:
-                fout.write(original_js_line)
+                fout.write(original_ts_line)
     with open(constant_css_file, 'w') as fout:
         for original_css_line in original_css_line_list:
             if original_css_line.startswith('$RequestHost: '):
@@ -169,9 +169,9 @@ def build():
                 fout.write(original_css_line)
     with lcd(_LOCAL_FRONT_SRC_DIR):
         local('npm run build')
-    with open(constant_js_file, 'w') as fout:
-        for original_js_line in original_js_line_list:
-            fout.write(original_js_line)
+    with open(constant_ts_file, 'w') as fout:
+        for original_ts_line in original_ts_line_list:
+            fout.write(original_ts_line)
     with open(constant_css_file, 'w') as fout:
         for original_css_line in original_css_line_list:
             fout.write(original_css_line)
@@ -185,6 +185,9 @@ def build():
         local(' '.join(cmd))
 
 def startServer():
+    '''
+    利用supervisor启动服务，nginx进行请求转发
+    '''
     with cd(_REMOTE_BACK_SRC_DIR):
         run('supervisorctl start programmingcases')
 
@@ -198,7 +201,7 @@ def checkServer():
 
 def deploy():
     '''
-    将在本地打包好的项目代码上传到服务器然后再解包，然后利用supervisor启动服务，nginx进行请求转发
+    将在本地打包好的项目代码上传到服务器然后再解包
     '''
     newdir = 'src-%s' % _now()
     run('rm -f %s' % _REMOTE_TMP_TAR)
@@ -215,22 +218,10 @@ def deploy():
         # run('chown -R 所有者:组 %s' % newdir)
         run('chmod -R 777 src')
         run('chmod -R 777 %s' % newdir)
-    # 在warn_only=True包含的代码快中 如果发生了错误原本是会直接终止的，现在变为不终止了变了警告
-    '''
-    with settings(warn_only=True):
-        sudo('supervisorctl stop APP_Inventor_case_base_website')
-        sudo('supervisorctl start APP_Inventor_case_base_website')
-        sudo('/etc/init.d/nginx reload')
-    '''
-    front_end_static_dir = _REMOTE_FRONT_SRC_DIR + '/dist/static'
-    back_end_static_dir = _REMOTE_BACK_SRC_DIR + '/static'
-    run('mv %s %s' % (front_end_static_dir + '/css/*', back_end_static_dir + '/css'))
-    run('mv %s %s' % (front_end_static_dir + '/js/*', back_end_static_dir + '/js'))
-    run('mv %s %s' % (_REMOTE_FRONT_SRC_DIR + '/dist/index.html', _REMOTE_BACK_SRC_DIR + '/templates'))
     with cd(_REMOTE_BASE_DIR + '/src'):
         run('pip3 install -r python-lib-requirements.txt')
-    with cd(_REMOTE_BACK_SRC_DIR + '/tool_scripts'):
-        run('python3 switch_setting.py remote')
+    with cd(_REMOTE_BACK_SRC_DIR + '/APP_Inventor_case_base'):
+        run("sed -i \"s/^CONFIG_ENV = .*/CONFIG_ENV = 'remote'/g\" settings.py")
 
 RE_FILES = re.compile('\r?\n')
 

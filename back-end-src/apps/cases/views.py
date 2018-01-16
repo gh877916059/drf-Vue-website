@@ -31,7 +31,7 @@ class CasesListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Re
     案例列表页, 分页， 搜索， 过滤， 排序
     """
     throttle_classes = (UserRateThrottle, )
-    queryset = Cases.objects.all()
+    queryset = Cases.objects.order_by('-add_time')
     serializer_class = GetCasesSerializer
     pagination_class = CasesPagination
     authentication_classes = (JSONWebTokenAuthentication, )
@@ -42,14 +42,11 @@ class CasesListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Re
     ordering_fields = ('click_num', 'add_time')
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
+        # 当进行的是创建新案例或修改旧案例时
+        if self.action == "create" or self.action == "update":
+            return PostCasesSerializer
+        else:
             return GetCasesSerializer
-        # 当进行的是创建新案例时
-        elif self.action == "create":
-            return PostCasesSerializer
-        elif self.action == "update":
-            return PostCasesSerializer
-        return GetCasesSerializer
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -61,8 +58,6 @@ class CasesListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Re
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print("---serializer---")
-        print(serializer)
         case = serializer.save()      # 注册成功，将SQL记录插入语句提交到数据库执行
         re_dict = serializer.data
         re_dict['id'] = case.id

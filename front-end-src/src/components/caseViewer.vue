@@ -1,7 +1,9 @@
 <template>
     <div>
-        <router-link class="button expanded" v-bind:to="editCaseURL" data-toggle="tooltip" data-original-title="编辑">编辑</router-link>
-        <button class="button expanded" v-on:click="deleteCase">删除</button>
+        <template v-if="userName===submitterName">
+            <router-link class="button expanded" v-bind:to="editCaseURL" data-toggle="tooltip" data-original-title="编辑">编辑</router-link>
+            <button class="button expanded" v-on:click="deleteCase">删除</button>
+        </template>
         <div id="richTextViewerDiv" v-html="casesDesc">
         </div>
     </div>
@@ -12,17 +14,19 @@
     import axios from 'axios';
     import {jumpToThisPage} from '../router';
     import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {State} from 'vuex-class';
     import Utils from '../utils';
     import {Mutation} from 'vuex-class';
     @Component
     export default class caseViewer extends Vue{
         casesDesc: string = '案例详情';
+        submitterName: string = '未知用户';
+        @State('userName') userName;
         @Prop({type: String, default: ''})
         caseId: string;
         get editCaseURL(): string{
             return '/editCase?id=' + this.caseId;
         }
-        @Mutation('increaseForcedRequestCounter') mutationIncreaseForcedRequestCounter;
         // 请求该案例的详细信息
         getCaseDetail(): void{
             if (this.caseId.length <= 0) {
@@ -30,7 +34,8 @@
             } else {
                 axios.get('cases/' + this.caseId + '/')
                     .then((res) => {
-                        let casesDesc = res.data['cases_desc'];
+                        this.submitterName = res.data['submitter']['username'];
+                        let casesDesc: string = res.data['cases_desc'];
                         this.casesDesc = Utils.completeAllHostInImgLabel(casesDesc);
                     }, (err) => {
                         let errorReasonDict = err.body;
@@ -46,7 +51,6 @@
                 axios.delete('cases/' + this.caseId + '/')
                     .then((res) => {
                         console.log('---删除案例成功---');
-                        this.mutationIncreaseForcedRequestCounter();
                         jumpToThisPage('/showAllCases');
                     }, (err) => {
                         let errorReasonDict = err.body;
