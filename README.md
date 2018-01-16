@@ -1,6 +1,6 @@
 # 一、网站临时首页
 
-http://119.23.69.178:8000/index/
+http://119.23.69.178/
 
 # 二、后端项目（back-end-src目录）
 
@@ -41,7 +41,7 @@ http://119.23.69.178:8000/index/
 
 1. fabric
 2. Supervisor（将`operation-and-deployment-src/supervisor/ProgrammingCases.conf`拷贝到`/etc/supervisor/conf.d/`目录下）
-3. ​
+3. ​Nginx（配置文件请见`operation-and-deployment-src/nginx/ProgrammingCases`）
 
 ## 2. 使用教程（下面的命令皆以operation-and-deployment-src为当前目录运行）
 
