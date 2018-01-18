@@ -15,3 +15,5 @@ elif CONFIG_ENV == 'remote':
     from setting_split.remote import *
 elif CONFIG_ENV == 'initial':
     from setting_split.initial import *
+
+import os

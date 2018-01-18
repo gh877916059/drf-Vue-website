@@ -2,7 +2,7 @@
 __author__ = 'HymanLu'
 
 from django.conf.urls import url, include
-from APP_Inventor_case_base.settings import MEDIA_ROOT
+from APP_Inventor_case_base.settings import MEDIA_ROOT, DEBUG
 from django.views.static import serve
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
@@ -12,7 +12,6 @@ from cases.views import CasesListViewSet, CategoryViewset, HotSearchsViewset, Ba
 from questions.views import QuestionsListViewSet
 from users.views import UserViewset, PictureCodeView
 from user_operation.views import UserFavViewset
-from django.views.generic import TemplateView
 from utils.file_views import UploadFileView, DeleteFileView
 
 router = DefaultRouter()    # 利用了ViewSet的重载as_view()方法进行请求方法和处理函数的动态绑定（简单好用，只需要逐一register，然后urls函数即可）
@@ -32,9 +31,13 @@ urlpatterns = [
     url(r'^hotcategory/', HotCategoryView.as_view()),   # 获取案例数量最多的若干个案例类型
     url(r'^picturecodes/', PictureCodeView.as_view(), name='picturecodes'),       # 获取验证码图片
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),     # 默认的通过账号和密码进行验证的方式(login和logout方法）
-    url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),     # path 将作为第二参数传到server进行处理
     url(r'docs/', include_docs_urls(title="APP Inventor案例库")),      # 自动生成的API说明文档
     url(r'^api-token-auth/', views.obtain_auth_token),      # drf自带的token认证模式（一般称为Session模式）
     url(r'^login/', obtain_jwt_token),      # jwt的认证接口（较之drf自带的认证模式，占用的服务器端资源更少，安全性更高）
     url(r'^captcha/', include('captcha.urls')),     # django-simple-captcha模块用于获取图片的URL
 ]
+
+if DEBUG:
+    urlpatterns = urlpatterns.extend([
+        url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),     # path 将作为第二参数传到server进行处理
+    ])

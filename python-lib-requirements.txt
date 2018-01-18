@@ -1,3 +1,4 @@
+raven
 django==2.0.1
 pillow
 mysqlclient
@@ -27,3 +28,4 @@ pymysql
 fabric3
 simplejson
 paramiko
+uWSGI

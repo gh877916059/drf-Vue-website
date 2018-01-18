@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        // 语法编译为es5语法，与Vue的浏览器支持保持一致
+        // 语法编译为es5
         "target": "es5",
+        "jsx": "preserve",
         // 模块采用import语法且不作转换（利用webpack 2+的tree-shake）
         "module": "es2015",
         // 这可以对'this'上的数据属性进行更严格的推断

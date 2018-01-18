@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'captcha',
-    'favicon'
+    'favicon',
+    'raven.contrib.django.raven_compat',
 ]
 
 # 作用于全局的中间件，一个Request进来会从上到下调用各个中间件的process_request()方法，再传给具体的View，得到的Response从下到上调用各个中间件的process_response()方法
@@ -105,24 +106,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 '''
-非Django原生setting项，仅用于REST-Framework
-'''
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',      # JSON Web Token Authentication
-    ),
-    # 设置限速策略，防止爬虫拖垮网站（仅作用于设置了throttle_classes的ViewSet）
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
-    ),
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '1000/minute',     # 对于未登录用户，每分钟最多访问4次
-        'user': '1200/minute'      # 对于已登录用户，每分钟最多访问6次
-    }
-}
-
-'''
 非Django原生setting项，仅用于REST-Framework-JWT
 '''
 import datetime
@@ -136,4 +119,27 @@ JWT_AUTH = {
 '''
 REST_FRAMEWORK_EXTENSIONS = {
     'DEFAULT_CACHE_RESPONSE_TIMEOUT': 15 * 60,      # 设置缓存有效时间
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {  # Log to stdout
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'logs', 'django-logging.txt'),
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
 }

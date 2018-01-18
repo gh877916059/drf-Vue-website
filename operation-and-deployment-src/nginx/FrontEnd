@@ -11,6 +11,7 @@ server {
     location / {
         root /srv/APP_Inventor_case_base_website/src/front-end-src/dist;
         index index.html;
+        try_files $uri /index.html;
     }
 
 }

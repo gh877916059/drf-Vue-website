@@ -5,6 +5,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "drf_vue_website.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "APP_Inventor_case_base.settings")
 
 application = get_wsgi_application()

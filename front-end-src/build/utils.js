@@ -1,5 +1,5 @@
 var path = require('path')
-var config = require('../config')
+var config = require('./config')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 exports.assetsPath = function(_path) {
@@ -51,7 +51,7 @@ exports.cssLoaders = function(options) {
         sass: generateLoaders('sass', { indentedSyntax: true }),
         scss: generateLoaders('sass'),
         stylus: generateLoaders('stylus'),
-        styl: generateLoaders('stylus')
+        styl: generateLoaders('stylus'),
     }
 }
 /*

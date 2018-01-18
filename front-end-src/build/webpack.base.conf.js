@@ -1,5 +1,5 @@
 var path = require('path')
-var config = require('../config')
+var config = require('./config')
 var utils = require('./utils')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var vueLoaderConfig = require('./vue-loader.conf')
@@ -75,20 +75,20 @@ module.exports = {
                 loader: 'vue-loader',
                 options: vueLoaderConfig
             },
-            /*
-            awesome-typescript-loader等同于
-            thread-loader/happypack是进行多线程/进程编译，可充分利用多核cpu。
-            hard-source-webpack-plugin/cache-loader是记录编译缓存，编译增量编译。
-            ts-loader进行 TypeScript编译。
-            fork-ts-checker单独线程/进程进行错误检查。
-             */
             {
                 test: /\.ts$/,
-                loader:'ts-loader',
                 exclude: /node_modules/,
-                options: {
-                    appendTsSuffixTo: [/\.vue$/],
-                }
+                use: [
+                    {
+                        loader: 'babel-loader'
+                    },
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            appendTsSuffixTo: [/\.vue$/],
+                        }
+                    }
+                ]
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
