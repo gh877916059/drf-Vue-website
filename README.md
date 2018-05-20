@@ -1,6 +1,25 @@
-# 一、网站临时首页
+# 一、网站效果展示：
+①公共模块（包括标题logo、搜索框、登录与注册按钮、页面导航栏，位于各个页面的顶部）：
+ ![公共模块](https://img-blog.csdn.net/20180521012039501?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+ 
+②首页：
+ ![首页1](https://img-blog.csdn.net/20180521012115797?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+ 
+![首页2](https://img-blog.csdn.net/20180521012201797?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
-http://119.23.69.178/
+③案例详情页：
+ ![案例详情页](https://img-blog.csdn.net/20180521012232479?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+④案例编辑页：
+ 
+![案例编辑页1](https://img-blog.csdn.net/201805210122553?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+ 
+![案例编辑页2](https://img-blog.csdn.net/20180521012326144?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+ 
+ ![案例编辑页3](https://img-blog.csdn.net/20180521012354620?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+⑤问题相关页面：
+ ![问题相关页面](https://img-blog.csdn.net/20180521012425925?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 # 二、后端项目（back-end-src目录）
 
