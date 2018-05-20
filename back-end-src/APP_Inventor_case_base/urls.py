@@ -38,6 +38,6 @@ urlpatterns = [
 ]
 
 if DEBUG:
-    urlpatterns = urlpatterns.extend([
+    urlpatterns.extend([
         url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),     # path 将作为第二参数传到server进行处理
     ])
