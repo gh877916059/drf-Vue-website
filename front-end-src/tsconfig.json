@@ -21,6 +21,7 @@
         "noImplicitReturns": true,
         // 移除注释
         "removeComments": true,
+        "strictPropertyInitialization": false,
         // 识别基本的系统类库
         "lib": [
             "dom",
