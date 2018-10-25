@@ -1,6 +1,6 @@
 # 一、网站效果展示：
 ①公共模块（包括标题logo、搜索框、登录与注册按钮、页面导航栏，位于各个页面的顶部）：
- ![公共模块](https://img-blog.csdn.net/20180521012039501?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+ ![公共模块](https://github.com/gh877916059/drf-Vue-website/raw/master/pictures/公共模块.png)
  
 ②首页：
  ![首页1](https://img-blog.csdn.net/20180521012115797?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dnXzE4ODI2MDc1MTU3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
